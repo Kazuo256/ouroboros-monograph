@@ -1,13 +1,56 @@
 \chapter*{Parte Objetiva}
 \label{sec:parte_objetiva}
 %% --------------------------------------------------------------------- %%
-\chapter{Introdu��o}
+\chapter{Introdução}
 \label{sec:intr}
 
-\section{Motiva��es e Objetivos}
+É comum, principalmente no desenvolvimento de jogos eletrônicos, a necessidade
+de um método prático de se inserir conteúdo lógico dinamicamente em uma
+aplicação. Linguagens de script (como Lua ou Python) são ferramentas que, dentre
+outras coisas, fornecem esse tipo de funcionalidade. Podem ter seu código fonte
+tanto compilado e processado dinamicamente quanto incorporado na aplicação
+desejada para que esta, por sua vez, adquira acesso a essas conveniências. No
+entanto, tal incorporação pode trazer vários desafios, especialmente o de ter
+que aprender a usar uma API (Application Programming Interface) diferente para
+cada linguagem de script usada.
+
+Esta monografia apresentará um sistema de software que permite ao usuário
+integrar facilmente diversas linguagens de script a um programa escrito em C++
+usando uma API unificada para incorporação e um exportador automatizado de
+interfaces C++ para essas linguagens de script. Ela explicará todos os
+principais mecanismos desse sistema, assim como a teoria e a tecnologia por trás
+deles.
+
+\section{Motivações e Objetivos}
 \label{sec:intr:motivacoes_objetivos}
 
-TODO
+\begin{enumerate}
+  \item Desenvolvimento de uma biblioteca C++ que abstrai o uso da API de uma(s)
+        linguagem(s) de script(s) de forma clara, prática de usar, e facilmente
+        estendível para aceitar outras linguagens de script, sendo que
+        inicialmente terá suporte a Lua e Python. O usuário da biblioteca não
+        necessitará de conhecimento específico da API das linguagens para
+        incorporá-las em seu programa, assim como não precisará se importar com
+        qual linguagem de fato está sendo usada, pois o sistema será capaz de
+        reconhecer as linguagens às quais ele fornece suporte.
+  \item Desenvolvimento de uma ferramenta que interpreta parte do código C++ do
+        usuário a fim de gerar wrappers (código fonte, nesse caso em C++, que
+        serve de intermediário para um ambiente externo, como as linguagens de
+        script) das classes e funções desse código para cada linguagem de script
+        que o sistema estiver configurado para reconhecer. Assim, o usuário
+        poderá usufruir das funcionalidades que desenvolveu em C++ na liguagem
+        de script de sua preferência.
+  \item Desenvolvimento de uma ferramenta que interpreta parte do código C++ do
+        usuário a fim de gerar wrappers (código fonte, nesse caso em C++, que
+        serve de intermediário para um ambiente externo, como as linguagens de
+        script) das classes e funções desse código para cada linguagem de script
+        que o sistema estiver configurado para reconhecer. Assim, o usuário
+        poderá usufruir das funcionalidades que desenvolveu em C++ na liguagem
+        de script de sua preferência.
+  \item Desenvolvimento de qualquer outra ferramenta que seja necessária para o
+        devido funcionamento conjunto dos dois resultados acima de maneira a
+        simplificar o máximo possível o uso do sistema como um todo.
+\end{enumerate}
 
 \input cap-estrutura
 
