@@ -28,7 +28,7 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{clrscode}
-%\usepackage[bf,small,compact]{titlesec} % cabeçalhos dos títulos: menores e compactos
+\usepackage[tt,bf,small,compact]{titlesec} % cabeçalhos dos títulos: menores e compactos
 \usepackage[fixlanguage]{babelbib}
 \usepackage[font=small,format=plain,labelfont=bf,up,textfont=it,up]{caption}
 \usepackage[usenames,svgnames,dvipsnames]{xcolor}
@@ -44,8 +44,8 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{#1}}{}}
-\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{#1}}{}}
+\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\texttt{#1}}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{\texttt{#1}}}{}}
 \renewcommand{\headrulewidth}{0pt}
 
 % ---------------------------------------------------------------------------- %
