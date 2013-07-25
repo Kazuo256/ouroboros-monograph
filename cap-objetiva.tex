@@ -17,8 +17,8 @@ usada.
 
 Esta monografia apresentará um sistema de software que permite ao usuário
 integrar facilmente diversas linguagens de \script{} a um programa escrito em
-\cxx{} usando uma API unificada para incorporação e um exportador
-automatizado de interfaces \cxx{} para essas linguagens de \script{}. Ela
+\CXX{} usando uma API unificada para incorporação e um exportador
+automatizado de interfaces \CXX{} para essas linguagens de \script{}. Ela
 explicará todos os principais mecanismos desse sistema, assim como a teoria e a
 tecnologia por trás deles.
 
@@ -28,7 +28,7 @@ tecnologia por trás deles.
 Pode-se resumir a proposta do nosso sistema nas seguintes partes:
 
 \begin{enumerate}
-  \item Desenvolvimento de uma biblioteca \cxx{} que abstrai o uso da API de uma(s)
+  \item Desenvolvimento de uma biblioteca \CXX{} que abstrai o uso da API de uma(s)
         linguagem(s) de \script{} de forma clara, prática de usar, e facilmente
         estendível para aceitar outras linguagens de \script{}, sendo que
         inicialmente terá suporte a Lua e Python. O usuário da biblioteca não
@@ -36,12 +36,12 @@ Pode-se resumir a proposta do nosso sistema nas seguintes partes:
         incorporá-las em seu programa, assim como não precisará se importar com
         qual linguagem de fato está sendo usada, pois o sistema será capaz de
         reconhecer as linguagens às quais ele fornece suporte.
-  \item Desenvolvimento de uma ferramenta que interpreta parte do código \cxx{} do
-        usuário a fim de gerar wrappers (código fonte, nesse caso em \cxx{}, que
+  \item Desenvolvimento de uma ferramenta que interpreta parte do código \CXX{} do
+        usuário a fim de gerar wrappers (código fonte, nesse caso em \CXX{}, que
         serve de intermediário para um ambiente externo, como as linguagens de
         \script{}) das classes e funções desse código para cada linguagem de \script{}
         que o sistema estiver configurado para reconhecer. Assim, o usuário
-        poderá usufruir das funcionalidades que desenvolveu em \cxx{} na liguagem
+        poderá usufruir das funcionalidades que desenvolveu em \CXX{} na liguagem
         de \script{} de sua preferência.
   \item Desenvolvimento de qualquer outra ferramenta que seja necessária para o
         devido funcionamento conjunto dos dois resultados acima de maneira a
