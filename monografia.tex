@@ -28,9 +28,10 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{clrscode}
-%\usepackage[bf,small,compact]{titlesec} % cabeçalhos dos títulos: menores e compactos
+\usepackage[tt,bf,small]{titlesec} % cabeçalhos dos títulos: menores e compactos
 \usepackage[fixlanguage]{babelbib}
 \usepackage[font=small,format=plain,labelfont=bf,up,textfont=it,up]{caption}
+\usepackage{wrapfig}
 \usepackage[usenames,svgnames,dvipsnames]{xcolor}
 \usepackage[a4paper,top=2.54cm,bottom=2.0cm,left=2.0cm,right=2.54cm]{geometry} % margens
 %\usepackage[pdftex,plainpages=false,pdfpagelabels,pagebackref,colorlinks=true,citecolor=black,linkcolor=black,urlcolor=black,filecolor=black,bookmarksopen=true]{hyperref} % links em preto
@@ -44,8 +45,8 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{#1}}{}}
-\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{#1}}{}}
+\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\texttt{#1}}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{\texttt{#1}}}{}}
 \renewcommand{\headrulewidth}{0pt}
 
 % ---------------------------------------------------------------------------- %
@@ -147,7 +148,12 @@ TODO
 % facilidades                                                        %
 % ------------------------------------------------------------------ %
 
+\renewcommand{\ttdefault}{txtt}
 \def\cyclic#1{\langle #1 \rangle}
+\def\script{\emph{script}}
+\def\lang#1{\texttt{#1}}
+\def\CXX{\lang{C++}}
+\def\C{\lang{C}}
 
 % comandos novos %
 \newcounter{defcnt}

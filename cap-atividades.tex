@@ -2,21 +2,54 @@
 
 \chapter{Atividades Realizadas}
 \label{sec:atividades}
-TODO
+
+O Projeto Ouroboros não foi uma ideia que tivemos exclusivamente para nosso
+trabalho de formatura. Como será relatado nas seções a seguir, ele começou como
+parte de um projeto maior, mas que decidimos emancipar e incrementar para
+apresentar neste trabalho. Por esse motivo, muito do que foi feito no
+desenvolvimento deste sistema antes dessa decisão não levou em consideração a
+possibilidade dele vir a se tornar independente do contexto a que pertencia.
+
+Isso levou a uma série de questionamentos sobre como seria possível tornar nosso
+sistema o mais completo e acessível possível por sí só, e quanto disso realmente
+teríamos tempo de concretizar. É na solução desses problemas que focamos nossas
+atenções durante o período do trabalho de formatura propriamente dito. O corpo
+principal do projeto já estava garantido pelo nosso trabalho anterior a essa
+etapa, quando ele ainda servia como componente de um sistema maior.
 
 \section{Origem do projeto}
 \label{sec:atividades:origem}
 
-TODO
+Eu e o Omar somos membros do USPGameDev. Lá, nós e o resto da equipe
+desenvolvemos uma \emph{engine} para jogos bidimensionais, chamada UGDK. Ela é
+feita em \CXX{}, uma linguagem de programação não exatamente simples. E aos
+poucos isso se tornou um gargalo para o desenvolvimento de nossos jogos.
+Decidimos que recisávamos de suporte a alguma linguagem de \script{}.
 
-\classname{UmaClasse} 
+Mas não conseguimos chegar a um consenso de qual usar. Por um lado tínhamos
+Python, com suas vastas extensões e facilidades, e por outro Lua, com sua
+simplicidade minimalista e versátil. Então decidimos usar ambas.
 
-\begin{codebox}
-    \Procname{$\proc{XTR-mul}(x, y)$}
-    \zi $\id{temp} \gets x_1 * y_2 + x_2 * y_1$
-    \zi \Return $\proc{XTRElem}(x_2 * y_2 - \id{temp}, x_1 * y_1 -
-    \id{temp})$
-\end{codebox}
+Esse foi o começo do então chamado "sistema de \script{} da UGDK": um sistema
+que premitiria ao desenvolvedor carregar módulos do seu jogo a partir de
+\script{} sem que ele tivesse que se preocupar em determinar e tratar a
+linguagem de origem. Descobrimos umas ferramenta chamada SWIG, que parecia ser
+exatamente o que precisávamos. Com ele, consequimos completar uma versão inicial
+do sistema de \script{}, atualmente ativo e funcional na UGDK.
+
+Para o TCC, eu e o Omar resolvemos usar esse trabalho que fizemos. Separamos o
+código dele da UGDK e fizemos nosso próprio repositório. Planejamos fazer
+melhorias e reformulações do projeto, visando sempre tornar a vida mais fácil
+para o usuário dessa nossa ferramenta.
+
+%\classname{UmaClasse} 
+%
+%\begin{codebox}
+%    \Procname{$\proc{XTR-mul}(x, y)$}
+%    \zi $\id{temp} \gets x_1 * y_2 + x_2 * y_1$
+%    \zi \Return $\proc{XTRElem}(x_2 * y_2 - \id{temp}, x_1 * y_1 -
+%    \id{temp})$
+%\end{codebox}
 
 \section{Uma interface comum para Lua e Python.}
 \label{sec:atividades:opa}
