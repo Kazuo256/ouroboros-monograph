@@ -1,11 +1,25 @@
 \chapter{Estrutura do Projeto}
 \label{sec:estrutura}
-Vamos explicar a estrutura do projeto.
+
+%TODO citation for metaprogramming
+Esse capítulo tem o objetivo de expor o conceito que projetamos para nosso
+sistema. Existe uma certa complexidade em entender como os diversos componentes
+dele se relacionam - principalmente devido ao fato deles usarem técnicas como
+geração de código automatizada e análise reflexiva de código. A ideia por trás
+dessas técnicas também serão explicadas nesse capítulo.
+
+A seção \ref{sec:estrutura:geral} buscará deixar
+claro o contexto em que o projeto funciona e como as responsabilidades da
+solução são distribuídas. As seções \ref{sec:estrutura:opa} e
+\ref{sec:estrutura:opwig} detalham as duas principais partes do projeto, e a
+seção \ref{sec:estrutura:integration}, por fim, explica como tudo isso funciona
+em conjunto para produzir o resultado desejado.
 
 \section{Visão Geral}
 \label{sec:estrutura:geral}
 
-TODO
+Um usuário do nosso sistema estará tipicamente desenvolvendo uma aplicação em
+\cxx{} que de alguma forma deve interagir com \script{s}.
 
 \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
 \label{sec:estrutura:opa}
