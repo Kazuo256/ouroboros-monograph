@@ -3,82 +3,104 @@
 \chapter{Atividades Realizadas}
 \label{sec:atividades}
 
-O sistema do Projeto Ouroboros é anterior ao nosso trabalho de formatura. Como
-será relatado nas seções a seguir, ele começou como parte de um outro projeto.
-Por esse motivo, a maior parte do desenvolvimento que fizemos nesse último ano
-foi com o intuito de completar a emancipação dele como um \emph{software}
-independente.
+  O objetivo desse capítulo é relatar as diversas atividades realizadas no
+  planejamento e desenvolvimento do Projeto Ouroboros. Como ele é anterior ao
+  nosso trabalho de formatura, descrevemos também as atividades dos anos
+  anteriores. Explicamos como de fato implementamos a solução apresentada no
+  capítulo anterior, as dificuldades técnicas encontradas e todos os outros
+  recursos que utilizamos para concretizar nossa ideia.
+  
+  \section{Origem do projeto}
+  \label{sec:atividades:origem}
+  
+    %TODO "estes que vos escrevem"
+    %TODO Essa seção precisa ser beeeeeem mais detalhada.
+    A proposta desse projeto foi elaborada no início deste ano, para o nosso
+    trabalho de formatura supervisionado. No entanto, o sistema em si já havia
+    sido desenvolvido por nós desde o começo de 2011. Ele era parte da UGDK, uma
+    \emph{engine} de desenvolvimento de jogos eletrônicos bidimensionais (ou
+    simplesmente jogos 2D) programada pela equipe USPGameDev, da qual
+    fazemos parte\footnotemark. Nós desenvolvemos a porção que corresponde ao
+    sistema atual quando acreditamos que seria útil que quem estivesse usando a
+    UGDK pudesse facilmente integrar seus jogos com \script{s}.
 
-Fora isso, também houve dificuldades no uso de algumas ferramentas auxiliares
-dos quais nosso sistema dependia. Elas impuseram certas limitações que deixaram
-de ser aceitáveis quando decidimos que o projeto deveria ser capaz de satisfazer
-usuários que não fossem nós mesmos.
+    \footnotetext{
+      O USPGameDev é um grupo de pesquisa e desenvolvimento de jogos da
+      Universidade de São Paulo. A UGDK é um de seus principais projetos, e seu
+      nome é um acrônimo que pode significar tanto \emph{USP Game Development
+      Kit} quanto \emph{USPGameDev Kit}. Ela é desenvolvida em \CXX{}. Ver
+      \url{uspgamedev.org} (última visita em 25/07/2013).
+    }
 
-\section{Origem do projeto}
-\label{sec:atividades:origem}
+    Mais especificamente, queríamos que essa integração fosse possível em um
+    outro projeto, também do USPGameDev: o jogo eletrônico chamado \emph{Horus
+    Eye}\footnotemark. Trata-se de uma aplicação feita em \CXX{} que usava os
+    recursos da UGDK para construir os alicerces do jogo. A equipe estava tendo
+    muitas dificuldades em expandir o conteúdo dele desde o seu lançamento em
+    outubro de 2010, pois não só apenas os membros mais antigos sabiam programar
+    em \CXX{}, como também só eles sabiam \emph{o quê} precisava ser mudado para
+    obter os resultados desejados. O então chamado ``sistema de \script{s} da
+    UGDK'' foi a solução que propomos.
 
-%TODO "estes que vos escrevem"
-%TODO Essa seção precisa ser beeeeeem mais detalhada.
-Como membros do USPGameDev\footnote{Grupo de pesquisa e desenvolvimento de jogos
-da USP. Ver \url{uspgamedev.org} (último acesso em 25/07/2013)},
-fomos um dos vários contribuintes para a principal \emph{engine} de jogos
-bidimensionais que o grupo vem desenvolvendo desde sua fundação, a
-UGDK\footnote{\emph{USP Game Development Kit} ou \emph{USPGameDev Kit}. Ver
-\url{uspgamedev.org/ugdk} (último acesso em 25/07/2013)}. Ela é programada em
-\CXX{}, e no começo de 2011 estes que vos escrevem decidiram que seria
-conveniente que ela tivesse suporte a alguma linguagem de \script{}. O principal
-motivo para tanto era que um dos jogos sendo desenvolvidos pelo grupo, o
-\emph{Horus Eye}\footnote{Ver \url{uspgamedev.org/horus-eye} (último acesso em
-25/07/2013)}, usava essa \emph{engine} e estava ficando com seu código fonte
-muito complexo, de tal maneira que era necessário muito esforço para acrescentar
-conteúdo novo ao jogo. Colocando na UGDK a capacidade de trabalhar com
-\script{s}, resolveríamos esse problema de uma maneira que os outros usuários
-dela pudessem aproveitar.
+    \footnotetext{
+      Ver \url{uspgamedev.org/horus-eye} (último acesso em 25/07/2013)
+    }
 
-Dessa maneira, surgiu a ideia inicial de programar um conjunto de
-funcionalidades capaz de facilitar a comunicação entre uma linguagem compilada
-(\CXX{}) e uma linguagem de \script{}. No entanto, não conseguimos chegar
-imediatamente a um consenso sobre qual linguagem de \script{} usar
-especificamente. As mais comunmente conhecidas na área de desenvolvimento de
-jogos eletrônicos são Lua e Python. Então de um lado tínhamos as vastas
-extensões e facilidades de Python, e do outro a simplicidade minimalista e
-versátil de Lua. O melhor jeito de resolver o impasse foi usar ambas.
+    A ideia era fornecer ferramentas que simplificassem o máximo possível a
+    troca de dados do jogo com arquivos de \script{}. Depois bastaria isolar as
+    partes mais críticas para a elaboração conteúdo novo do jogo de maneira que
+    elas pudessem ser programadas inteiramente (ou pelo menos em grande parte)
+    através de \script{s}. E dessa maneira tornamos possível aprimorar o jogo
+    usando linguagens bem mais simples que \CXX{} e sem a necessidade de
+    conhecer todas as minúcias do seu código.
 
-Isso levou ao então chamado "sistema de \script{s} da UGDK": um sistema que
-premite que o desenvolvedor-usuário carregue módulos do seu jogo a partir de
-\script{s} sem que ele tenha que se preocupar em determinar e tratar a linguagem
-de origem deles. Com a ajuda de uma ferramenta que descobrimos nessa época
-chamada SWIG, consequimos completar uma versão inicial do sistema de \script{s},
-que existe até hoje no código da UGDK\footnote{Há planos para a UGDK usar
-diretamente o sistema do Projeto Ouroboros quando ele estiver pronto,
-abrindo mão do atual sistema de \script{s} próprio dela}.
+    %TODO colocar imagens do horus antes e depois do sistema de scripts
 
-%\classname{UmaClasse} 
-%
-%\begin{codebox}
-%    \Procname{$\proc{XTR-mul}(x, y)$}
-%    \zi $\id{temp} \gets x_1 * y_2 + x_2 * y_1$
-%    \zi \Return $\proc{XTRElem}(x_2 * y_2 - \id{temp}, x_1 * y_1 -
-%    \id{temp})$
-%\end{codebox}
-
-\section{Uma interface comum para Lua e Python.}
-\label{sec:atividades:opa}
-
-TODO
-
-\section{Integração com SWIG}
-
-TODO
-
-\section{Problemas com SWIG}
-
-TODO
-
-\section{Nosso próprio gerador de \emph{wrappers}}
-
-TODO
-
-\section{Módulos de CMake}
-
-TODO
+    %
+    %Dessa maneira, surgiu a ideia inicial de programar um conjunto de
+    %funcionalidades capaz de facilitar a comunicação entre uma linguagem compilada
+    %(\CXX{}) e uma linguagem de \script{}. No entanto, não conseguimos chegar
+    %imediatamente a um consenso sobre qual linguagem de \script{} usar
+    %especificamente. As mais comunmente conhecidas na área de desenvolvimento de
+    %jogos eletrônicos são Lua e Python. Então de um lado tínhamos as vastas
+    %extensões e facilidades de Python, e do outro a simplicidade minimalista e
+    %versátil de Lua. O melhor jeito de resolver o impasse foi usar ambas.
+    %
+    %Isso levou ao então chamado "sistema de \script{s} da UGDK": um sistema que
+    %premite que o desenvolvedor-usuário carregue módulos do seu jogo a partir de
+    %\script{s} sem que ele tenha que se preocupar em determinar e tratar a linguagem
+    %de origem deles. Com a ajuda de uma ferramenta que descobrimos nessa época
+    %chamada SWIG, consequimos completar uma versão inicial do sistema de \script{s},
+    %que existe até hoje no código da UGDK\footnote{Há planos para a UGDK usar
+    %diretamente o sistema do Projeto Ouroboros quando ele estiver pronto,
+    %abrindo mão do atual sistema de \script{s} próprio dela}.
+  
+  %\classname{UmaClasse} 
+  %
+  %\begin{codebox}
+  %    \Procname{$\proc{XTR-mul}(x, y)$}
+  %    \zi $\id{temp} \gets x_1 * y_2 + x_2 * y_1$
+  %    \zi \Return $\proc{XTRElem}(x_2 * y_2 - \id{temp}, x_1 * y_1 -
+  %    \id{temp})$
+  %\end{codebox}
+  
+  \section{Uma interface comum para Lua e Python.}
+  \label{sec:atividades:opa}
+  
+  TODO
+  
+  \section{Integração com SWIG}
+  
+  TODO
+  
+  \section{Problemas com SWIG}
+  
+  TODO
+  
+  \section{Nosso próprio gerador de \emph{wrappers}}
+  
+  TODO
+  
+  \section{Módulos de CMake}
+  
+  TODO
