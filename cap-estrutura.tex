@@ -69,7 +69,27 @@
 
   \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
   \label{sec:estrutura:opa}
-  TODO
+  A biblioteca de abstração de APIs de linguagens de \script{}, também conhecida como
+  \textit{libouroboros} ou simplesmente como OPA (\textit{Ouroboros Project API}) é
+  a parte do projeto que provê a interação do tipo (A), como explicada acima.
+  
+  Ela consiste em um conjunto de classes e funções em \CXX{} que generalizam o meio
+  com o qual se realiza diversas operações com a API da linguagem de \script{}, como:
+  \begin{itemize}
+    \item carregar um \script{};
+    \item executar uma função na máquina virtual;
+    \item pegar/configurar um objeto/atributo/valor na máquina virtual;
+    \item converter valores entre \CXX{} e \script{};
+  \end{itemize}
+  Parte desse conjunto de classes define uma interface que deve ser implementada para
+  cada linguagem de \script{}, possibilitando que o sistema reconheça tal linguagem e 
+  realize as operações descritas. Essa implementação usa diretamente a API da linguagem
+  para satisfazer nossa interface. Em contrapartida, tal implementação é usada pelo 
+  resto do sistema. Desse jeito, o usuário final do OPA não precisa usar esses 
+  componentes, nem se preocupar com a API da linguagem de \script{}, a não ser que
+  ele vá adicionar o suporte a ela no sistema.
+  
+  Por padrão, o projeto já tem a implementação de \textit{Lua} e \textit{Python}.
   
   \section{Gerador de \emph{wrappers} e interfaces.}
   \label{sec:estrutura:opwig}
