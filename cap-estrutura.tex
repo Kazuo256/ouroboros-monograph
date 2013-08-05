@@ -70,7 +70,7 @@
   \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
   \label{sec:estrutura:opa}
   A biblioteca de abstração de APIs de linguagens de \script{}, também conhecida como
-  \textit{libouroboros} ou simplesmente como OPA (\textit{Ouroboros Project API}) é
+  \textit{libouroboros} ou simplesmente como \emph{Ouroboros Project API} (OPA) é
   a parte do projeto que provê a interação do tipo (A), como explicada acima.
   
   Ela consiste em um conjunto de classes e funções em \CXX{} que generalizam o meio
@@ -91,9 +91,30 @@
   
   Por padrão, o projeto já tem a implementação de \textit{Lua} e \textit{Python}.
   
+  %TODO: subsection: conversão de valores (entre linguagem nativa e máquina virtual)
+  %TODO: subsection: virtualobj (possiveis subsubsection pra falar do encapsulamento do vdata, etc)
+  %TODO: subsection: importação de um módulo de script para a linguagem nativa
+  
+  
   \section{Gerador de \emph{wrappers} e interfaces.}
   \label{sec:estrutura:opwig}
-  TODO
+  Linguagens de \script{} possuem um mecanismo próprio para importar módulos. 
+  Esses módulos podem ser definidos tanto em outros arquivos na mesma linguagem,
+  quanto na linguagem nativa da máquina virtual. Nesse último caso, temos a relação
+  do tipo (B). Ela exige que a linguagem nativa disponibilize certos dados seguindo
+  protocolo adequado. Infelizmente tal protocolo não só difere para cada linguagem 
+  de \script{} como também involve um trabalho repetitivo e maçante para ser utilizado. 
+  
+  Por isso, parte do nosso sistema é composta por um gerador automatizado de código fonte.
+  Ele é responsável por criar o código necessário ao devido funcionamento dos módulos 
+  feitos na linguagem nativa. Além disso, ele processa código que o usuário fornecer na
+  linguagem nativa para saber o conteúdo que deve aparecer no módulo exportado.
+  Esse conteúdo é inserido no módulo através de \emph{wrappers}. Chamamos esse componente
+  do sistema de \emph{Ouroboros Project Wrapper and Interface Generator} (OPWIG).
+  
+  %TODO: subsection: parser
+  %TODO: subsection: code generator
+  %TODO: subsection: wrapper explanation 
   
   \section{Integrando e entregando tudo para o usuário.}
   \label{sec:estrutura:integration}
