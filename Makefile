@@ -12,7 +12,8 @@ BIBTEX    = bibtex
 MAKEINDEX = makeindex
 
 CAPITULOS = cap-objetiva.tex cap-subjetiva.tex cap-atividades.tex \
-						cap-estrutura.tex cap-resultados.tex
+						cap-estrutura.tex cap-resultados.tex \
+                        cap-subjetiva-omar.tex cap-subjetiva-wil.tex
 
 pdf: $(BASE_NAME).pdf
 ps: $(BASE_NAME).ps
