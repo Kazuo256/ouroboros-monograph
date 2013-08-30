@@ -86,8 +86,34 @@
   
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
+  Desenvolver uma interface comum entre as duas linguagens de \script{} foi uma das 
+  primeiras coisas que fizemos, e hoje o trabalho realizado nesse quesito foi o que
+  formou a \emph{Ouroboros Project API} (OPA). Desde o começo já desenvolvemos uma
+  interface genérica capaz de usar uma ou outra linguagem de \script{} sem
+  diferenças na interface para o usuário.
   
-  TODO
+  A principal classe dessa interface comum é a \emph{VirtualObj}. Essa classe 
+  encapsula um objeto qualquer de uma máquina virtual, podendo representar um
+  módulo de \script{} carregado, uma instância de uma classe, um valor na máquina
+  virtual, entre outros. É praticamente a única classe que o usuário precisa 
+  usar. Ela implementa alguns métodos que possibilitam ao usuário realizar 
+  operações comuns a qualquer linguagem de \script{} sobre o tal objeto (se for
+  possível, caso contrário ela irá dar erro), e também sobreescreve alguns operadores
+  de \CXX{} para facilitar o uso de algumas operações, como por exemplo:
+  \begin{itemize}
+     \item Executar o objeto como uma função: simplificado pelo operador \emph{()}
+       do \CXX{}, permitindo você usar o próprio VirtualObj como uma função;
+     \item Acessar e alterar atributos do objeto: simplificado pelo operador
+       \emph{[]} do \CXX{}, permitindo você usar o próprio VirtualObj como uma
+       tabela de símbolos;
+     \item Executar um método do objeto (instância de uma classe): simplificado pelo
+       operador \emph{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
+       passam a instância da classe (o próprio objeto) como o primeiro argumento da
+       função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
+       \begin{verbatim}(vObj | "nome_do_método")(argumentos)\end{verbatim}
+     \item Conversão de valores 
+     
+  \end{itemize} 
   
   \section{Integração com SWIG}
   
