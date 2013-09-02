@@ -162,8 +162,11 @@
   
   \footnotetext{Disponível em: \url{http://www.swig.org/} (data de acesso: 2 de setembro de 2013).}
   
-  Usamos o SWIG para que linguagens de \script{} tenham acesso ao \CXX{}, enquanto nossa interface
-  comum, o OPA - definido na seção anterior -, possibilita que o \CXX{} use tais linguagens.
+  Usamos o SWIG pois enquanto nossa interface comum, o OPA - definido na seção anterior -, 
+  possibilita que o \CXX{} use linguagens de \script{}, também precisávamos de algo para que linguagens 
+  de \script{} tenham acesso a interfaces \CXX{}. Após pesquisar possíveis soluções encontramos
+  o SWIG, uma ferramenta já um tanto quanto antiga e usada na indústria que fazia basicamente o
+  que queríamos.
   
   Como o SWIG é uma ferramenta já pronta, e que é executada para gerar código que será compilado
   com o código do usuário, não há muita integração entre ele e o nosso sistema. A principal
@@ -193,8 +196,49 @@
   
   
   \section{Problemas com SWIG}
+  Ao longo do tempo em que fomos usando o SWIG notamos alguns problemas com ele, que eram
+  refletidos no nosso sistema, impondo certas restrições. Alguns desses problemas conseguimos
+  apaziguar com código posto nos arquivos de interface do SWIG, como mencionado na seção
+  anterior.
   
-  TODO
+  \begin{itemize}
+    \item A determinação de \textit{disown} depende da API do usuário e não é prático usar.
+      \textit{Disown} é o ato de fazer com que algum método da interface \CXX{} retire a posse
+      de uma instância de uma classe \CXX{} que ele recebe como argumento da máquina virtual. 
+      Quando a máquina virtual cria algum objeto \CXX{}, ou seja, um objeto da linguagem de 
+      \script{} que encapsula uma instância de alguma classe \CXX{} que foi exportada, ela
+      retém a posse de tal objeto. Quando a ela for remover tal objeto de \script{}, seja 
+      lá por qual razão, se ela deter a posse do objeto, ela também irá remover a instância 
+      \CXX{} encapsulada. Isso pode causar problemas se alguma parte do código \CXX{} tem 
+      algum ponteiro para tal instância, e tenta remover ou simplesmente usar ela em algum
+      momento após a máquina virtual ter removido a instância. Portanto fizemos que métodos
+      da interface \CXX{} que recebem instâncias de classes e cuidam da remoção delas 
+      internamente tiram a posse de tal instância da máquina virtual.
+    \item O SWIG não tem suporte a classes, \textit{structs} e \textit{unions} aninhadas, e 
+      aparentemente não pretende ter tão cedo. Aninhar tais estruturas de \CXX{} é o ato
+      de definir algumas delas dentro de outra.
+    \item SWIG não tem suporte a herança de classes \CXX{} nos \script{s}. A nossa ``solução''
+      para isso foi criar um sistema de \textit{proxies}: classes \CXX{} que derivam de uma
+      classe base \textit{proxy} e da classe ``alvo'' \CXX{} que foi exportada para \script{}.
+      Essas classes \textit{proxy} contém um \VObj{} com um objeto de script que deve ser uma
+      instância da classe de \script{} que derive da classe \CXX{}. Elas também implementam 
+      os métodos virtuais da classe base, usando o \VObj{} para repassar a chamada do método
+      para o objeto virtual. Fora a definição da classe \textit{proxy} base, e das \textit{proxy}
+      para cada classe \CXX{} passível de ser herdada, para esse sistema funcionar foi também
+      necessário uma grande parte de código adicionado nos arquivos de interface do SWIG.
+    \item O SWIG não exporta em seus \textit{wrappers} variáveis e métodos de classes com 
+      modificador de acesso \textit{protected} (acessíveis somente pela classe em si e por 
+      classes derivadas). Isso decorre do fato que ele não tem suporte a herança, como mencionado
+      anteriormente, mas ainda assim é um problema ao nosso ver.
+    \item Problemas com \textit{wrappers} de Lua:
+      %TODO: WIL! Acho que essa parte vc deve ver direito...
+      \begin{itemize}
+        \item Uma das informações necessárias (metatabelas das classes) só pode ser obtida
+          fazendo suposições sobre a implementação interna dos \textit{wrappers} de Lua do SWIG.
+        \item Duas funções internas dos \textit{wrappers} de Lua do SWIG precisam ter uma linha
+          de código alterada para que \textit{proxies} funcionem.
+      \end{itemize}
+  \end{itemize}
   
   \section{Nosso próprio gerador de \emph{wrappers}}
   
