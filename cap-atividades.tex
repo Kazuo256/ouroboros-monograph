@@ -154,8 +154,43 @@
   \end{itemize}
   
   \section{Integração com SWIG}
+  O \emph{Simplified Wrapper and Interface Generator} (SWIG\footnotemark{}) é uma ferramenta
+  para exportar uma interface \C{}/\CXX{} para diversas linguagens de \script{} de alto nível.
+  Um dos usos padrão dessa ferramenta (e a forma como usamos) é gerar o código de \textit{wrapper}
+  necessário para criar módulos em linguagem nativa para uma determinada linguagem de \script{}.
+  E é isso que possibilita tal linguagem ter acesso a uma interface implementada em \CXX{}.
   
-  TODO
+  \footnotetext{Disponível em: \url{http://www.swig.org/} (data de acesso: 2 de setembro de 2013).}
+  
+  Usamos o SWIG para que linguagens de \script{} tenham acesso ao \CXX{}, enquanto nossa interface
+  comum, o OPA - definido na seção anterior -, possibilita que o \CXX{} use tais linguagens.
+  
+  Como o SWIG é uma ferramenta já pronta, e que é executada para gerar código que será compilado
+  com o código do usuário, não há muita integração entre ele e o nosso sistema. A principal
+  integração está no fato que o OPA usa uma interface padrão (para cada linguagem de \script{})
+  gerada pelo SWIG para conseguir converter instâncias de tipos do usuário entre \CXX{} e as
+  máquinas virtuais.
+  
+  O SWIG usa arquivos separados, seguindo a interface deles, para determinar quais arquivos
+  de \CXX{} ele irá ler, e como irá gerar o \textit{wrapper} para tal código. Nesses arquivos
+  de interface do SWIG é também possível incluir código que será posto no código gerado, ou usado
+  internamente no código gerado em algumas etapas, como por exemplo nas conversões de valores
+  que existem nos \textit{wrappers}. O segundo grupo de integrações com o SWIG que fizemos está
+  nesses arquivos.
+  
+  Fizemos algumas coisas com diversos objetivos nesses arquivos de interface, mas podemos
+  classificá-las de dois jeitos:
+  \begin{enumerate}
+    \item Código usado para dizer para o OPA quais são os tipos de usuário exportados para
+      as máquinas virtuais, e as estruturas de dados do SWIG que representam eles. O OPA
+      por sua vez necessita disso para poder converter tais tipos entre a máquina virtual
+      e o \CXX{}.
+    \item Código usado para mudar ou adicionar alguma funcionalidade ao \textit{wrapper}
+      gerado. Tais códigos essencialmente tentam resolver algum problema do SWIG, como
+      a incapacidade de herdar tipos de \CXX{} nas linguagens de \script{}. Veremos mais
+      sobre esses problemas na próxima seção.
+  \end{enumerate}
+  
   
   \section{Problemas com SWIG}
   
