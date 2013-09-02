@@ -92,7 +92,7 @@
   interface genérica capaz de usar uma ou outra linguagem de \script{} sem
   diferenças na interface para o usuário.
   
-  A principal classe dessa interface comum é a \emph{VirtualObj}. Essa classe 
+  A principal classe dessa interface comum é a \VObj{}. Essa classe 
   encapsula um objeto qualquer de uma máquina virtual, podendo representar um
   módulo de \script{} carregado, uma instância de uma classe, um valor na máquina
   virtual, entre outros. É praticamente a única classe que o usuário precisa 
@@ -102,18 +102,56 @@
   de \CXX{} para facilitar o uso de algumas operações, como por exemplo:
   \begin{itemize}
      \item Executar o objeto como uma função: simplificado pelo operador \emph{()}
-       do \CXX{}, permitindo você usar o próprio VirtualObj como uma função;
+       do \CXX{}, permitindo você usar o próprio \VObj{} como uma função;
      \item Acessar e alterar atributos do objeto: simplificado pelo operador
-       \emph{[]} do \CXX{}, permitindo você usar o próprio VirtualObj como uma
+       \emph{[]} do \CXX{}, permitindo você usar o próprio \VObj{} como uma
        tabela de símbolos;
      \item Executar um método do objeto (instância de uma classe): simplificado pelo
        operador \emph{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
        passam a instância da classe (o próprio objeto) como o primeiro argumento da
        função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
-       \begin{verbatim}(vObj | "nome_do_método")(argumentos)\end{verbatim}
-     \item Conversão de valores 
-     
-  \end{itemize} 
+       \begin{verbatim}
+         (vObj | "nome_do_método")(argumentos)
+       \end{verbatim}
+     \item Conversão de valores: como a maioria dos métodos (e operadores) do \VObj{}
+       recebe e retorna tais objetos, a conversão de valores é o que forma a principal
+       ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, o \VObj{}
+       possui 2 métodos \textit{templates} que possibilitam a conversão de valores entre
+       os dois ambientes. \textit{Templates} são uma funcionalidade de \CXX{} que permite
+       criar funções e classes genéricas, recebendo 1 ou mais tipos\footnotemark{} em uma notação especial,
+       que a função ou classe usa de forma genérica em seu corpo. Exemplo de chamada de uma
+       função \textit{template}:
+       \begin{verbatim}
+         função_genérica<tipo1, tipo2, ...>(argumentos);
+       \end{verbatim}
+       
+       \footnotetext{\textit{Templates} também podem receber valores aritméticos e \textit{strings},
+        mas para o propósito do nosso trabalho, somente usamos com tipos.}   
+  \end{itemize}
+  
+  Mas agora como que o usuário cria \VObj{s}? De algum lugar tem que vir os primeiros \VObj{s}, relativos
+  aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface comum
+  entre linguagens, e praticamente a única outra classe que o usuário precisa usar além dos \VObj{s}:
+  o \SMgr{}.
+  
+  O \SMgr{} gerencia as máquinas virtuais que estão disponíveis no sistema, permitindo ao usuário
+  executar algumas operações simples porém importantes nelas como um conjunto:
+  \begin{itemize}
+    \item Inicialização e Finalização: o \SMgr{} tem métodos para inicializar e finalizar o conjunto
+      de máquinas virtuais. A inicialização é necessária para poder usá-las, e a finalização 
+      termina as máquinas, liberando quaisquer recursos do computador que elas estão usando.
+    \item Registro e busca de máquinas virtuais: o \SMgr{} inicialmente não sabe quais são as máquinas
+      virtuais disponíveis. O usuário pode tanto registrá-las manualmente com um simples método, quanto
+      delegar essa responsabilidade para o código gerado pelo OPWIG, como veremos mais adiante.
+      Caso seja necessário, ele pode buscar uma máquina virtual registrada.
+    \item Executar código: o \SMgr{} permite ao usuário executar um código qualquer, dado como uma
+      \textit{string}, na máquina virtual de sua escolha.
+    \item Carregar módulos: possivelmente o método mais importante do \SMgr{}, este método recebe
+      um caminho para um \script{} (sem a extensão de arquivo). Ele então determina se o \script{}
+      existe, e de acordo com a extensão do arquivo, qual máquina virtual deve rodá-lo. A tal máquina
+      virtual então carrega o \script{} e a função retorna um \VObj{} representando o módulo em
+      sua linguagem de \script{}.
+  \end{itemize}
   
   \section{Integração com SWIG}
   
