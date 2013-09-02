@@ -218,7 +218,7 @@
       aparentemente não pretende ter tão cedo. Aninhar tais estruturas de \CXX{} é o ato
       de definir algumas delas dentro de outra.
     \item SWIG não tem suporte a herança de classes \CXX{} nos \script{s}. A nossa ``solução''
-      para isso foi criar um sistema de \textit{proxies}: classes \CXX{} que derivam de uma
+      para isso foi criar um sistema de \textit{proxies}\footnotemark: classes \CXX{} que derivam de uma
       classe base \textit{proxy} e da classe ``alvo'' \CXX{} que foi exportada para \script{}.
       Essas classes \textit{proxy} contém um \VObj{} com um objeto de script que deve ser uma
       instância da classe de \script{} que derive da classe \CXX{}. Elas também implementam 
@@ -226,6 +226,10 @@
       para o objeto virtual. Fora a definição da classe \textit{proxy} base, e das \textit{proxy}
       para cada classe \CXX{} passível de ser herdada, para esse sistema funcionar foi também
       necessário uma grande parte de código adicionado nos arquivos de interface do SWIG.
+      
+      \footnotetext{Uma alternativa para simplificar esse processo está no nosso blog: 
+        \url{http://projeto-ouroboros.blogspot.com.br/2013/07/gerador-de-proxies.html}}
+      
     \item O SWIG não exporta em seus \textit{wrappers} variáveis e métodos de classes com 
       modificador de acesso \textit{protected} (acessíveis somente pela classe em si e por 
       classes derivadas). Isso decorre do fato que ele não tem suporte a herança, como mencionado
@@ -241,8 +245,34 @@
   \end{itemize}
   
   \section{Nosso próprio gerador de \emph{wrappers}}
+  Boa parte do que explicamos nas seções anteriores neste capítulo foi o trabalho que realizamos
+  antes do trabalho de formatura. E o principal ponto do trabalho é exatamente o de substituir 
+  o SWIG por uma ferramenta própria que criamos, a fim de simplificar o uso e corrigir os
+  erros listados na seção anterior. Mantemos o OPA, fazendo algumas alterações para resolver
+  erros, melhorar o sistema ou substituir as partes relativas ao SWIG para a nossa nova ferramenta.
   
-  TODO
+  Foi então que surgiu o nosso próprio gerador de \textit{wrappers}, o \emph{Ouroboros Project 
+  Wrapper and Interface Generator} (OPWIG).
+  
+  Enquanto o OPWIG ainda não é capaz de substituir completamente o SWIG, ele já realiza algumas
+  tarefas básicas importantes, como exportar funções, variáveis e classes simples. E continuamos
+  o seu desenvolvimento num passo constante razoável. Infelizmente não podemos ainda falar que
+  já conseguimos resolver os problemas do SWIG pois como nossa ferramenta ainda está no começo
+  do desenvolvimento, ainda não chegamos no ponto de ocorrer tais erros. 
+  
+  Mas pelo menos já conseguimos notar que será relativamente fácil corrigir o problema de classes, 
+  \textit{structs} e \textit{unions} aninhadas. De fato, nosso \textit{parser} de \CXX{} já reconheçe
+  tal funcionalidade, só falta adaptarmos o gerador de código para tratar esse caso e testá-lo.
+  
+  Outra funcionalidade presente no OPWIG que não conseguimos fazer com o SWIG foi o registro automático
+  de máquinas virtuais e de seus módulos disponíveis no \SMgr{}, simplificando o código do usuário
+  para usar o sistema com suas máquinas virtuais e seus módulos gerados. Esse registro automático
+  funciona da seguinte maneira: cada módulo gerado pelo OPWIG contém um bloco de código de \textit{bootstrap}
+  (inicialização), que é executado automaticamente quando o programa é carregado, dado que ele tenha
+  sido ligado estaticamente com o código de \textit{wrapper} gerado. O \textit{bootstrap} então
+  registra a máquina virtual da linguagem de \script{} relativa ao módulo em que ele está definido
+  no \SMgr{}, caso ela ainda não tenha sido registrada, e registra o módulo de \script{} e seus sub-módulos
+  contidos tal máquina virtual.
   
   \section{Módulos de CMake}
   
