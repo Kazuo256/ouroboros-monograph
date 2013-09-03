@@ -76,41 +76,73 @@ variável dele e do retorno da execução de uma função.
     pega o valor de uma variável do \script{}, seta o valor de outra variável, executa uma
     função pegando o valor de retorno, e finaliza o \SMgr{}:
     
-    \begin{verbatim}
-      #include <opa/scriptmanager.h>
-      #include <opa/virtualobj.h>
-      
-      using opa::VirtualObj;
-      using opa::ScriptManager;
-      
-      int main() {
-          //inicializando
-          SCRIPT_MANAGER()->Initialize("./scripts/");
-          
-          //carregando script
-          VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("exemplo");
-          
-          //pegando váriavel
-          double valor_antigo = modulo["VariavelNumerica"].value<double>();
-          
-          //setando novo valor de váriavel
-          modulo["VariavelNumerica"].set_value<double>(42.0);
-          
-          //executando funcao
-          VirtualObj funcao = modulo["Funcao"];
-          VirtualObj retorno = funcao(); 
-          // argumentos para a função são passados como VirtualObjs, e podem ser passados quaisquer quantidade
-          // de objetos, ou uma lista de VirtualObj (VirtualObj::List).
-          
-          //finalizando
-          SCRIPT_MANAGER()->Finalize();
-          delete SCRIPT_MANAGER();
-          
-          return 0;
-      }
-    \end{verbatim}
+    \begin{lstlisting}
+    #include <opa/scriptmanager.h>
+    #include <opa/virtualobj.h>
     
-    Há uma coisa faltando nesse exemplo. 
+    using opa::VirtualObj;
+    using opa::ScriptManager;
+    
+    int main() {
+        //inicializando
+        SCRIPT_MANAGER()->Initialize("./scripts/");
+        
+        //carregando script
+        VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("exemplo");
+        
+        //pegando variavel
+        double valor_antigo = modulo["VariavelNumerica"].value<double>();
+        
+        //setando novo valor de variavel
+        modulo["VariavelNumerica"].set_value<double>(42.0);
+        
+        //executando funcao
+        VirtualObj funcao = modulo["Funcao"];
+        VirtualObj retorno = funcao(); 
+        // argumentos para a funcao sao passados como VirtualObjs, 
+        // e podem ser passados quaisquer quantidade de objetos,
+        // ou uma lista de VirtualObj (VirtualObj::List).
+        
+        //finalizando
+        SCRIPT_MANAGER()->Finalize();
+        delete SCRIPT_MANAGER();
+        
+        return 0;
+    }
+    \end{lstlisting}
+    
+    Há uma coisa faltando nesse exemplo. As máquinas virtuais precisam ser registradas no \SMgr{}.
+    Enquanto os módulos gerados pelo OPWIG fazem isso automaticamente, nesse pequeno exemplo não
+    usamos nenhum, então temos que fazer isso manualmente. Basta fazer essas modificações no código acima:
+    
+    \begin{lstlisting}
+    ... [includes anteriores] ...
+    #include <opa/config.h>
+    #ifdef OUROBOROS_LUA_BINDINGS
+    #include <languages/lua/luawrapper.h>
+    #endif
+    #ifdef OUROBOROS_PYTHON_BINDINGS
+    #include <languages/python/pythonwrapper.h>
+    #endif
+    
+    using ...
+    
+    int main () {
+    #ifdef OUROBOROS_LUA_BINDINGS
+        if (SCRIPT_MANAGER()->GetWrapper("Lua") == nullptr)
+            SCRIPT_MANAGER()->Register(new opa::lua::LuaWrapper());    
+    #endif
+    #ifdef OUROBOROS_PYTHON_BINDINGS
+        if (SCRIPT_MANAGER()->GetWrapper("Python") == nullptr)
+            SCRIPT_MANAGER()->Register(new opa::python::PythonWrapper());
+    #endif
+    
+        //inicializando
+        SCRIPT_MANAGER()->Initialize("./scripts/");
+        
+        ...
+    }
+    \end{lstlisting}
   
 \end{enumerate}
 
