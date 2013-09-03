@@ -143,6 +143,20 @@ variável dele e do retorno da execução de uma função.
         ...
     }
     \end{lstlisting}
+    
+    Para esse exemplo funcionar, basta ter um \script{} chamado ``\textit{exemplo}''
+    na pasta \textit{/scripts/}, na raiz da onde o programa será executado. A extensão
+    do arquivo deverá ser \textit{.lua} ou \textit{.py} para Lua ou Python respectivamente
+    (exemplo.: \textit{./scripts/exemplo.py}). Tal \script{} deverá ter uma váriavel
+    com um valor numérico de ponto flutuante chamada ``VariavelNumerica'', e uma função
+    chamada ``Funcao'' que não recebe nenhum argumento (no exemplo, o valor de retorno da
+    função não importa pois não é usado).
+    
+    Você pode ver a robustez do OPA e de sua generalização das linguagens fazendo o seguinte:
+    escreva o \script{} em uma linguagem, teste, e então troque o \script{} por um na
+    outra linguagem, mantendo as restrições ditas acima (nome exemplo,  com uma variável, etc),
+    e teste novamente. O programa irá executar do mesmo modo que antes, mesmo tendo trocado a
+    linguagem do \script{} usado, pois a lógica é a mesma e o OPA abstrai as interfaces.
   
 \end{enumerate}
 
