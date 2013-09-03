@@ -2,10 +2,118 @@
 \label{sec:resultados}
 
 %exemplo de citação
-% \cite{xtr:00}
+\cite{xtr:00}
 
 \section{Biblioteca \textbf{libouroboros}}
-Virtual marotagens
+A libouroboros, que é basicamente a biblioteca para \CXX{} contendo o OPA,
+já tem praticamente todas funcionalidades desejadas implementadas e
+funcionando normalmente. Contém um sistema para gerenciar as máquinas
+virtuais desejadas, para carregar \script{s} independente de sua
+linguagem, e uma interface simples, genérica e robusta para
+que o usuário de \CXX{} mexa com a máquina virtual e seus \script{s}.
+
+É provável que ainda alteremos algumas coisas nela, arrumando alguma
+coisa ou implementando novas funcionalidades. Algo que ainda iremos
+fazer é adaptar seu código de conversão de valores de tipos de usuários
+para condizer com a interface do OPWIG, apagando todas referências ao
+SWIG.
+
+A libouroboros também é facilmente compilada em várias plataformas usando
+o CMake para gerar arquivos relativos à compilação, como \textit{Makefile}s
+no Linux. As implementações das interfaces abstratas do OPA para as linguagens
+de \script{} Python e Lua que fizemos também estão praticamente completas,
+sendo distríbuidas juntamente com a libouroboros e sendo compiladas em
+bibliotecas diferentes: \emph{libouroboros-python} e \emph{libouroboros-lua},
+para Python e Lua, respectivamente. Assim é fácil incorporá-las em um
+mesmo programa, basta linkar o programa com a libouroboros e com as 
+libouroboros-\textit{linguagem} desejadas. Caso o usuário não queira usar
+uma das linguagens, é só não linkar com as bibliotecas correspondentes.
+
+\subsection{Instruções de Uso}
+Aqui iremos explicar brevemente o uso da libouroboros e do OPA, desde compilar
+(usando \textit{Makefile}) até pegar valores de um \script{}, seguindo um 
+simples exemplo de um programa que carrega um \script{}, pega o valor de uma
+variável dele e do retorno da execução de uma função.
+
+\begin{enumerate}
+  \item \textbf{Compilação:} Como ainda não disponibilizamos nenhum pacote
+    com os binários da libouroboros, você terá que pegar o código fonte dela
+    e compilá-la manualmente. Para compilar, basta rodar o CMake na pasta 
+    raiz do projeto para gerar seus arquivos de compilação. Então basta 
+    executar os comandos de make para compilação:
+    \begin{verbatim}
+      $ cmake .
+      $ make libouroboros
+      $ make libouroboros-python
+      $ make libouroboros-lua
+    \end{verbatim}
+    Os dois ultimos comandos são para compilar as implementações para cada linguagem,
+    e você deve usá-los somente se necessário. Note que enquanto a libouroboros não
+    tem nenhuma dependência externa, as implementações das linguagens dependem dos
+    pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
+    
+    É também possivel simplesmente executar
+    \begin{verbatim}
+      $ cmake .
+      $ make
+    \end{verbatim}
+    Isso irá compilar a libouroboros, libouroboros-python, libouroboros-lua e o OPWIG
+    (mais sobre ele na próxima seção). Caso queira, as seguintes opções podem ser
+    passadas para o CMake para alterar seu comportamento:
+    \begin{itemize}
+      \item OUROBOROS\_CREATE\_BINDINGS: se verdade, o CMake irá tentar criar as 
+        implementações de linguagens (padrão é sim).
+      \item OUROBOROS\_LUA\_BINDINGS: se verdade, a implementação de Lua será habilitada (padrão é sim).
+      \item OUROBOROS\_PYTHON\_BINDINGS: se verdade, a implementação de Python será habilitada (padrão é sim).
+    \end{itemize}
+    
+  \item \textbf{Ligação:} após compilar a libouroboros, compile o seu código fonte e ligue-o estaticamente
+    com a libouroboros, e com as libouroboros-\textit{linguagem} que preferir, podendo ser qualquer uma
+    das duas ou ambas.
+    
+  \item \textbf{Exemplo de Código:} em ordem, ele inicializa o \SMgr{}, passando em qual pasta
+    o \SMgr{} deverá procurar por \script{s}, carrega um \script{},
+    pega o valor de uma variável do \script{}, seta o valor de outra variável, executa uma
+    função pegando o valor de retorno, e finaliza o \SMgr{}:
+    
+    \begin{verbatim}
+      #include <opa/scriptmanager.h>
+      #include <opa/virtualobj.h>
+      
+      using opa::VirtualObj;
+      using opa::ScriptManager;
+      
+      int main() {
+          //inicializando
+          SCRIPT_MANAGER()->Initialize("./scripts/");
+          
+          //carregando script
+          VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("exemplo");
+          
+          //pegando váriavel
+          double valor_antigo = modulo["VariavelNumerica"].value<double>();
+          
+          //setando novo valor de váriavel
+          modulo["VariavelNumerica"].set_value<double>(42.0);
+          
+          //executando funcao
+          VirtualObj funcao = modulo["Funcao"];
+          VirtualObj retorno = funcao(); 
+          // argumentos para a função são passados como VirtualObjs, e podem ser passados quaisquer quantidade
+          // de objetos, ou uma lista de VirtualObj (VirtualObj::List).
+          
+          //finalizando
+          SCRIPT_MANAGER()->Finalize();
+          delete SCRIPT_MANAGER();
+          
+          return 0;
+      }
+    \end{verbatim}
+    
+    Há uma coisa faltando nesse exemplo. 
+  
+\end{enumerate}
+
 
 \section{Gerador de \emph{wrappers} \textbf{opwig}}
 
