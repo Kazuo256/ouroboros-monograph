@@ -7,19 +7,19 @@
 É comum, principalmente no desenvolvimento de jogos eletrônicos, a necessidade
 de um método prático de se inserir conteúdo lógico dinâmicamente em uma
 aplicação (isto é, durante a execução dela). Linguagens de \script{} (como Lua ou
-Python) são ferramentas que, dentre outras coisas, fornecem esse tipo de
-funcionalidade. Podem ter seu código fonte tanto compilado e processado
-dinâmicamente quanto incorporado na aplicação desejada para que esta, por sua
-vez, adquira acesso a essas conveniências. No entanto, tal incorporação pode
-trazer vários desafios, especialmente o de ter que aprender a usar uma API
-(\textit{Application Programming Interface}) diferente para cada linguagem de \script{}
-usada.
+Python) são ferramentas popularmente usadas para atender esse tipo de
+funcionalidade. Elas podem ter seu código fonte tanto compilado e processado
+dinamicamente quanto incorporado na aplicação desejada. A aplicação, por sua
+vez, torna-se capaz de acessar essas conveniências. No entanto, tal incorporação
+pode trazer vários desafios, especialmente o de ter que aprender a usar uma API
+(\textit{Application Programming Interface}) diferente para cada linguagem de
+\script{} usada.
 
 Esta monografia apresentará um sistema de software que permite ao usuário
 integrar facilmente diversas linguagens de \script{} a um programa escrito em
 \CXX{} usando uma API unificada para incorporação e um exportador
-automatizado de interfaces \CXX{} para essas linguagens de \script{}. Ela
-explicará todos os principais mecanismos desse sistema, assim como a teoria e a
+automatizado de interfaces em \CXX{} para essas linguagens de \script{}. São
+explicados todos os principais mecanismos desse sistema, assim como a teoria e a
 tecnologia por trás deles.
 
 \section{Motivações e Objetivos}
