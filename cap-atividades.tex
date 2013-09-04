@@ -21,6 +21,7 @@
     \emph{engine} de desenvolvimento de jogos eletrônicos bidimensionais (ou
     simplesmente jogos 2D) programada pela equipe USPGameDev, da qual
     fazemos parte\footnotemark. Nós desenvolvemos a porção que corresponde ao
+    % "ao sistema atual" significa o quê?
     sistema atual quando acreditamos que seria útil que quem estivesse usando a
     UGDK pudesse facilmente integrar seus jogos com \script{s}.
 
@@ -49,10 +50,10 @@
     Ele fornecia ferramentas que buscavam simplificar o máximo possível a
     troca de dados do jogo com arquivos de \script{}. Bastava isolar as
     partes mais críticas para a elaboração de conteúdo novo do jogo de maneira
-    que elas pudessem ser programadas inteiramente (ou pelo menos em grande
-    parte) através de \script{s}. E dessa maneira tornamos possível aprimorar o
-    jogo usando linguagens bem mais simples que \CXX{} e sem a necessidade de
-    conhecer todas as minúcias do seu código.
+    que elas pudessem ser programadas majoritariamente através de \script{s}. E
+    dessa maneira tornamos possível aprimorar o jogo usando linguagens bem mais
+    simples que \CXX{} e sem a necessidade de conhecer todas as minúcias do seu
+    código.
 
     %TODO colocar imagens do horus antes e depois do sistema de scripts
 
@@ -83,39 +84,52 @@
   %    \zi \Return $\proc{XTRElem}(x_2 * y_2 - \id{temp}, x_1 * y_1 -
   %    \id{temp})$
   %\end{codebox}
+
+  \section{Decisões de projeto}
+  \label{sec:actividads:decisoes}
+  % TODO: Falar sobre as ferramentas básicas escolhidas: linguagem de
+  %       programação, sistema operacional de preferência, compilador, etc.
   
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
   Desenvolver uma interface comum entre as duas linguagens de \script{} foi uma das 
   primeiras coisas que fizemos, e hoje o trabalho realizado nesse quesito foi o que
   formou a \emph{Ouroboros Project API} (OPA). Desde o começo já desenvolvemos uma
+  % TODO: a frase abaixa está redundante com "interface genérica"
   interface genérica capaz de usar uma ou outra linguagem de \script{} sem
   diferenças na interface para o usuário.
   
+  % TODO: Aqui começa se referindo à (classe) VirtualOBj no femenino. Mais
+  %       adiante, refere-se ao (objeto) VirtualObj no masculino. Precisamos
+  %       bolar um jeito de deixar isso mais consistente e menos discordante.
+  %       (discordância de gênero é um erro de português)
   A principal classe dessa interface comum é a \VObj{}. Essa classe 
   encapsula um objeto qualquer de uma máquina virtual, podendo representar um
   módulo de \script{} carregado, uma instância de uma classe, um valor na máquina
   virtual, entre outros. É praticamente a única classe que o usuário precisa 
+  % TODO: Dar alguns exemplos, como um usuário querendo ler um número de um script, etc.
   usar. Ela implementa alguns métodos que possibilitam ao usuário realizar 
   operações comuns a qualquer linguagem de \script{} sobre o tal objeto (se for
+  % TODO: Melhor falar sobre os casos de erro em outro lugar.
   possível, caso contrário ela irá dar erro), e também sobreescreve alguns operadores
   de \CXX{} para facilitar o uso de algumas operações, como por exemplo:
+  % TODO: Código de exemplo para todos esses itens! XD
   \begin{itemize}
-    \item Executar o objeto como uma função: simplificado pelo operador \emph{()}
+    \item Executar o objeto como uma função: simplificado pelo operador \lang{()}
       do \CXX{}, permitindo você usar o próprio \VObj{} como uma função;
     \item Acessar e alterar atributos do objeto: simplificado pelo operador
-      \emph{[]} do \CXX{}, permitindo você usar o próprio \VObj{} como uma
+      \lang{[]} do \CXX{}, permitindo você usar o próprio \VObj{} como uma
       tabela de símbolos;
     \item Executar um método do objeto (instância de uma classe): simplificado pelo
-      operador \emph{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
+      operador \lang{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
       passam a instância da classe (o próprio objeto) como o primeiro argumento da
       função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
       \begin{verbatim}
         (vObj | "nome_do_método")(argumentos)
       \end{verbatim}
-    \item Conversão de valores: como a maioria dos métodos (e operadores) do \VObj{}
-      recebe e retorna tais objetos, a conversão de valores é o que forma a principal
-      ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, o \VObj{}
+    \item Conversão de valores: como a maioria dos métodos (e operadores) do
+      \VObj{} recebe e retorna outros \VObj{}s, a conversão de valores é o que forma a
+      principal ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, o \VObj{}
       possui 2 métodos \textit{templates} que possibilitam a conversão de valores entre
       os dois ambientes.
   \end{itemize}
@@ -129,8 +143,12 @@
     função_genérica<tipo1, tipo2, ...>(argumentos);\end{verbatim}
   \end{framed}
   
-  \footnotetext{\textit{Templates} também podem receber valores aritméticos e \textit{strings},
-   mas para o propósito do nosso trabalho, somente usamos com tipos.}   
+  \footnotetext{
+    \textit{Templates} também podem receber valores aritméticos e \textit{strings},
+    mas para o propósito do nosso trabalho, somente usamos com tipos.
+    % TODO: Não exatamente. O mais correto seria dizer que não usamos eles na interface do
+    %       VirtualObj, apenas.
+  }   
   
   Mas agora como que o usuário cria \VObj{s}? De algum lugar tem que vir os primeiros \VObj{s}, relativos
   aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface comum
@@ -142,13 +160,13 @@
   \begin{itemize}
     \item Inicialização e Finalização: o \SMgr{} tem métodos para inicializar e finalizar o conjunto
       de máquinas virtuais. A inicialização é necessária para poder usá-las, e a finalização 
-      termina as máquinas, liberando quaisquer recursos do computador que elas estão usando.
+      termina as máquinas, liberando quaisquer recursos do computador que elas estejam usando.
     \item Registro e busca de máquinas virtuais: o \SMgr{} inicialmente não sabe quais são as máquinas
       virtuais disponíveis. O usuário pode tanto registrá-las manualmente com um simples método, quanto
       delegar essa responsabilidade para o código gerado pelo OPWIG, como veremos mais adiante.
       Caso seja necessário, ele pode buscar uma máquina virtual registrada.
     \item Executar código: o \SMgr{} permite ao usuário executar um código qualquer, dado como uma
-      \textit{string}, na máquina virtual de sua escolha.
+      cadeia de caracteres, na máquina virtual de sua escolha.
     \item Carregar módulos: possivelmente o método mais importante do \SMgr{}, este método recebe
       um caminho para um \script{} (sem a extensão de arquivo). Ele então determina se o \script{}
       existe, e de acordo com a extensão do arquivo, qual máquina virtual deve rodá-lo. A tal máquina
@@ -172,11 +190,13 @@
   que queríamos.
   
   Como o SWIG é uma ferramenta já pronta, e que é executada para gerar código que será compilado
+  % TODO: Não diga que não há integração XD faz essa seção parecer sem sentido
   com o código do usuário, não há muita integração entre ele e o nosso sistema. A principal
   integração está no fato que o OPA usa uma interface padrão (para cada linguagem de \script{})
   gerada pelo SWIG para conseguir converter instâncias de tipos do usuário entre \CXX{} e as
   máquinas virtuais.
   
+  % TODO: Exemplos!
   O SWIG usa arquivos separados, seguindo a interface deles, para determinar quais arquivos
   de \CXX{} ele irá ler, e como irá gerar o \textit{wrapper} para tal código. Nesses arquivos
   de interface do SWIG é também possível incluir código que será posto no código gerado, ou usado
@@ -217,6 +237,9 @@
       momento após a máquina virtual ter removido a instância. Portanto fizemos que métodos
       da interface \CXX{} que recebem instâncias de classes e cuidam da remoção delas 
       internamente tiram a posse de tal instância da máquina virtual.
+      % TODO: Faltou falar mais sobre o verdadeiro problema: a impraticidade do designdo
+      %       SWIG em reconhecer essas especificações. A questão da posse em si é
+      %       inerente ao problema, e não tem como ser evitada.
     \item O SWIG não tem suporte a classes, \textit{structs} e \textit{unions} aninhadas, e 
       aparentemente não pretende ter tão cedo. Aninhar tais estruturas de \CXX{} é o ato
       de definir algumas delas dentro de outra.
@@ -272,13 +295,14 @@
   para usar o sistema com suas máquinas virtuais e seus módulos gerados. Esse registro automático
   funciona da seguinte maneira: cada módulo gerado pelo OPWIG contém um bloco de código de \textit{bootstrap}
   (inicialização), que é executado automaticamente quando o programa é carregado, dado que ele tenha
-  sido ligado estaticamente com o código de \textit{wrapper} gerado. O \textit{bootstrap} então
+  sido compilado juntamente com o código de \textit{wrapper} gerado. O \textit{bootstrap} então
   registra a máquina virtual da linguagem de \script{} relativa ao módulo em que ele está definido
   no \SMgr{}, caso ela ainda não tenha sido registrada, e registra o módulo de \script{} e seus sub-módulos
-  contidos tal máquina virtual.
+  nela.
   
   Internamente, o OPWIG contém:
   \begin{itemize}
+    % TODO: Falar sobre o flexc++ e o bisonc++
     \item Um \textit{parser} de \CXX{}.
     \item Classes representando metadados de \CXX{}.
     \item Um gerador de código, que gera código de acordo com uma ``especificação''

@@ -1,12 +1,14 @@
 \chapter{Resultados}
 \label{sec:resultados}
 
+% TODO: Uma introdução do capítulo, dando uma visão geral dos resultados.
+
 %exemplo de citação
 \cite{xtr:00}
 
 \section{Biblioteca \textbf{libouroboros}}
 A libouroboros, que é basicamente a biblioteca para \CXX{} contendo o OPA,
-já tem praticamente todas funcionalidades desejadas implementadas e
+já tem praticamente todas as funcionalidades desejadas implementadas e
 funcionando normalmente. Contém um sistema para gerenciar as máquinas
 virtuais desejadas, para carregar \script{s} independente de sua
 linguagem, e uma interface simples, genérica e robusta para
@@ -25,9 +27,10 @@ de \script{} Python e Lua que fizemos também estão praticamente completas,
 sendo distríbuidas juntamente com a libouroboros e sendo compiladas em
 bibliotecas diferentes: \emph{libouroboros-python} e \emph{libouroboros-lua},
 para Python e Lua, respectivamente. Assim é fácil incorporá-las em um
-mesmo programa, basta linkar o programa com a libouroboros e com as 
+mesmo programa, basta ligar o programa com a libouroboros e com as 
+% TODO: libouroboros-linguagem? seriously?
 libouroboros-\textit{linguagem} desejadas. Caso o usuário não queira usar
-uma das linguagens, é só não linkar com as bibliotecas correspondentes.
+uma das linguagens, é só não ligar com as bibliotecas correspondentes.
 
 \subsection{Instruções de Uso}
 Aqui iremos explicar brevemente o uso da libouroboros e do OPA, desde compilar
@@ -48,8 +51,8 @@ executar os comandos de make para compilação:
   $ make libouroboros-lua
 \end{verbatim}
 Os dois ultimos comandos são para compilar as implementações para cada linguagem,
-e você deve usá-los somente se necessário. Note que enquanto a libouroboros não
-tem nenhuma dependência externa, as implementações das linguagens dependem dos
+e você deve usá-los somente se necessário. Note que apesar de a libouroboros não
+ter nenhuma dependência externa, as implementações das linguagens dependem dos
 pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
 
 É também possivel simplesmente executar
@@ -67,7 +70,7 @@ passadas para o CMake para alterar seu comportamento:
   \item OUROBOROS\_PYTHON\_BINDINGS: se verdade, a implementação de Python será habilitada (padrão é sim).
 \end{itemize}
 
-É possível também compilar o os testes unitários da libouroboros, que
+É possível também compilar os testes unitários da libouroboros, que
 criamos para testar suas funcionalidades usando o seguinte comando:
 \begin{verbatim}
   $ make ouroboros_test
@@ -172,13 +175,15 @@ linguagem do \script{} usado, pois a lógica é a mesma e o OPA abstrai as inter
 
 
 \section{Gerador de \emph{wrappers} \textbf{opwig}}
+
+% TODO: Por que "uma ferramenta externa"?
 O OPWIG é uma ferramenta externa com o propósito de substituir o SWIG.
 Ela ainda não implementa todas funcionalidades que o SWIG tem, e portanto
 ainda não consegue substituir o SWIG completamente, porém já é funcional.
 As suas capacidades atuais de geração de \textit{wrappers} são:
 \begin{itemize}
-  \item \textit{namespaces} são traduzidos em módulos e sub-módulos na máquina
-    virtual, de acordo com a estrutura dos \textit{namespaces}.
+  \item \lang{namespaces} são traduzidos em módulos e sub-módulos na máquina
+    virtual, de acordo com a estrutura dos \lang{namespaces}.
   \item Variáveis globais de tipos primitivos, possivelmente constantes.
   \item Funções globais que recebam um número qualquer de argumentos de tipos
     primitivos e retorne nada ou um valor primitivo.
@@ -194,18 +199,18 @@ As suas capacidades atuais de geração de \textit{wrappers} são:
 
 Além disso o código gerado pelo OPWIG também tem um bloco de inicialização
 (\textit{bootstrap}) que registra a máquina virtual correspondente no \SMgr{},
-caso ela não tenha sido, e registra os módulos e sub-módulos que esse arquivo
-gerado define na máquina virtual.
+caso ela não tenha sido ainda, e registra nela os módulos e sub-módulos que esse
+arquivo gerado define.
 
 É importante notar também que o código gerado pelo OPWIG depende do OPA, 
 portanto qualquer programa compilado com código gerado pelo OPWIG deve ser
 ligado com a libouroboros. Isso é um contraste em relação ao SWIG, o qual gera
 código sem nenhuma dependência externa. Esse comportamento foi uma decisão de
-design que fizemos para simplificar o código gerado pelo OPWIG e sua integração
+projeto que fizemos para simplificar o código gerado pelo OPWIG e sua integração
 com a OPA. Supomos que se um usuário está usando o OPWIG ele provavelmente
 também usará o OPA, já que nosso sistema provê essas duas vias de comunicação
 entre linguagem nativa e linguagens de \script{}, enquanto o SWIG só possibilita
-uma delas ( a geração de \textit{wrappers}).
+uma delas (a geração de \textit{wrappers}).
 
 \subsection{Instruções de Uso}
 Aqui iremos explicar como usar o OPWIG, desde compilação até execução da ferramenta
@@ -245,7 +250,7 @@ Após compilado, executar o programa é simples:
 Onde:
 \begin{itemize}
   \item \textbf{NOME}: é o nome do módulo que será gerado.
-  \item \textbf{ARQUIVO-i}: são os arquivos de \CXX{} que contém a interface
+  \item \textbf{ARQUIVO-i}: são os arquivos de cabeçalho em \CXX{} que contêm a interface
     que você deseja que seja exportada no módulo.
 \end{itemize}
 

@@ -66,10 +66,16 @@
     vários fatores que estão sendo omitidos nesse esquema, principalmente
     envolvendo a interação do tipo (B). Além disso, ainda não foi dito
     explicitamente o que significam essas interações. Esses e outros detalhes
-    serão aprofundados nas seções deste capítulo que se seguem.
+    serão aprofundados nas seções a seguir.
+    
+    % TODO: Definir melhor os atos de "exportar" e "importar" entre as
+    %       linguagens
 
   \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
   \label{sec:estrutura:opa}
+  
+  %TODO: Explicar mais sobre a ideia geral da relação do tipo (A)
+
   A biblioteca de abstração de APIs de linguagens de \script{}, também conhecida como
   \textit{libouroboros} ou simplesmente como \emph{Ouroboros Project API} (OPA) é
   a parte do projeto que provê a interação do tipo (A), como explicada acima.
@@ -89,6 +95,9 @@
   resto do sistema. Desse jeito, o usuário final do OPA não precisa usar esses 
   componentes, nem se preocupar com a API da linguagem de \script{}, a não ser que
   ele vá adicionar o suporte a ela no sistema.
+
+  % TODO: Diagrama ilustrando relação da OPA com as APIs específicas de cada
+  %       linguagem de script
   
   Por padrão, o projeto já tem a implementação de \textit{Lua} e \textit{Python}.
   
@@ -99,12 +108,16 @@
   
   \section{Gerador de \emph{wrappers} e interfaces.}
   \label{sec:estrutura:opwig}
-  Linguagens de \script{} possuem um mecanismo próprio para importar módulos. 
-  Esses módulos podem ser definidos tanto em outros arquivos na mesma linguagem,
-  quanto na linguagem nativa da máquina virtual. Nesse último caso, temos a relação
-  do tipo (B). Ela exige que a linguagem nativa disponibilize certos dados seguindo
-  protocolo adequado. Infelizmente tal protocolo não só difere para cada linguagem 
-  de \script{} como também involve um trabalho repetitivo e maçante para ser utilizado. 
+
+  %TODO: Explicar mais sobre a ideia geral da relação do tipo (B)
+
+  Linguagens de \script{} possuem um mecanismo próprio para importar os módulos
+  necessários à sua execução. Esses módulos podem ser definidos tanto em outros
+  arquivos na mesma linguagem, quanto na linguagem nativa da máquina virtual.
+  Nesse último caso, temos a relação do tipo (B). Ela exige que a linguagem
+  nativa disponibilize certos dados seguindo um protocolo adequado. Infelizmente
+  tal protocolo não só difere para cada linguagem de \script{} como também
+  involve um trabalho repetitivo e maçante para ser utilizado. 
   
   Por isso, parte do nosso sistema é composta por um gerador automatizado de código fonte.
   Ele é responsável por criar o código necessário ao devido funcionamento dos módulos 
