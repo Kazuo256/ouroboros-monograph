@@ -28,7 +28,7 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{clrscode}
-\usepackage[tt,bf,small]{titlesec} % cabeçalhos dos títulos: menores e compactos
+\usepackage[sf,bf,small]{titlesec} % cabeçalhos dos títulos: menores e compactos
 \usepackage[fixlanguage]{babelbib}
 \usepackage[font=small,format=plain,labelfont=bf,up,textfont=it,up]{caption}
 \usepackage{wrapfig}
@@ -116,27 +116,28 @@
 % orifício de 10,7cm de largura x 6,0cm de altura que há na capa fornecida pela SPG.
 \thispagestyle{empty}
 \begin{center}
-    \vspace*{2.3cm}
-    \textbf{
-      \Large{
-        Projeto Ouroboros \\
-      }
-      Sistema de integração de C++ com linguagens de \emph{script} \\
+  \vspace*{2.3cm}
+  \textsf{\textbf{
+    {\LARGE Projeto Ouroboros }\\
+    {
+      \Large Sistema de integração automatizada entre \\
+      \texttt{C++} e linguagens de \emph{script}
     }
+  }}
     
-    \vspace*{1.2cm}
-    \Large{Fernando Omar Aluani} \\
-    \Large{Wilson Kazuo Mizutani}
-    
-    \vskip 2cm
-    \textsc{Trabalho de conclusão de curso} 
-    
-    \vskip 10cm
-    Orientador: Prof. Dr. Marcos Dimas Gubitoso
+  \vspace*{1.2cm}
+  \textsf{\Large{Fernando Omar Aluani}} \\
+  \textsf{\Large{Wilson Kazuo Mizutani}}
+  
+  \vskip 2cm
+  \textsc{Trabalho de conclusão de curso} 
+  
+  \vskip 10cm
+  \textsf{Orientador: Prof. Dr. Marcos Dimas Gubitoso}
 
-    \vskip 3cm
-    
-    \normalsize{São Paulo, Dezembro de 2013}
+  \vskip 3cm
+  
+  \normalsize{São Paulo, Dezembro de 2013}
 \end{center}
 
 \pagenumbering{roman}     % começamos a numerar 
@@ -197,8 +198,8 @@ Isso será completo na versão final da monografia.
 
 \singlespacing              % espaçamento simples
 
-\input cap-objetiva       % associado ao arquivo: 'cap-objetiva.tex'
-\input cap-subjetiva      % associado ao arquivo: 'cap-subjetiva.tex'
+\input parte-objetiva       % associado ao arquivo: 'cap-objetiva.tex'
+\input parte-subjetiva      % associado ao arquivo: 'cap-subjetiva.tex'
 
 % cabeçalho para os apêndices
 \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\appendixname\ \thechapter}} {\MakeUppercase{#1}} }
