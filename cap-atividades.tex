@@ -101,33 +101,36 @@
   possível, caso contrário ela irá dar erro), e também sobreescreve alguns operadores
   de \CXX{} para facilitar o uso de algumas operações, como por exemplo:
   \begin{itemize}
-     \item Executar o objeto como uma função: simplificado pelo operador \emph{()}
-       do \CXX{}, permitindo você usar o próprio \VObj{} como uma função;
-     \item Acessar e alterar atributos do objeto: simplificado pelo operador
-       \emph{[]} do \CXX{}, permitindo você usar o próprio \VObj{} como uma
-       tabela de símbolos;
-     \item Executar um método do objeto (instância de uma classe): simplificado pelo
-       operador \emph{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
-       passam a instância da classe (o próprio objeto) como o primeiro argumento da
-       função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
-       \begin{verbatim}
-         (vObj | "nome_do_método")(argumentos)
-       \end{verbatim}
-     \item Conversão de valores: como a maioria dos métodos (e operadores) do \VObj{}
-       recebe e retorna tais objetos, a conversão de valores é o que forma a principal
-       ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, o \VObj{}
-       possui 2 métodos \textit{templates} que possibilitam a conversão de valores entre
-       os dois ambientes. \textit{Templates} são uma funcionalidade de \CXX{} que permite
-       criar funções e classes genéricas, recebendo 1 ou mais tipos\footnotemark{} em uma notação especial,
-       que a função ou classe usa de forma genérica em seu corpo. Exemplo de chamada de uma
-       função \textit{template}:
-       \begin{verbatim}
-         função_genérica<tipo1, tipo2, ...>(argumentos);
-       \end{verbatim}
-       
-       \footnotetext{\textit{Templates} também podem receber valores aritméticos e \textit{strings},
-        mas para o propósito do nosso trabalho, somente usamos com tipos.}   
+    \item Executar o objeto como uma função: simplificado pelo operador \emph{()}
+      do \CXX{}, permitindo você usar o próprio \VObj{} como uma função;
+    \item Acessar e alterar atributos do objeto: simplificado pelo operador
+      \emph{[]} do \CXX{}, permitindo você usar o próprio \VObj{} como uma
+      tabela de símbolos;
+    \item Executar um método do objeto (instância de uma classe): simplificado pelo
+      operador \emph{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
+      passam a instância da classe (o próprio objeto) como o primeiro argumento da
+      função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
+      \begin{verbatim}
+        (vObj | "nome_do_método")(argumentos)
+      \end{verbatim}
+    \item Conversão de valores: como a maioria dos métodos (e operadores) do \VObj{}
+      recebe e retorna tais objetos, a conversão de valores é o que forma a principal
+      ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, o \VObj{}
+      possui 2 métodos \textit{templates} que possibilitam a conversão de valores entre
+      os dois ambientes.
   \end{itemize}
+
+  \begin{framed}
+    \textit{Templates} são uma funcionalidade de \CXX{} que permite
+    criar funções e classes genéricas, recebendo 1 ou mais tipos\footnotemark{} em uma notação especial,
+    que a função ou classe usa de forma genérica em seu corpo. Exemplo de chamada de uma
+    função \textit{template}:
+  \begin{verbatim}
+    função_genérica<tipo1, tipo2, ...>(argumentos);\end{verbatim}
+  \end{framed}
+  
+  \footnotetext{\textit{Templates} também podem receber valores aritméticos e \textit{strings},
+   mas para o propósito do nosso trabalho, somente usamos com tipos.}   
   
   Mas agora como que o usuário cria \VObj{s}? De algum lugar tem que vir os primeiros \VObj{s}, relativos
   aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface comum
