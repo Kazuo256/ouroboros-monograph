@@ -277,6 +277,20 @@
   no \SMgr{}, caso ela ainda não tenha sido registrada, e registra o módulo de \script{} e seus sub-módulos
   contidos tal máquina virtual.
   
+  Internamente, o OPWIG contém:
+  \begin{itemize}
+    \item Um \textit{parser} de \CXX{}.
+    \item Classes representando metadados de \CXX{}.
+    \item Um gerador de código, que gera código de acordo com uma ``especificação''
+      de uma linguagem de \script{}.
+    \item A definição abstrata da especificação de uma linguagem de \script{}, que recebe
+      os metadados para retornar o código que deverá ser escrito no arquivo gerado. Essa
+      definição abstrata deve ser implementada para uma dada linguagem de \script{} para
+      que o OPWIG seja capaz de gerar código para tal linguagem. Por padrão, nós criamos
+      a implementação para Lua e Python.
+  \end{itemize}
+ 
+  
   \section{Módulos de CMake}
   
   TODO

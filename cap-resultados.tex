@@ -35,133 +35,234 @@ Aqui iremos explicar brevemente o uso da libouroboros e do OPA, desde compilar
 simples exemplo de um programa que carrega um \script{}, pega o valor de uma
 variável dele e do retorno da execução de uma função.
 
-\begin{enumerate}
-  \item \textbf{Compilação:} Como ainda não disponibilizamos nenhum pacote
-    com os binários da libouroboros, você terá que pegar o código fonte dela
-    e compilá-la manualmente. Para compilar, basta rodar o CMake na pasta 
-    raiz do projeto para gerar seus arquivos de compilação. Então basta 
-    executar os comandos de make para compilação:
-    \begin{verbatim}
-      $ cmake .
-      $ make libouroboros
-      $ make libouroboros-python
-      $ make libouroboros-lua
-    \end{verbatim}
-    Os dois ultimos comandos são para compilar as implementações para cada linguagem,
-    e você deve usá-los somente se necessário. Note que enquanto a libouroboros não
-    tem nenhuma dependência externa, as implementações das linguagens dependem dos
-    pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
+\subsubsection{Compilação} 
+Como ainda não disponibilizamos nenhum pacote
+com os binários da libouroboros, você terá que pegar o código fonte dela
+e compilá-la manualmente. Para compilar, basta rodar o CMake na pasta 
+raiz do projeto para gerar seus arquivos de compilação. Então basta 
+executar os comandos de make para compilação:
+\begin{verbatim}
+  $ cmake .
+  $ make libouroboros
+  $ make libouroboros-python
+  $ make libouroboros-lua
+\end{verbatim}
+Os dois ultimos comandos são para compilar as implementações para cada linguagem,
+e você deve usá-los somente se necessário. Note que enquanto a libouroboros não
+tem nenhuma dependência externa, as implementações das linguagens dependem dos
+pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
+
+É também possivel simplesmente executar
+\begin{verbatim}
+  $ cmake .
+  $ make
+\end{verbatim}
+Isso irá compilar a libouroboros, libouroboros-python, libouroboros-lua e o OPWIG
+(mais sobre ele na próxima seção). Caso queira, as seguintes opções podem ser
+passadas para o CMake para alterar seu comportamento:
+\begin{itemize}
+  \item OUROBOROS\_CREATE\_BINDINGS: se verdade, o CMake irá tentar criar as 
+    implementações de linguagens (padrão é sim).
+  \item OUROBOROS\_LUA\_BINDINGS: se verdade, a implementação de Lua será habilitada (padrão é sim).
+  \item OUROBOROS\_PYTHON\_BINDINGS: se verdade, a implementação de Python será habilitada (padrão é sim).
+\end{itemize}
+
+É possível também compilar o os testes unitários da libouroboros, que
+criamos para testar suas funcionalidades usando o seguinte comando:
+\begin{verbatim}
+  $ make ouroboros_test
+\end{verbatim}
+E para executá-los:
+\begin{verbatim}
+  $ ./test/ouroboros_test
+\end{verbatim}
     
-    É também possivel simplesmente executar
-    \begin{verbatim}
-      $ cmake .
-      $ make
-    \end{verbatim}
-    Isso irá compilar a libouroboros, libouroboros-python, libouroboros-lua e o OPWIG
-    (mais sobre ele na próxima seção). Caso queira, as seguintes opções podem ser
-    passadas para o CMake para alterar seu comportamento:
-    \begin{itemize}
-      \item OUROBOROS\_CREATE\_BINDINGS: se verdade, o CMake irá tentar criar as 
-        implementações de linguagens (padrão é sim).
-      \item OUROBOROS\_LUA\_BINDINGS: se verdade, a implementação de Lua será habilitada (padrão é sim).
-      \item OUROBOROS\_PYTHON\_BINDINGS: se verdade, a implementação de Python será habilitada (padrão é sim).
-    \end{itemize}
+\subsubsection{Ligação} 
+Após compilar a libouroboros, compile o seu código fonte e ligue-o estaticamente
+com a libouroboros, e com as libouroboros-\textit{linguagem} que preferir, podendo ser qualquer uma
+das duas ou ambas.
     
-  \item \textbf{Ligação:} após compilar a libouroboros, compile o seu código fonte e ligue-o estaticamente
-    com a libouroboros, e com as libouroboros-\textit{linguagem} que preferir, podendo ser qualquer uma
-    das duas ou ambas.
+\subsubsection{Exemplo de Código} 
+Em ordem, esse exemplo inicializa o \SMgr{}, passando em qual pasta
+o \SMgr{} deverá procurar por \script{s}, carrega um \script{},
+pega o valor de uma variável do \script{}, seta o valor de outra variável, 
+executa uma função pegando o valor de retorno, e finaliza o \SMgr{}:
     
-  \item \textbf{Exemplo de Código:} em ordem, ele inicializa o \SMgr{}, passando em qual pasta
-    o \SMgr{} deverá procurar por \script{s}, carrega um \script{},
-    pega o valor de uma variável do \script{}, seta o valor de outra variável, executa uma
-    função pegando o valor de retorno, e finaliza o \SMgr{}:
+\begin{lstlisting}
+#include <opa/scriptmanager.h>
+#include <opa/virtualobj.h>
+
+using opa::VirtualObj;
+using opa::ScriptManager;
+
+int main() {
+    //inicializando
+    SCRIPT_MANAGER()->Initialize("./scripts/");
     
-    \begin{lstlisting}
-    #include <opa/scriptmanager.h>
-    #include <opa/virtualobj.h>
+    //carregando script
+    VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("exemplo");
     
-    using opa::VirtualObj;
-    using opa::ScriptManager;
+    //pegando variavel
+    double valor_antigo = modulo["VariavelNumerica"].value<double>();
     
-    int main() {
-        //inicializando
-        SCRIPT_MANAGER()->Initialize("./scripts/");
-        
-        //carregando script
-        VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("exemplo");
-        
-        //pegando variavel
-        double valor_antigo = modulo["VariavelNumerica"].value<double>();
-        
-        //setando novo valor de variavel
-        modulo["VariavelNumerica"].set_value<double>(42.0);
-        
-        //executando funcao
-        VirtualObj funcao = modulo["Funcao"];
-        VirtualObj retorno = funcao(); 
-        // argumentos para a funcao sao passados como VirtualObjs, 
-        // e podem ser passados quaisquer quantidade de objetos,
-        // ou uma lista de VirtualObj (VirtualObj::List).
-        
-        //finalizando
-        SCRIPT_MANAGER()->Finalize();
-        delete SCRIPT_MANAGER();
-        
-        return 0;
-    }
-    \end{lstlisting}
+    //setando novo valor de variavel
+    modulo["VariavelNumerica"].set_value<double>(42.0);
     
-    Há uma coisa faltando nesse exemplo. As máquinas virtuais precisam ser registradas no \SMgr{}.
-    Enquanto os módulos gerados pelo OPWIG fazem isso automaticamente, nesse pequeno exemplo não
-    usamos nenhum, então temos que fazer isso manualmente. Basta fazer essas modificações no código acima:
+    //executando funcao
+    VirtualObj funcao = modulo["Funcao"];
+    VirtualObj retorno = funcao(); 
+    // argumentos para a funcao sao passados como VirtualObjs, 
+    // e podem ser passados quaisquer quantidade de objetos,
+    // ou uma lista de VirtualObj (VirtualObj::List).
     
-    \begin{lstlisting}
-    ... [includes anteriores] ...
-    #include <opa/config.h>
-    #ifdef OUROBOROS_LUA_BINDINGS
-    #include <languages/lua/luawrapper.h>
-    #endif
-    #ifdef OUROBOROS_PYTHON_BINDINGS
-    #include <languages/python/pythonwrapper.h>
-    #endif
+    //finalizando
+    SCRIPT_MANAGER()->Finalize();
+    delete SCRIPT_MANAGER();
     
-    using ...
+    return 0;
+}
+\end{lstlisting}
+
+Há uma coisa faltando nesse exemplo. As máquinas virtuais precisam ser registradas no \SMgr{}.
+Enquanto os módulos gerados pelo OPWIG fazem isso automaticamente, nesse pequeno exemplo não
+usamos nenhum, então temos que fazer isso manualmente. Basta fazer essas modificações no código acima:
+
+\begin{lstlisting}
+... [includes anteriores] ...
+#include <opa/config.h>
+#ifdef OUROBOROS_LUA_BINDINGS
+#include <languages/lua/luawrapper.h>
+#endif
+#ifdef OUROBOROS_PYTHON_BINDINGS
+#include <languages/python/pythonwrapper.h>
+#endif
+
+using ...
+
+int main () {
+#ifdef OUROBOROS_LUA_BINDINGS
+    if (SCRIPT_MANAGER()->GetWrapper("Lua") == nullptr)
+        SCRIPT_MANAGER()->Register(new opa::lua::LuaWrapper());    
+#endif
+#ifdef OUROBOROS_PYTHON_BINDINGS
+    if (SCRIPT_MANAGER()->GetWrapper("Python") == nullptr)
+        SCRIPT_MANAGER()->Register(new opa::python::PythonWrapper());
+#endif
+
+    //inicializando
+    SCRIPT_MANAGER()->Initialize("./scripts/");
     
-    int main () {
-    #ifdef OUROBOROS_LUA_BINDINGS
-        if (SCRIPT_MANAGER()->GetWrapper("Lua") == nullptr)
-            SCRIPT_MANAGER()->Register(new opa::lua::LuaWrapper());    
-    #endif
-    #ifdef OUROBOROS_PYTHON_BINDINGS
-        if (SCRIPT_MANAGER()->GetWrapper("Python") == nullptr)
-            SCRIPT_MANAGER()->Register(new opa::python::PythonWrapper());
-    #endif
-    
-        //inicializando
-        SCRIPT_MANAGER()->Initialize("./scripts/");
-        
-        ...
-    }
-    \end{lstlisting}
-    
-    Para esse exemplo funcionar, basta ter um \script{} chamado ``\textit{exemplo}''
-    na pasta \textit{/scripts/}, na raiz da onde o programa será executado. A extensão
-    do arquivo deverá ser \textit{.lua} ou \textit{.py} para Lua ou Python respectivamente
-    (exemplo.: \textit{./scripts/exemplo.py}). Tal \script{} deverá ter uma váriavel
-    com um valor numérico de ponto flutuante chamada ``VariavelNumerica'', e uma função
-    chamada ``Funcao'' que não recebe nenhum argumento (no exemplo, o valor de retorno da
-    função não importa pois não é usado).
-    
-    Você pode ver a robustez do OPA e de sua generalização das linguagens fazendo o seguinte:
-    escreva o \script{} em uma linguagem, teste, e então troque o \script{} por um na
-    outra linguagem, mantendo as restrições ditas acima (nome exemplo,  com uma variável, etc),
-    e teste novamente. O programa irá executar do mesmo modo que antes, mesmo tendo trocado a
-    linguagem do \script{} usado, pois a lógica é a mesma e o OPA abstrai as interfaces.
-  
-\end{enumerate}
+    ...
+}
+\end{lstlisting}
+
+Para esse exemplo funcionar, basta ter um \script{} chamado ``\textit{exemplo}''
+na pasta \textit{/scripts/}, na raiz da onde o programa será executado. A extensão
+do arquivo deverá ser \textit{.lua} ou \textit{.py} para Lua ou Python respectivamente
+(exemplo.: \textit{./scripts/exemplo.py}). Tal \script{} deverá ter uma váriavel
+com um valor numérico de ponto flutuante chamada ``VariavelNumerica'', e uma função
+chamada ``Funcao'' que não recebe nenhum argumento (no exemplo, o valor de retorno da
+função não importa pois não é usado).
+
+Você pode ver a robustez do OPA e de sua generalização das linguagens fazendo o seguinte:
+escreva o \script{} em uma linguagem, teste, e então troque o \script{} por um na
+outra linguagem, mantendo as restrições ditas acima (nome exemplo,  com uma variável, etc),
+e teste novamente. O programa irá executar do mesmo modo que antes, mesmo tendo trocado a
+linguagem do \script{} usado, pois a lógica é a mesma e o OPA abstrai as interfaces.
 
 
 \section{Gerador de \emph{wrappers} \textbf{opwig}}
+O OPWIG é uma ferramenta externa com o propósito de substituir o SWIG.
+Ela ainda não implementa todas funcionalidades que o SWIG tem, e portanto
+ainda não consegue substituir o SWIG completamente, porém já é funcional.
+As suas capacidades atuais de geração de \textit{wrappers} são:
+\begin{itemize}
+  \item \textit{namespaces} são traduzidos em módulos e sub-módulos na máquina
+    virtual, de acordo com a estrutura dos \textit{namespaces}.
+  \item Variáveis globais de tipos primitivos, possivelmente constantes.
+  \item Funções globais que recebam um número qualquer de argumentos de tipos
+    primitivos e retorne nada ou um valor primitivo.
+  \item Classes simples, com:
+    \begin{itemize}
+      \item Destrutor.
+      \item Construtor trivial.
+      \item Atributos de tipos primitivos, possivelmente constantes.
+      \item Métodos que recebam um número qualquer de argumentos de tipos
+        primitivos e retorne nada ou um valor primitivo.
+    \end{itemize}
+\end{itemize}
 
-Só que não. 
-UPDATE: Só que sim, tá daora =D
+Além disso o código gerado pelo OPWIG também tem um bloco de inicialização
+(\textit{bootstrap}) que registra a máquina virtual correspondente no \SMgr{},
+caso ela não tenha sido, e registra os módulos e sub-módulos que esse arquivo
+gerado define na máquina virtual.
+
+É importante notar também que o código gerado pelo OPWIG depende do OPA, 
+portanto qualquer programa compilado com código gerado pelo OPWIG deve ser
+ligado com a libouroboros. Isso é um contraste em relação ao SWIG, o qual gera
+código sem nenhuma dependência externa. Esse comportamento foi uma decisão de
+design que fizemos para simplificar o código gerado pelo OPWIG e sua integração
+com a OPA. Supomos que se um usuário está usando o OPWIG ele provavelmente
+também usará o OPA, já que nosso sistema provê essas duas vias de comunicação
+entre linguagem nativa e linguagens de \script{}, enquanto o SWIG só possibilita
+uma delas ( a geração de \textit{wrappers}).
+
+\subsection{Instruções de Uso}
+Aqui iremos explicar como usar o OPWIG, desde compilação até execução da ferramenta
+e integração do código gerado com seu programa.
+
+\subsubsection{Compilação}
+Como ainda não disponibilizamos um pacote com a ferramenta pronta, será necessário
+compilar o OPWIG. Para tal, basta usar o CMake tal como já explicamos anteriormente:
+\begin{verbatim}
+  $ cmake .
+  $ make opwig
+\end{verbatim}
+E lembrando que o comando \lang{make} (sem parâmetros) compila o OPWIG juntamente com
+as libouroboros.
+
+Note que ao contrário da libouroboros e das libouroboros-\textit{linguagem}, o OPWIG
+ainda não foi separado das implementações para Lua e Python de sua interface 
+(a especificação de uma linguagem de \script{}). Portanto ele será compilado com 
+essas implementações que, assim como as libouroboros-\textit{linguagem} respectivas,
+dependem dos pacote de desenvolvimento da sua linguagem de \script{}.
+
+É possível também compilar o extenso conjunto de testes unitários do OPWIG, que
+criamos para testar suas funcionalidades usando o seguinte comando:
+\begin{verbatim}
+  $ make opwig_test
+\end{verbatim}
+E para executá-los:
+\begin{verbatim}
+  $ ./test/opwig_test
+\end{verbatim}
+
+\subsubsection{Execução}
+Após compilado, executar o programa é simples:
+\begin{verbatim}
+  $ opwig --module-name=NOME ARQUIVO1 ARQUIVO2 ... ARQUIVON
+\end{verbatim}
+Onde:
+\begin{itemize}
+  \item \textbf{NOME}: é o nome do módulo que será gerado.
+  \item \textbf{ARQUIVOi}: são os arquivos de \CXX{} que contém a interface
+    que você deseja que seja exportada no módulo.
+\end{itemize}
+
+Como explicado anteriormente, o OPWIG ainda não está separado das especificações
+de linguagens de \script{}, e portanto ao ser executado ele obrigatoriamente
+irá gerar um arquivo de código com o módulo para Lua e outro para Python. Ele gera
+os arquivos na mesma pasta de onde ele está sendo executado, seguindo o seguinte
+padrão de nomeação:
+\begin{verbatim}
+  <nome da linguagem de script>_<nome do módulo>_wrap.cxx
+\end{verbatim}
+
+\subsubsection{Usando os módulos gerados}
+Para usar os módulos gerados, basta compilar eles junto com seu programa, ligado com
+a libouroboros e com as libouroboros-\textit{linguagem} desejadas.
+
+Qualquer \script{} ou código de uma dada linguagem executado pelo seu programa (como 
+carregar um \script{} com o OPA) será capaz de importar o módulo gerado usando o
+sistema padrão da linguagem para importação de módulos. E o módulo em si deverá ser
+usado como qualquer outro módulo dessa linguagem.
