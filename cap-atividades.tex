@@ -113,25 +113,46 @@
   % TODO: Melhor falar sobre os casos de erro em outro lugar.
   possível, caso contrário ela irá dar erro), e também sobreescreve alguns operadores
   de \CXX{} para facilitar o uso de algumas operações, como por exemplo:
-  % TODO: Código de exemplo para todos esses itens! XD
   \begin{itemize}
     \item Executar o objeto como uma função: simplificado pelo operador \lang{()}
-      do \CXX{}, permitindo você usar o próprio \VObj{} como uma função;
+      do \CXX{}, permitindo você usar o próprio \VObj{} como uma função. Exemplo:
+      \begin{lstlisting}
+        VirtualObj vObj, vReturnObj, vObjArg1, ... vObjArgN; 
+        VirtualObj::List vObjList; // <=> std::list<VirtualObj> vObjList
+                                   // lista de VirtualObj.
+                                   
+        vReturnObj = vObj();
+        vReturnObj = vObj( vObjArg1, vObjArg2, ... , vObjArgN );
+        vReturnObj = vObj( vObjList );
+      \end{lstlisting}
     \item Acessar e alterar atributos do objeto: simplificado pelo operador
       \lang{[]} do \CXX{}, permitindo você usar o próprio \VObj{} como uma
-      tabela de símbolos;
+      tabela de símbolos. Exemplo:
+      \begin{lstlisting}
+        VirtualObj vObj, vAttrObj, vObj_AttrName;
+        vAttrObj = vObj["nome_do_atributo"];
+        vAttrObj = vObj[ vObj_AttrName ];
+      \end{lstlisting}
     \item Executar um método do objeto (instância de uma classe): simplificado pelo
       operador \lang{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
       passam a instância da classe (o próprio objeto) como o primeiro argumento da
       função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
-      \begin{verbatim}
-        (vObj | "nome_do_método")(argumentos)
-      \end{verbatim}
+      \begin{lstlisting}
+        (vObj | "nome_do_metodo")( /*argumentos como nas chamadas de funcao*/ );
+      \end{lstlisting}
     \item Conversão de valores: como a maioria dos métodos (e operadores) do
       \VObj{} recebe e retorna outros \VObj{}s, a conversão de valores é o que forma a
       principal ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, o \VObj{}
       possui 2 métodos \textit{templates} que possibilitam a conversão de valores entre
-      os dois ambientes.
+      os dois ambientes. Exemplo:
+      \begin{lstlisting}
+        T* valor = vObj.value<T*>();
+        vObj.set_value<T*>(valor);
+        
+        VirtualObj vNumObj; //suponha um VirtualObj contendo um numero
+        double num = vNumObj.value<double>(); // pegar o valor
+        vNumObj.set_value<double>(num);       // atribuir o valor
+      \end{lstlisting}
   \end{itemize}
 
   \begin{framed}
@@ -144,10 +165,8 @@
   \end{framed}
   
   \footnotetext{
-    \textit{Templates} também podem receber valores aritméticos e \textit{strings},
-    mas para o propósito do nosso trabalho, somente usamos com tipos.
-    % TODO: Não exatamente. O mais correto seria dizer que não usamos eles na interface do
-    %       VirtualObj, apenas.
+    \textit{Templates} também podem receber valores aritméticos e \str{s},
+    mas na interface do \VObj{}, e na maioria do nosso trabalho, somente usamos com tipos.
   }   
   
   Mas agora como que o usuário cria \VObj{s}? De algum lugar tem que vir os primeiros \VObj{s}, relativos
