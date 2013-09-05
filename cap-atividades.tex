@@ -90,13 +90,13 @@
   % TODO: Falar sobre as ferramentas básicas escolhidas: linguagem de
   %       programação, sistema operacional de preferência, compilador, etc.
   
+  
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
   Desenvolver uma interface comum entre as duas linguagens de \script{} foi uma das 
   primeiras coisas que fizemos, e hoje o trabalho realizado nesse quesito foi o que
   formou a \emph{Ouroboros Project API} (OPA). Desde o começo já desenvolvemos uma
-  % TODO: a frase abaixa está redundante com "interface genérica"
-  interface genérica capaz de usar uma ou outra linguagem de \script{} sem
+  interface generalizada capaz de usar uma ou outra linguagem de \script{} sem
   diferenças na interface para o usuário.
   
   % TODO: Aqui começa se referindo à (classe) VirtualOBj no femenino. Mais
@@ -107,12 +107,10 @@
   encapsula um objeto qualquer de uma máquina virtual, podendo representar um
   módulo de \script{} carregado, uma instância de uma classe, um valor na máquina
   virtual, entre outros. É praticamente a única classe que o usuário precisa 
-  % TODO: Dar alguns exemplos, como um usuário querendo ler um número de um script, etc.
   usar. Ela implementa alguns métodos que possibilitam ao usuário realizar 
-  operações comuns a qualquer linguagem de \script{} sobre o tal objeto (se for
-  % TODO: Melhor falar sobre os casos de erro em outro lugar.
-  possível, caso contrário ela irá dar erro), e também sobreescreve alguns operadores
-  de \CXX{} para facilitar o uso de algumas operações, como por exemplo:
+  operações comuns a qualquer linguagem de \script{} sobre o tal objeto, e 
+  também sobreescreve alguns operadores de \CXX{} para facilitar o uso de 
+  algumas operações, como por exemplo:
   \begin{itemize}
     \item Executar o objeto como uma função: simplificado pelo operador \lang{()}
       do \CXX{}, permitindo você usar o próprio \VObj{} como uma função. Exemplo:
@@ -174,8 +172,15 @@
   entre linguagens, e praticamente a única outra classe que o usuário precisa usar além dos \VObj{s}:
   o \SMgr{}.
   
-  O \SMgr{} gerencia as máquinas virtuais que estão disponíveis no sistema, permitindo ao usuário
-  executar algumas operações simples porém importantes nelas como um conjunto:
+  O \SMgr{} é uma classe que segue o padrão de \textit{singleton} e gerencia as máquinas virtuais que
+  estão disponíveis no sistema, permitindo ao usuário executar algumas operações simples porém 
+  importantes nelas como um conjunto:
+  
+  \begin{framed}
+    \textit{Singleton} é um padrão de projeto que permite ter apenas uma instância de uma classe
+    num dado momento.
+  \end{framed}
+  
   \begin{itemize}
     \item Inicialização e Finalização: o \SMgr{} tem métodos para inicializar e finalizar o conjunto
       de máquinas virtuais. A inicialização é necessária para poder usá-las, e a finalização 
@@ -209,13 +214,12 @@
   que queríamos.
   
   Como o SWIG é uma ferramenta já pronta, e que é executada para gerar código que será compilado
-  % TODO: Não diga que não há integração XD faz essa seção parecer sem sentido
-  com o código do usuário, não há muita integração entre ele e o nosso sistema. A principal
+  com o código do usuário, a integração entre ele e o nosso sistema é bem simples. A principal
   integração está no fato que o OPA usa uma interface padrão (para cada linguagem de \script{})
   gerada pelo SWIG para conseguir converter instâncias de tipos do usuário entre \CXX{} e as
   máquinas virtuais.
   
-  % TODO: Exemplos!
+  % TODO: Exemplos (de como usar o swig)!
   O SWIG usa arquivos separados, seguindo a interface deles, para determinar quais arquivos
   de \CXX{} ele irá ler, e como irá gerar o \textit{wrapper} para tal código. Nesses arquivos
   de interface do SWIG é também possível incluir código que será posto no código gerado, ou usado
@@ -256,7 +260,7 @@
       momento após a máquina virtual ter removido a instância. Portanto fizemos que métodos
       da interface \CXX{} que recebem instâncias de classes e cuidam da remoção delas 
       internamente tiram a posse de tal instância da máquina virtual.
-      % TODO: Faltou falar mais sobre o verdadeiro problema: a impraticidade do designdo
+      % TODO: Faltou falar mais sobre o verdadeiro problema: a impraticidade do design do
       %       SWIG em reconhecer essas especificações. A questão da posse em si é
       %       inerente ao problema, e não tem como ser evitada.
     \item O SWIG não tem suporte a classes, \textit{structs} e \textit{unions} aninhadas, e 
