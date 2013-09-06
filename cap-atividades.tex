@@ -87,9 +87,73 @@
 
   \section{Decisões de projeto}
   \label{sec:actividads:decisoes}
-  % TODO: Falar sobre as ferramentas básicas escolhidas: linguagem de
-  %       programação, sistema operacional de preferência, compilador, etc.
+  % TODO: checar toda essa seção (e sub-seções) por erros, e provavelmente
+  %       tem que arrumar um monte de coisa pra indicar o que é ou onde 
+  %       encontrar essas ferramentas (como CMake, Git, etc).
+  Quando começamos a desenvolver o nosso ``sistema de \script{s}'',
+  como ele era integrado à UGDK e fazia parte do USPGameDev, muitas das
+  nossas decisões do projeto refletiam os padrões de projeto que seguimos
+  no grupo.
   
+  Escolhemos \CXX{} como a linguagem de programação a ser usada para desenvolver
+  o sistema pois essa era a linguagem que a UGDK e os nossos jogos usavam, 
+  e além disso é comum linguagens de \script{} terem uma implementação de 
+  sua máquina virtual para \C{}, ou até \CXX{}, ambas das quais podemos 
+  usar facilmente no \CXX{}.
+  
+  Também decidimos inicialmente que o sistema seria generalizado para poder
+  funcionar com possivelmente qualquer linguagem de \script{}, sendo que
+  inicialmente iriamos incluir suporte à Lua (a qual o Wilson conhecia bem)
+  e Python (usada regularmente pelo Fernando). Para prover a geração de 
+  \textit{wrappers}, escolhemos o SWIG, que foi a melhor opção para o que 
+  necessitávamos segundo nossa pesquisa (o que essa ferramenta faz e como
+  usamos ela será melhor explicado mais adiante, na seção \ref{sec:actividads:integracaoswig}).
+  
+  Como os projetos do USPGameDev usavam CMake para simplificar sua compilação
+  em diversas plataformas e compiladores, nós também usavamos essa ferramenta.
+  Usualmente progamávamos em Linux (Debian ou Ubuntu) usando G++ como compilador,
+  ou em Windows com o Visual Studio 2010. Para controle de versão do código fonte
+  usamos o mesmo repositório da UGDK, que usava Git, hospedado no GitHub.
+  
+  \subsection{Mudanças no Projeto}
+  Quando começamos o trabalho de formatura, fizemos algumas mudanças nas nossas
+  decisões de projeto originais.
+  
+  Primeiramente, separamos o sistema para ser um projeto separado, totalmente
+  independente de qualquer outro projeto do USPGameDev, e o nomeamos Projeto
+  Ouroboros. Partindo do código de fonte original, criamos outro repositório
+  Git específico para o Ouroboros, ainda hospedado no GitHub.
+  
+  Também decidimos atualizar a linguagem de programação usada para \CXX{11},
+  uma versão bem mais recente do \CXX{} clássico, com diversas melhorias e
+  novas funcionalidades. Isso introduziu um problema no projeto: qual compilador
+  poderíamos usar. Como o \CXX{11} ainda é razoavelmente recente, nem todos
+  compiladores reconhecem todas suas novas funcionalidades. Mais notavelmente,
+  não conseguimos mais compilar no Windows com o Visual Studio 2010, e nem com
+  sua versão mais recente, Visual Studio 2012. No Linux, tivemos que usar uma
+  versão mais recente do G++, a 4.7. Enquanto existem versões aindam mais 
+  recentes, essa era a mínima que necessitamos, e ela não é padrão dos repositórios
+  %melhorar essa parte... ta meio estranho essa coisa do g++
+  de pacotes do Ubuntu atual, tivemos que atualizar o G++ separadamente.
+  
+  Como parte do trabalho de formatura, tiramos o SWIG do projeto para substituí-lo
+  pelo nosso gerador de \textit{wrappers}, o OPWIG (mais sobre na seção 
+  \ref{sec:actividads:opwig}). Também passamos a criar e usar bem mais testes
+  unitários para testar o nosso código, além de registrar nosso repositório Git
+  no Travis\footnotemark, que automaticamente tenta compilar nosso projeto e
+  rodar todos os testes.
+  
+  \footnotetext{
+    O Travis (\url{https://travis-ci.org/Rewasvat/ouroboros/}) é um servidor de 
+    integração contínua: ele automaticamente baixa seu repositório quando há
+    alguma mudança nele, e executa uma sequência de comandos determinada pelo
+    usuário através de um arquivo no repositório.
+  }
+  
+  Nossa metodologia de trabalho também foi alterada. Passamos a desenvolver o
+  sistema separadamente do USPGameDev, manter listas de tarefas que deveriam
+  ser feitas e a ter objetivos fixos a serem completados quanto mais cedo
+  possível.
   
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
@@ -199,6 +263,7 @@
   \end{itemize}
   
   \section{Integração com SWIG}
+  \label{sec:actividads:integracaoswig}
   O \emph{Simplified Wrapper and Interface Generator} (SWIG\footnotemark{}) é uma ferramenta
   para exportar uma interface \C{}/\CXX{} para diversas linguagens de \script{} de alto nível.
   Um dos usos padrão dessa ferramenta (e a forma como usamos) é gerar o código de \textit{wrapper}
@@ -294,6 +359,7 @@
   \end{itemize}
   
   \section{Nosso próprio gerador de \emph{wrappers}}
+  \label{sec:actividads:opwig}
   Boa parte do que explicamos nas seções anteriores neste capítulo foi o trabalho que realizamos
   antes do trabalho de formatura. E o principal ponto do trabalho é exatamente o de substituir 
   o SWIG por uma ferramenta própria que criamos, a fim de simplificar o uso e corrigir os
@@ -310,7 +376,7 @@
   do desenvolvimento, ainda não chegamos no ponto de ocorrer tais erros. 
   
   Mas pelo menos já conseguimos notar que será relativamente fácil corrigir o problema de classes, 
-  \textit{structs} e \textit{unions} aninhadas. De fato, nosso \textit{parser} de \CXX{} já reconheçe
+  \lang{structs} e \lang{unions} aninhadas. De fato, nosso \textit{parser} de \CXX{} já reconheçe
   tal funcionalidade, só falta adaptarmos o gerador de código para tratar esse caso e testá-lo.
   
   Outra funcionalidade presente no OPWIG que não conseguimos fazer com o SWIG foi o registro automático
@@ -337,7 +403,7 @@
       a implementação para Lua e Python.
   \end{itemize}
  
-  
+
   \section{Módulos de CMake}
   
   TODO
