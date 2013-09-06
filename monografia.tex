@@ -172,15 +172,12 @@ Isso será completo na versão final da monografia.
 
 % comandos novos %
 \newcounter{defcnt}
-\newcommand\definicao[2]{
+\newcommand\definicao[1]{
     \stepcounter{defcnt}
-    \vspace{0.5cm}
-    \vbox{
-    \textbf{Definição \thedefcnt \hspace{1cm} #1} \\ #2
-    \begin{center}
-        $ \square $
-    \end{center}
-}
+    \begin{framed}
+      \textbf{Definição \thechapter.\thedefcnt:} \\
+      #1
+    \end{framed}
 }
 \newcommand\notacao{
     \textbf{Notação} \hspace{0.2cm}
