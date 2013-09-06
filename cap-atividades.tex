@@ -167,6 +167,8 @@
   %       adiante, refere-se ao (objeto) VirtualObj no masculino. Precisamos
   %       bolar um jeito de deixar isso mais consistente e menos discordante.
   %       (discordância de gênero é um erro de português)
+  \subsection{\VObj{}}
+  \label{sec:atividades:opa:vobj}
   A principal classe dessa interface comum é a \VObj{}. Essa classe 
   encapsula um objeto qualquer de uma máquina virtual, podendo representar um
   módulo de \script{} carregado, uma instância de uma classe, um valor na máquina
@@ -229,8 +231,15 @@
   \footnotetext{
     \textit{Templates} também podem receber valores aritméticos e \str{s},
     mas na interface do \VObj{}, e na maioria do nosso trabalho, somente usamos com tipos.
-  }   
+  }
   
+  Na prática, o \VObj{} é uma classe que encapsula um \VData{}. Todas essas operações do
+  \VObj{} são repassadas para seu \VData{}. Essa classe que representa um objeto numa máquina
+  virtual específica, mas não deve ser usada diretamente pelo usuário, por isso existe o
+  \VObj{}. Mais sobre o \VData{} pode ser visto na subseção \ref{sec:atividades:opa:vdata}
+  
+  \subsection{\SMgr{}}
+  \label{sec:atividades:opa:smgr}
   Mas agora como que o usuário cria \VObj{s}? De algum lugar tem que vir os primeiros \VObj{s}, relativos
   aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface comum
   entre linguagens, e praticamente a única outra classe que o usuário precisa usar além dos \VObj{s}:
@@ -247,20 +256,81 @@
   
   \begin{itemize}
     \item Inicialização e Finalização: o \SMgr{} tem métodos para inicializar e finalizar o conjunto
-      de máquinas virtuais. A inicialização é necessária para poder usá-las, e a finalização 
-      termina as máquinas, liberando quaisquer recursos do computador que elas estejam usando.
+      de máquinas virtuais. A inicialização é necessária para poder usá-las e também serve para
+      especificar o diretório na qual \script{s} serão carregados pelo \SMgr{}, e a finalização 
+      termina as máquinas, liberando quaisquer recursos do computador que elas estejam usando. Exemplo:
+      \begin{lstlisting}
+        //SCRIPT_MANAGER() eh uma macro que retorna um ponteiro para a instancia do ScriptManager.
+        bool ok = SCRIPT_MANAGER()->Initialize("./caminho/para/os/scripts/");
+        
+        SCRIPT_MANAGER()->Finalize();
+      \end{lstlisting}
+      Se o valor booleano que o \lang{Initialize} retorna for verdadeiro, o \SMgr{} foi inicializado
+      sem problemas. Caso contrário ocorreu algum problema na inicialização dele.
     \item Registro e busca de máquinas virtuais: o \SMgr{} inicialmente não sabe quais são as máquinas
       virtuais disponíveis. O usuário pode tanto registrá-las manualmente com um simples método, quanto
       delegar essa responsabilidade para o código gerado pelo OPWIG, como veremos mais adiante.
-      Caso seja necessário, ele pode buscar uma máquina virtual registrada.
+      Caso seja necessário, ele pode buscar uma máquina virtual registrada. As máquinas virtuais
+      são representadas no nosso sistema pela classe \LangWrap{}, que é uma classe abstrata,
+      devendo ser implementada para cada máquina virtual. Exemplo:
+      \begin{lstlisting}
+        //Registrando uma maquina virtual.
+        LangWrapper* vm = new python::PythonWrapper();
+        SCRIPT_MANAGER()->Register(vm);
+        
+        //Buscando uma maquina virtual.
+        LangWrapper* pyvm = SCRIPT_MANAGER()->GetWrapper("Python");
+        // pyvm sera equivalente ao vm declarado antes.
+      \end{lstlisting}
     \item Executar código: o \SMgr{} permite ao usuário executar um código qualquer, dado como uma
-      cadeia de caracteres, na máquina virtual de sua escolha.
+      cadeia de caracteres, na máquina virtual de sua escolha. Exemplo:
+      \begin{lstlisting}
+        SCRIPT_MANAGER()->ExecuteCode("Linguagem", "codigo em tal linguagem");
+      \end{lstlisting}
     \item Carregar módulos: possivelmente o método mais importante do \SMgr{}, este método recebe
       um caminho para um \script{} (sem a extensão de arquivo). Ele então determina se o \script{}
       existe, e de acordo com a extensão do arquivo, qual máquina virtual deve rodá-lo. A tal máquina
       virtual então carrega o \script{} e a função retorna um \VObj{} representando o módulo em
-      sua linguagem de \script{}.
+      sua linguagem de \script{}. Exemplo:
+      \begin{lstlisting}
+        VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("modulo");
+        VirtualObj modul2 = SCRIPT_MANAGER()->LoadModule("pacote.subpacote.modulo");
+      \end{lstlisting}
   \end{itemize}
+  
+  \subsection{\LangWrap{}}
+  \label{sec:atividades:opa:langwrapper}
+  O \LangWrap{} é uma das duas classes abstratas do sistema que devem ser implementadas para
+  cada linguagem para que ela consiga ser usada pelo OPA. O \LangWrap{} representa a máquina
+  virtual da linguagem em si, sendo usada internamente pelo \SMgr{}. Raramente ela será
+  usada diretamente pelo usuário. Alguns métodos importantes de sua interface são:
+  
+  \begin{itemize}
+    \item Inicialização e Finalização da máquina virtual. São chamados pelo \SMgr{} internamente.
+    \item Método para retornar a cadeia de caracteres correspondente à extensão de um 
+      arquivo de \script{} dessa linguagem.
+    \item Carregar módulos, chamado pelo \SMgr{} internamente.
+    \item Executar código arbitrário, também chamado pelo \SMgr{}.
+    \item Retornar um novo \VData{} (ver próxima seção) vazio correspondente a essa linguagem
+      (uma instância vazia da implementação do \VData{} para esta linguagem).
+  \end{itemize}
+  
+  \subsection{\VData{}}
+  \label{sec:atividades:opa:vdata}
+  \VData{} é a segunda classe abstrata do sistema que deve ser implementada para uma linguagem
+  de \script{} poder ser usada pelo OPA. Ela representa um objeto contido na máquina virtual
+  de uma linguagem específica.
+  
+  Essa classe é uma interface para métodos que devem implementar todas aquelas operações do 
+  \VObj{} (descritas anteriormente), de tal jeito que o \VObj{} chama essas funções na implementação
+  de seus métodos e operadores. Dessa forma, um \VObj{} pode ter um \VData{} de uma linguagem 
+  ou de outra sem se preocupar de qual é, graças ao polimorfismo através de herança.
+  
+  Fora métodos para as operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto
+  importante da interface do \VData{} é um método para retornar a instância (contida no \SMgr{}) 
+  da implementação do \LangWrap{} que representa a máquina virtual correspondente a este \VData{}
+  em questão.
+  
   
   \section{Integração com SWIG}
   \label{sec:actividads:integracaoswig}
