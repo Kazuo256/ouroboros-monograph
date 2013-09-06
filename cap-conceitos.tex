@@ -2,15 +2,18 @@
 \chapter{Conceitos Necessários}
 \label{cap:conceitos}
 
-  Nosso trabalho lida com os mecanismos que jazem por trás de uma linguagem de
-  programação, que a fazem funcionar. Ele inspeciona as informações internas e
-  estende o alcance desse mecanismo, de forma que diferentes linguagens consigam
-  interagir. Por isso vamos esclarecer a ideia básica do que é uma linguagem de
-  programação - na seção \ref{cap:conceitos:linguagens} - e de como programas
-  escritos com elas são executados - na seção \ref{cap:conceitos:compiladores}.
-  E então, como o sistema que desenvolvemos cai em uma situação semelhante,
-  também apresentaremos um par de conceitos computacionais usados no processo de
-  analisar o código escrito em uma determinada linguagem - na seção
+  O que significa integrar linguagens de programação? O que faz uma dessas
+  linguagens ser uma \textbf{linguagem de \script{}} ou não? Como isso interfere
+  no desenvolvimento da ferramenta que apresentamos aqui? É com o intuito de
+  responder essas questões que fizemos esse capítulo. Nele, apresentamos a
+  teoria e os conceitos por trás do nosso projeto.
+
+  Começamos esclarecendo a ideia geral do que é uma linguagem de programação -
+  na seção \ref{cap:conceitos:linguagens} - e de como programas escritos com
+  elas podem ser executados - na seção \ref{cap:conceitos:compiladores}.
+  E então, uma vez que o sistema que desenvolvemos lida com uma situação
+  semelhante, também apresentaremos um par de conceitos computacionais usados
+  quando o código escrito em uma determinada linguagem é processado - na seção
   \ref{cap:conceitos:gramaticas}.
 
   \section{Linguagens de Programação}
@@ -21,80 +24,59 @@
   de descrevê-lo de forma que outros possam reproduzí-lo. E acontece que alguns
   procedimentos (como calcular a média de um conjunto de números ou ordenar uma
   sequência de valores) podem ser descritos de maneira tão exata que podemos
-  fazer computadores digitais executá-los para nós.
+  mandar computadores digitais realizá-los para nós. Dizemos que um processo
+  assim é uma \textbf{computação}, pois ele trabalha apenas sobre um
+  \textbf{modelo computacional}.
   
-  Obviamente, esses últimos compõem o tipo de processo que é o objeto de
-  interesse aqui. São processos chamados de \emph{computações} - justificando o
-  termo \emph{computador}. Uma maneira um pouco mais formal de definí-los pode
-  ser derivada de \cite[Introduction]{pl:00}:
+  Em certo ponto, ao invés de ensinarmos um indivíduo a fazer algo, simplesmente
+  escrevemos receitas e manuais que especificam como o procedimento deve ser
+  feito. No caso dos computadores, isso significa fazer um \textbf{programa}
+  que descreve as ações que a máquina deve executar. E da mesma maneira que
+  escrevemos receitas e manuais usando uma linguagem natural (como Português ou
+  Inglês), programas são expressos através de \textbf{linguagens de
+  programação}.
 
   \definicao{
-    Dada uma coleção de valores e operações, chamada de \textbf{modelo
-    computacional}, a aplicação de uma sequência dessas operações sobre um
-    desses valores para obter outro valor é o que constitui uma
-    \textbf{computação}.
+    De maneira mais formal, podemos definir os termos acima conforme
+    \cite[Introduction]{pl:00}:
+    \begin{enumerate}
+      \item Um \textbf{modelo computacional} é uma coleção de valores e operações.
+      \item Uma \textbf{computação} é a aplicação de um sequência de operações
+            sobre um valor para obter outro valor.
+      \item Um \textbf{programa} é a especificação de uma computação.
+      \item Uma \textbf{linguagem de programação} é uma notação para escrever
+            programas.
+    \end{enumerate}
   }
 
-  %Por exemplo, o processador de um computador é responsável por executar
-  %operações sobre dados binários armazenados nos registradores ou na
-  %memória. Assim, quando esses dados são usados para produzir novos valores,
-  %podemos dizer que ocorreu uma \emph{computação}. Nesse caso, o \emph{modelo
-  %computacional} seria determinado pelos circuitos lógicos do processador e
-  %pelos valores representáveis nas diferentes unidades de armazenamento da
-  %máquina.
+  E com isso gostaríamos de esclarecer que quando dizemos ``integração entre
+  linguagens de programação'' estamos fazendo um abuso de expressão que na
+  verdade significa ``integração entre programas escritos em diferentes
+  linguagens de programação''. E não ``composição de várias linguagens de
+  programação em uma única linguagem''. Além disso, isso mostra que na realidade
+  o usuário do nosso sistema estará lidando com \emph{múltiplos} programas que,
+  por estarem integrados, comportam-se como se fossem um só.
 
-  % TODO: exemplo com ábaco?
-
-  Da mesma maneira que existem diversas maneiras de se ensinar uma pessoa a
-  dirigir um carro, há diferentes métodos de representar uma computação de
-  maneira que um computador seja capaz de executá-la. Essa representação, por
-  sua vez, precisa de uma \emph{linguagem} através da qual humanos podem
-  expressá-la e os computadores podem processá-la. E com isso chegamos ao
-  assunto dessa seção:
-
-  \definicao{
-    A descrição de uma computação é um \textbf{programa}, e a notação com
-    a qual ela é expressa é uma \textbf{linguagem de programação}.
-  }
-
-  %Usando novamente o exemplo do computador, as operações que o processador
-  %executa seguem uma série de instruções escritas em código de máquina. Essa
-  %série de instruções compões um \emph{programa}, e o representação usada para
-  %escrevê-las é uma \emph{linguagem de programação} conhecida como
-  %\emph{código de máquina}. Tipicamente, ela é baseada em valores puramente
-  %numéricos, tornando incrivelmente difícil sua compreensão por humanos.
-
-  % TODO: exemplo com receitas?
-
-  %Como veremos na seção \ref{cap:conceitos:compiladores} a seguir, essas
-  %definições também podem ser usadas em outros contextos. Existem outras
-  %manifestações de modelos computacionais fora o \emph{hardware} de um
-  %computador. E a grande maioria programadores não escreve código de máquina.
-
-  Juntando todos esses elementos, entendemos que se usa uma linguagem de
-  programação para expressar um programa, isso é, uma descrição de como computar
-  algo dentro de um modelo computacional. Bom, sabemos que existem \emph{muitas}
-  linguagens de programação. Cada uma delas tem uma maneira particular de
-  satisfazer essa caracterização. Por exemplo, a nível de \emph{hardware}, temos
-  a linguagem de código de máquina, cujo modelo computacional é composto pelas
-  operações que o processador é capaz de executar somadas aos possíveis valores
-  binários que podem ser armazenados na memória disponível.
-
-  Nosso interesse maior está, é claro, nas chamadas linguagens de \script{}.
-  Tentaremos, na seção \ref{cap:conceitos:compiladores} a seguir, mostrar os
-  aspectos dessas linguagens que exploramos na elaboração do nosso projeto.
+  Como sabemos, existem inúmeras linguagens de programação. Ao longo dos anos,
+  várias classificações foram surgindo como tentativa de diferenciar o
+  propósito, o funcionamento e as vantagens de cada uma delas. Cada
+  classificação leva em conta um aspecto diferente da linguagem. No que diz
+  respeito a esse trabalho, estamos interessados em reconhecer como os programas
+  escritos nelas são usados para realizar as computações correspondentes.
+  Entendendo esse mecanismo, saberemos se e como é possível interligar a
+  execução de programas escritos em diferentes linguagens.
 
   \section{Compiladores e máquinas virtuais}
   \label{cap:conceitos:compiladores}
 
-  O título dessa monografia se refere a ``linguagens de \script{}''. Apesar de
-  haver um senso comum entre quais linguagens de programação são, de fato,
-  linguagens de \script{}, é difícil expressar claramente o que isso significa.
-  Por exemplo, é bastante aceito que \lang{Lua} seja uma linguagem de \script{},
-  enquanto que \lang{Java}, não. % TODO: citation needed
-  No entanto, tanto uma quanto a outra compilam seus arquivos de código fonte em
-  \emph{bytecode}, que por sua vez é processado por suas máquinas virtuais
-  implementadas em \C{} ou \CXX{}.
+  %O título dessa monografia se refere a ``linguagens de \script{}''. Apesar de
+  %haver um senso comum entre quais linguagens de programação são, de fato,
+  %linguagens de \script{}, é difícil expressar claramente o que isso significa.
+  %Por exemplo, é bastante aceito que \lang{Lua} seja uma linguagem de \script{},
+  %enquanto que \lang{Java}, não. % TODO: citation needed
+  %No entanto, tanto uma quanto a outra compilam seus arquivos de código fonte em
+  %\emph{bytecode}, que por sua vez é processado por suas máquinas virtuais
+  %implementadas em \C{} ou \CXX{}.
 
   \section{Gramáticas e analisadores léxico-sintáticos}
   \label{cap:conceitos:gramaticas}
