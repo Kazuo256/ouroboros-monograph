@@ -11,10 +11,10 @@
   Começamos esclarecendo a ideia geral do que é uma linguagem de programação -
   na seção \ref{cap:conceitos:linguagens} - e de como programas escritos com
   elas podem ser executados - na seção \ref{cap:conceitos:compiladores}.
-  E então, uma vez que o sistema que desenvolvemos lida com uma situação
-  semelhante, também apresentaremos um par de conceitos computacionais usados
+  E então apresentaremos um par de conceitos computacionais usados
   quando o código escrito em uma determinada linguagem é processado - na seção
-  \ref{cap:conceitos:gramaticas}.
+  \ref{cap:conceitos:gramaticas} -, uma vez que o sistema que desenvolvemos lida
+  com uma situação semelhante.
 
   \section{Linguagens de Programação}
   \label{cap:conceitos:linguagens}
@@ -25,7 +25,7 @@
   procedimentos (como calcular a média de um conjunto de números ou ordenar uma
   sequência de valores) podem ser descritos de maneira tão exata que podemos
   mandar computadores digitais realizá-los para nós. Dizemos que um processo
-  assim é uma \textbf{computação}, pois ele trabalha apenas sobre um
+  assim é uma \textbf{computação}, pois ele trabalha estritamente sobre um
   \textbf{modelo computacional}.
   
   Em certo ponto, ao invés de ensinarmos um indivíduo a fazer algo, simplesmente
@@ -61,22 +61,68 @@
   várias classificações foram surgindo como tentativa de diferenciar o
   propósito, o funcionamento e as vantagens de cada uma delas. Cada
   classificação leva em conta um aspecto diferente da linguagem. No que diz
-  respeito a esse trabalho, estamos interessados em reconhecer como os programas
-  escritos nelas são usados para realizar as computações correspondentes.
-  Entendendo esse mecanismo, saberemos se e como é possível interligar a
-  execução de programas escritos em diferentes linguagens.
+  respeito a esse trabalho, estamos interessados em discriminar como os
+  programas escritos nelas são usados para realizar as computações que eles
+  representam. Em outras palavras, como essas linguagens fazem para ``rodar''
+  seus programas. Entendendo esse mecanismo, saberemos \emph{se} e \emph{como} é
+  possível interligar a execução de programas escritos em diferentes linguagens.
 
   \section{Compiladores e máquinas virtuais}
   \label{cap:conceitos:compiladores}
 
-  %O título dessa monografia se refere a ``linguagens de \script{}''. Apesar de
-  %haver um senso comum entre quais linguagens de programação são, de fato,
-  %linguagens de \script{}, é difícil expressar claramente o que isso significa.
-  %Por exemplo, é bastante aceito que \lang{Lua} seja uma linguagem de \script{},
-  %enquanto que \lang{Java}, não. % TODO: citation needed
-  %No entanto, tanto uma quanto a outra compilam seus arquivos de código fonte em
-  %\emph{bytecode}, que por sua vez é processado por suas máquinas virtuais
-  %implementadas em \C{} ou \CXX{}.
+  A princípio, programas era implantados diretamente na máquina que os
+  executaria, que conhecemos como \emph{computador}. Isso era feito de diversas
+  maneiras, em geral envolvendo manipular fisicamente a máquina através de
+  chaves ou cartões. Conforme os computadores foram ficando mais elaborados,
+  tornou-se possível usar eles mesmos para escrever programas diretamente em
+  sua memória. Como é de se esperar, eles eram escritos usando alguma linguagem
+  de programação, como vimos na seção anterior.
+
+  Ainda assim, escrever nessas primeiras linguagens envolvia usar apenas valores
+  numéricos que representavam instruções explícitas do \emph{hardware} da
+  máquina. Essas linguagens são chamadas de \textbf{código de máquina}. E cada
+  modelo de computador tinha uma diferente, forçando o programador a aprender
+  várias linguagens para ser capaz de desenvolver em diferentes ambientes. A
+  solução para isso foram os \textbf{compiladores}: programas que processavam
+  código escrito \emph{em alguma outra linguagem de programação} e escreviam
+  o equivalente - segundo a semântica dessa linguagem - em código de máquina.
+
+  \definicao{
+    Juntando o que acabamos de ver, temos:
+    \begin{enumerate}
+      \item \textbf{Código de máquina} é toda linguagem de programação que é
+            processada diretamente por uma máquina como um computador.
+      \item Uma \textbf{linguagem de programação compilada} é uma linguagem cujo
+            código é processado por um programa, chamado de \textbf{compilador},
+            e traduzida para código de máquina.
+    \end{enumerate}
+  }
+
+  As primeiras linguagens compiladas eram as \textbf{linguagens de montagem}. Os
+  termos delas eram compostos de comando mnemônicos que em geral correspondiam
+  diretamente ao código de máquina que eles representavam. Por exemplo o trecho
+
+  \begin{verbatim}
+    add ecx, edx\end{verbatim}
+
+  \hspace{-16pt}é compilado para a sequência de valores numéricos que indicam,
+  em código de máquina, a instrução de \emph{hardware} responsável por somar os
+  valores nos registradores \lang{ecx} e \lang{edx}, escrevendo o resultado em
+  um deles em seguida (isso depende da linguagem de montagem usada).
+
+  Depois disso, outras linguagens foram sendo inventadas que cada vez mais
+  permitiam ao programador abstrair as operações de \emph{hardware} por trás
+  do código que ele escrevia. Isso passou a ser responsabilidade do compilador,
+  que em certo ponto passou a ser capaz de até otimizar o código de máquina
+  gerado ao detectar padrões conhecidos no que o programador fornecia através
+  da linguagem compilada. Havia quem chamasse código de máquina e linguagens de
+  montagem de \emph{linguagens de baixo nível}, e as demais linguagens
+  compiladas de \emph{linguagens de alto nível}.
+
+  % TODO: eficiência vs produtividade => justifica linguagens de alto nível.
+  % TODO: linguagens de script que eram linguagens interpretadas.
+  % TODO: linguagens de script que usam máquinas virtuais.
+  % TODO: se vira ae para descobrir um jeito da hora de falar essas coisas
 
   \section{Gramáticas e analisadores léxico-sintáticos}
   \label{cap:conceitos:gramaticas}
