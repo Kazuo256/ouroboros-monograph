@@ -92,7 +92,7 @@
   %       encontrar essas ferramentas (como CMake, Git, etc).
   Quando começamos a desenvolver o nosso ``sistema de \script{s}'',
   como ele era integrado à UGDK e fazia parte do USPGameDev, muitas das
-  nossas decisões do projeto refletiam os padrões de projeto que seguimos
+  nossas decisões do projeto refletiam os padrões de projeto que seguíamos
   no grupo.
   
   Escolhemos \CXX{} como a linguagem de programação a ser usada para desenvolver
@@ -103,7 +103,7 @@
   
   Também decidimos inicialmente que o sistema seria generalizado para poder
   funcionar com possivelmente qualquer linguagem de \script{}, sendo que
-  inicialmente iriamos incluir suporte à Lua (a qual o Wilson conhecia bem)
+  inicialmente iríamos incluir suporte à Lua (a qual o Wilson conhecia bem)
   e Python (usada regularmente pelo Fernando). Para prover a geração de 
   \textit{wrappers}, escolhemos o SWIG, que foi a melhor opção para o que 
   necessitávamos segundo nossa pesquisa (o que essa ferramenta faz e como
@@ -111,11 +111,11 @@
   
   Como os projetos do USPGameDev usavam CMake para simplificar sua compilação
   em diversas plataformas e compiladores, nós também usavamos essa ferramenta.
-  Usualmente progamávamos em Linux (Debian ou Ubuntu) usando G++ como compilador,
+  Usualmente progamávamos em Linux (Debian ou Ubuntu) usando \lang{G++} como compilador,
   ou em Windows com o Visual Studio 2010. Para controle de versão do código fonte
   usamos o mesmo repositório da UGDK, que usava Git, hospedado no GitHub.
   
-  \subsection{Mudanças no Projeto}
+  \subsection{Mudanças no Projeto para o Trabalho de Formatura}
   Quando começamos o trabalho de formatura, fizemos algumas mudanças nas nossas
   decisões de projeto originais.
   
@@ -131,13 +131,13 @@
   compiladores reconhecem todas suas novas funcionalidades. Mais notavelmente,
   não conseguimos mais compilar no Windows com o Visual Studio 2010, e nem com
   sua versão mais recente, Visual Studio 2012. No Linux, tivemos que usar uma
-  versão mais recente do G++, a 4.7. Enquanto existem versões aindam mais 
+  versão mais recente do \lang{G++}, a 4.7. Enquanto existem versões ainda mais 
   recentes, essa era a mínima que necessitamos, e ela não é padrão dos repositórios
   %melhorar essa parte... ta meio estranho essa coisa do g++
-  de pacotes do Ubuntu atual, tivemos que atualizar o G++ separadamente.
+  de pacotes do Ubuntu estável atual, tivemos que atualizar o \lang{G++} separadamente.
   
   Como parte do trabalho de formatura, tiramos o SWIG do projeto para substituí-lo
-  pelo nosso gerador de \textit{wrappers}, o OPWIG (mais sobre na seção 
+  pelo nosso gerador de \textit{wrappers}, o OPWIG (mais sobre ele na seção 
   \ref{sec:actividads:opwig}). Também passamos a criar e usar bem mais testes
   unitários para testar o nosso código, além de registrar nosso repositório Git
   no Travis\footnotemark, que automaticamente tenta compilar nosso projeto e
@@ -151,9 +151,8 @@
   }
   
   Nossa metodologia de trabalho também foi alterada. Passamos a desenvolver o
-  sistema separadamente do USPGameDev, manter listas de tarefas que deveriam
-  ser feitas e a ter objetivos fixos a serem completados quanto mais cedo
-  possível.
+  sistema separadamente do USPGameDev, manter listas de tarefas pendentes e a
+  ter objetivos fixados periodicamente para serem completados o quanto antes.
   
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
@@ -234,9 +233,14 @@
   }
   
   Na prática, o \VObj{} é uma classe que encapsula um \VData{}. Todas essas operações do
-  \VObj{} são repassadas para seu \VData{}. Essa classe que representa um objeto numa máquina
-  virtual específica, mas não deve ser usada diretamente pelo usuário, por isso existe o
+  \VObj{} são repassadas para seu \VData{}\footnotemark. Esta classe, que representa um objeto numa máquina
+  virtual específica, não deve ser usada diretamente pelo usuário. Para isso existe o
   \VObj{}. Mais sobre o \VData{} pode ser visto na subseção \ref{sec:atividades:opa:vdata}
+  
+  \footnotetext{
+    Esse é um padrão de projeto específico de \CXX{} conhecido como
+    \textbf{ponteiro para implementação}.
+  }
   
   \subsection{\SMgr{}}
   \label{sec:atividades:opa:smgr}
@@ -312,7 +316,7 @@
     \item Carregar módulos, chamado pelo \SMgr{} internamente.
     \item Executar código arbitrário, também chamado pelo \SMgr{}.
     \item Retornar um novo \VData{} (ver próxima seção) vazio correspondente a essa linguagem
-      (uma instância vazia da implementação do \VData{} para esta linguagem).
+      (uma instância vazia da classe que implementa o \VData{} para esta linguagem).
   \end{itemize}
   
   \subsection{\VData{}}
@@ -328,8 +332,8 @@
   
   Fora métodos para as operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto
   importante da interface do \VData{} é um método para retornar a instância (contida no \SMgr{}) 
-  da implementação do \LangWrap{} que representa a máquina virtual correspondente a este \VData{}
-  em questão.
+  da implementação do \LangWrap{} que representa a máquina virtual responsável por esta instância
+  de \VData{}.
   
   
   \section{Integração com SWIG}
