@@ -282,5 +282,33 @@ usado como qualquer outro módulo dessa linguagem.
 
 \section{Metas para a versão final}
 \label{sec:resultados:pendencias}
+Nossas metas para a versão final do trabalho são as seguintes:
 
-
+\begin{itemize}
+  \item \textbf{Conversão de Tipos do Usuário}: Isso permitiria a exportação de
+    funções e variáveis com tipos definidos pelo usuário que foram exportados também.
+  \item \textbf{Pré-processador}: O pré-processador de \C{}/\CXX{} é uma parte 
+    importante da linguagem, podendo até definir trechos de código condicionalmente.
+    Colocar um pré-processador no \textit{parser} possibilitaria reconhecer
+    códigos \CXX{} bem mais complexos. Nós vamos analisar a dificuldade de implementar
+    essa funcionalidade, e se acharmos que não gastará muito tempo vamos colocá-la -
+    para tal provavelmente vamos procurar alguma ferramenta pronta que ajude nisso.
+  \item \textbf{Remover o SWIG completamente}: Enquanto o propósito do OPWIG é substituir
+    o SWIG, ainda não removemos ele completamente do projeto ainda.
+  \item \textbf{Exceções na OPA}: Modificar o OPA para usar \textit{exceções} de \CXX{}
+    quando ocorrerem problemas, para melhorar o sistema e as opções de tratamento de
+    erros para os usuários.
+  \item \textbf{Separar linguagens no OPWIG}: Assim como na libouroboros, queremos que
+    a implementação de cada linguagem para o OPWIG seja definida e compilada separadamente
+    do código principal do OPWIG.
+  \item \textbf{Módulos CMake}: Criar módulos CMake para facilitar o uso do sistema
+    pelos usuários.
+  \item \textbf{Exportar \lang{Enum}s}: \lang{Enum} é uma estrutura de dados de \CXX{} 
+    que representa um tipo e seus possíveis valores. O \textit{parser} do OPWIG já
+    é capaz de reconhecer essas estruturas, porém o gerador de código ainda não
+    exporta ela para as linguagens de \script{}.
+  \item \textbf{Documentação}: Boa parte da interface do sistema com o usuário ainda
+    não está documentada. Isso facilitaria o uso do sistema para os usuários.
+  \item \textbf{Tutoriais}: Alguns tutoriais sobre como usar as diferentes partes do
+    sistema também seria bem útil para ajudar os usuários.
+\end{itemize}
