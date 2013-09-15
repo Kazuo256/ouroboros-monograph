@@ -22,8 +22,38 @@ tecnologia por trás deles.
 
 \section{Motivação}
 \label{sec:intr:motivacao}
+O que nos levou a fazer esse sistema foi nosso trabalho no USPGameDev\footnote{
+  O USPGameDev é um grupo de pesquisa e desenvolvimento de jogos da
+  Universidade de São Paulo. Ver \url{uspgamedev.org} (última visita 
+  em 25/07/2013).
+}.
+Lá, nós (e os outros da equipe) desenvolvemos uma plataforma para jogos
+bidimensionais (a UGDK\footnotemark), além de um jogo que usava a plataforma, ambos feitos em \CXX{}.
 
-Isso será escrito na versão final da monografia.
+\footnotetext{
+  A UGDK é um dos principais projetos do USPGameDev, e seu
+  nome é um acrônimo que pode significar tanto \emph{USP Game Development
+  Kit} quanto \emph{USPGameDev Kit}. Ela é desenvolvida em \CXX{}.
+}
+
+Mas \CXX{}, mesmo sendo extremamente poderosa, não é exatamente uma linguagem
+fácil de usar, o que começou a causar gargalos no desenvolvimento
+dos nossos programas. Decidimos que precisávamos ter suporte a alguma linguagem
+de \script{}, mas não conseguimos nos decidir qual usar. Por um lado tínhamos
+Python, com suas vastas extensões e facilidades, e por outro Lua, com sua
+simplicidade e versatilidade.
+
+Eventualmente pensamos numa idéia ``melhor de dois mundos'': usar ambas linguagens.
+E depois de algumas discussões sobre como implementar tal idéia e outras opções,
+vimos que não só essa era uma das melhores opções para nós, como também era
+possível ser feita. Então nós dois (autores desse trabalho de formatura) começamos
+a desenvolver o então chamado ``sistama de scripts da UGDK''. Após alguns meses
+de desenvolvimento o sistema ficou pronto para uso, porém depois que começamos 
+a usá-lo em grande porte fomos descobrindo alguns problemas no sistema.
+
+Finalmente, decidimos usar o sistema que desenvolvemos no nosso trabalho de 
+formatura, com o objetivo de melhorar alguns pontos do sistema e corrigir
+os problemas encontrados.
 
 \section{Objetivos}
 \label{sec:intr:objetivos}
