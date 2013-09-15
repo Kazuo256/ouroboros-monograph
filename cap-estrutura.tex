@@ -1,7 +1,7 @@
 \chapter{Estrutura do Projeto}
 \label{sec:estrutura}
 
-  Esse capítulo tem o objetivo de expor o conceito que projetamos para nosso
+  Esse capítulo tem o objetivo de expor a estrutura que projetamos para nosso
   sistema. Existe uma certa complexidade em entender como os diversos
   componentes dele se relacionam - principalmente devido ao fato deles usarem
   técnicas como geração de código automatizada e análise reflexiva de código. A
@@ -70,57 +70,61 @@
     
     Note que ao longo desta monografia iremos repetir algumas vezes o ato de
     ``exportar'' e ``importar'' elementos entre linguagens. A não ser que o
-    contrário seja dito, definimos ``exportar'' nesse contexto como o ato
-    da linguagem nativa enviar ou disponibilizar à máquina virtual elementos
-    nativos (uma interação tipo (B)), enquanto ``importar'' será o ato
-    da linguagem nativa pegar ou adquirir elementos da máquina virtual, que 
-    é uma interação tipo (A).
+    contrário seja dito, ``exportar'' refere-se nesse contexto ao ato da
+    linguagem nativa enviar ou disponibilizar à máquina virtual elementos
+    nativos (uma interação tipo (B)), enquanto que ``importar'' será o ato
+    da linguagem nativa pegar ou adquirir elementos a partir da máquina virtual,
+    que é uma interação tipo (A).
 
   \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
   \label{sec:estrutura:opa}
   
-  Uma máquina virtual de uma linguagem de \script{} é implementada em uma outra
-  linguagem, que chamamos de sua linguagem nativa. Enquanto nosso sistema trabalha
-  com as linguagens nativas \C{} ou \CXX{}, podem existir implementações da máquina
-  virtual para diversas linguagens. É comum a implementação de uma máquina virtual
-  disponibilizar uma API para sua linguagem nativa, provendo funções, constantes
-  e outros elementos para que a linguagem nativa consiga acessar e manipular a
-  máquina virtual e seu conteúdo. Isso na prática que representa a interação do
-  tipo (A).
+    Uma máquina virtual de uma linguagem de \script{} é implementada em uma outra
+    linguagem, que chamamos de sua linguagem nativa. Enquanto nosso sistema trabalha
+    com as linguagens nativas \C{} ou \CXX{}, podem existir implementações da máquina
+    virtual para diversas linguagens. É comum a implementação de uma máquina virtual
+    disponibilizar uma API para sua linguagem nativa, provendo funções, constantes
+    e outros elementos para que a linguagem nativa consiga acessar e manipular a
+    máquina virtual e seu conteúdo. Isso que representa, na prática, a interação do
+    tipo (A).
 
-  Infelizmente, para um usuário comum que está desenvolvendo um programa em
-  linguagem nativa, usar a API de uma máquina virtual é normalmente uma tarefa
-  difícil e trabalhosa pela complexidade da API e do tempo para aprender a 
-  usá-la. Foi para resolver esse problema que desenvolvemos a biblioteca de 
-  abstração de APIs de linguagens de \script{}, também conhecida como 
-  \textit{libouroboros} ou simplesmente como \emph{Ouroboros Project API} (OPA).
-  
-  A libouroboros é a parte do nosso projeto que provê a interação do tipo (A),
-  como explicada acima. Ela consiste em um conjunto de classes e funções em 
-  \CXX{} que generalizam o meio com o qual se realiza diversas operações com 
-  a API da linguagem de \script{}, como:
-  \begin{itemize}
-    \item carregar um \script{};
-    \item executar uma função na máquina virtual;
-    \item pegar/configurar um objeto/atributo/valor na máquina virtual;
-    \item converter valores entre linguagem nativa e a máquina virtual;
-  \end{itemize}
-  Parte desse conjunto de classes define uma interface que deve ser implementada para
-  cada linguagem de \script{}, possibilitando que o sistema reconheça tal linguagem e 
-  realize as operações descritas. Essa implementação usa diretamente a API da linguagem
-  para satisfazer nossa interface. Em contrapartida, tal implementação é usada pelo 
-  resto do sistema. Desse jeito, o usuário final do OPA não precisa usar esses 
-  componentes, nem se preocupar com a API da linguagem de \script{}, a não ser que
-  ele vá adicionar o suporte a ela no sistema.
+    Infelizmente, para um usuário comum que está desenvolvendo um programa em
+    linguagem nativa, usar a API de uma máquina virtual é normalmente uma tarefa
+    difícil e trabalhosa pela complexidade da API e pelo tempo necessário para
+    aprender a usá-la. Foi para resolver esse problema que desenvolvemos a
+    biblioteca de abstração de APIs de linguagens de \script{}, também conhecida
+    como \textit{libouroboros} ou simplesmente como \emph{Ouroboros Project API}
+    (OPA).
+    
+    A libouroboros é a parte do nosso projeto que provê a interação do tipo (A),
+    como explicada acima. Ela consiste em um conjunto de classes e funções em 
+    \CXX{} que generalizam o meio com o qual se realiza diversas operações com 
+    a API da linguagem de \script{}, como:
+    \begin{itemize}
+      \item carregar um \script{};
+      \item executar uma função na máquina virtual;
+      \item obter/configurar um objeto/atributo/valor na máquina virtual;
+      \item converter valores entre linguagem nativa e a máquina virtual;
+    \end{itemize}
+    Uma parte dessa API é uma interface polimórfica que, ao ser implementada usando
+    as rotinas da máquina virtual de uma linguagem de \script{}, possibilita que
+    a \emph{libouroboros} reconheça e trabalhe com tal linguagem. Essa
+    implementação deve satisfazer nossa interface, isso é, as operações
+    descritas acima. A nossa API administrará as diversas implementações
+    disponíveis apresentando ao usuário final da OPA apenas a interface
+    unificada. Desse jeito, ele não precisa saber sobre esse gerenciamento
+    interno, nem se preocupar com a API da linguagem de \script{}, a não ser que
+    seja ele quem vá adicionar o suporte a ela no sistema.
 
-  % TODO: Diagrama ilustrando relação da OPA com as APIs específicas de cada
-  %       linguagem de script
-  
-  Por padrão, o projeto já tem a implementação de \textit{Lua} e \textit{Python}.
-  
-  %TODO: subsection: conversão de valores (entre linguagem nativa e máquina virtual)
-  %TODO: subsection: virtualobj (possiveis subsubsection pra falar do encapsulamento do vdata, etc)
-  %TODO: subsection: importação de um módulo de script para a linguagem nativa
+    % TODO: Diagrama ilustrando relação da OPA com as APIs específicas de cada
+    %       linguagem de script
+    
+    Por padrão, o projeto terá as implementações para \textit{Lua} e
+    \textit{Python}, e portanto essas linguagens serão compatíveis com a OPA.
+    
+    %TODO: subsection: conversão de valores (entre linguagem nativa e máquina virtual)
+    %TODO: subsection: virtualobj (possiveis subsubsection pra falar do encapsulamento do vdata, etc)
+    %TODO: subsection: importação de um módulo de script para a linguagem nativa
   
   
   \section{Gerador de \emph{wrappers} e interfaces.}
@@ -128,25 +132,28 @@
 
   %TODO: Explicar mais sobre a ideia geral da relação do tipo (B)
 
-  Linguagens de \script{} possuem um mecanismo próprio para importar os módulos
-  necessários à sua execução. Esses módulos podem ser definidos tanto em outros
-  arquivos na mesma linguagem, quanto na linguagem nativa da máquina virtual.
-  Nesse último caso, temos a relação do tipo (B). Ela exige que a linguagem
-  nativa disponibilize certos dados seguindo um protocolo adequado. Infelizmente
-  tal protocolo não só difere para cada linguagem de \script{} como também
-  involve um trabalho repetitivo e maçante para ser utilizado. 
+    Linguagens de \script{} possuem um mecanismo próprio para incluir módulos
+    externos, eventualmente necessários à sua execução. Esses módulos podem ser
+    definidos tanto em outros arquivos na mesma linguagem, quanto na linguagem
+    nativa da máquina virtual. Nesse último caso, temos a relação do tipo (B). Ela
+    exige que a linguagem nativa disponibilize certos dados seguindo um protocolo
+    adequado. Infelizmente tal protocolo não só difere para cada linguagem de
+    \script{} como também involve um trabalho repetitivo e maçante para ser utilizado. 
+
+    %TODO: Detalhar esse processo repetitivo e maçante.
+    
+    Por isso, parte do nosso sistema é composto por um gerador automatizado de código fonte.
+    Ele é responsável por criar o código necessário à devida exportação dos módulos 
+    feitos na linguagem nativa. Além disso, ele processa código que o usuário fornecer na
+    linguagem nativa para saber o conteúdo que deve aparecer no módulo exportado.
+    Esse conteúdo é inserido no módulo através de \emph{wrappers}. Chamamos esse componente
+    do sistema de \emph{Ouroboros Project Wrapper and Interface Generator} (OPWIG).
   
-  Por isso, parte do nosso sistema é composta por um gerador automatizado de código fonte.
-  Ele é responsável por criar o código necessário ao devido funcionamento dos módulos 
-  feitos na linguagem nativa. Além disso, ele processa código que o usuário fornecer na
-  linguagem nativa para saber o conteúdo que deve aparecer no módulo exportado.
-  Esse conteúdo é inserido no módulo através de \emph{wrappers}. Chamamos esse componente
-  do sistema de \emph{Ouroboros Project Wrapper and Interface Generator} (OPWIG).
-  
-  %TODO: subsection: parser
-  %TODO: subsection: code generator
-  %TODO: subsection: wrapper explanation 
+    %TODO: subsection: parser
+    %TODO: subsection: code generator
+    %TODO: subsection: wrapper explanation 
   
   \section{Integrando e entregando tudo para o usuário.}
   \label{sec:estrutura:integration}
-  TODO
+
+    Isso será escrito na versão final da monografia.
