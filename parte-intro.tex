@@ -1,0 +1,52 @@
+
+\chapter{Introdução}
+\label{sec:intr}
+
+É comum, principalmente no desenvolvimento de jogos eletrônicos, a necessidade
+de um método prático de se inserir conteúdo lógico dinâmicamente em uma
+aplicação (isto é, durante a execução dela). Linguagens de \script{} (como Lua ou
+Python) são ferramentas popularmente usadas para atender esse tipo de
+funcionalidade. Elas podem ter seu código fonte tanto compilado e processado
+dinamicamente quanto incorporado na aplicação desejada. A aplicação, por sua
+vez, torna-se capaz de acessar essas conveniências. No entanto, tal incorporação
+pode trazer vários desafios, especialmente o de ter que aprender a usar uma API
+(\textit{Application Programming Interface}) diferente para cada linguagem de
+\script{} usada.
+
+Esta monografia apresentará um sistema de software que permite ao usuário
+integrar facilmente diversas linguagens de \script{} a um programa escrito em
+\CXX{} usando uma API unificada para incorporação e um exportador
+automatizado de interfaces em \CXX{} para essas linguagens de \script{}. São
+explicados todos os principais mecanismos desse sistema, assim como a teoria e a
+tecnologia por trás deles.
+
+\section{Motivação}
+\label{sec:intr:motivacao}
+
+\section{Objetivos}
+\label{sec:intr:objetivos}
+
+Pode-se resumir a proposta do nosso projeto nas seguintes partes:
+
+\begin{enumerate}
+  \item Desenvolvimento de uma biblioteca \CXX{} que abstrai o uso da API de uma(s)
+        linguagem(s) de \script{} de forma clara, prática de usar, e facilmente
+        estendível para aceitar outras linguagens de \script{}, sendo que
+        inicialmente terá suporte a Lua e Python. O usuário da biblioteca não
+        necessitará de conhecimento específico da API das linguagens para
+        incorporá-las em seu programa, assim como não precisará se importar com
+        qual linguagem de fato está sendo usada, pois o sistema será capaz de
+        reconhecer as linguagens às quais ele fornece suporte.
+  \item Desenvolvimento de uma ferramenta que interpreta parte do código \CXX{} do
+        usuário a fim de gerar wrappers (código fonte, nesse caso em \CXX{}, que
+        serve de intermediário para um ambiente externo, como as linguagens de
+        \script{}) das classes e funções desse código para cada linguagem de \script{}
+        que o sistema estiver configurado para reconhecer. Assim, o usuário
+        poderá usufruir das funcionalidades que desenvolveu em \CXX{} na liguagem
+        de \script{} de sua preferência.
+  \item Desenvolvimento de módulos de \lang{CMake} que garantam a devida
+        compilação e funcionamento conjunto dos dois resultados acima de maneira
+        a simplificar o máximo possível o uso do sistema como um todo. Também
+        elaborar uma documentação básica sobre como usar o \emph{software}
+        resultante do projeto.
+\end{enumerate}
