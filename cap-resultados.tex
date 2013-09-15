@@ -16,7 +16,7 @@ OPWIG (seção \ref{sec:resultados:opwig}).
 
 \section{Biblioteca \textbf{libouroboros}}
 \label{sec:resultados:libouroboros}
-A libouroboros, que é basicamente a biblioteca para \CXX{} contendo o OPA,
+A libouroboros, que é basicamente uma biblioteca para \CXX{} contendo o OPA,
 já tem praticamente todas as funcionalidades desejadas implementadas e
 funcionando normalmente. Contém um sistema para gerenciar as máquinas
 virtuais desejadas, para carregar \script{s} independente de sua
@@ -31,7 +31,7 @@ SWIG.
 
 A libouroboros também é facilmente compilada em várias plataformas usando
 o CMake para gerar arquivos relativos à compilação, como \textit{Makefile}s
-no Linux. As implementações das interfaces abstratas do OPA para as linguagens
+no Linux. As implementações das interfaces abstratas da OPA para as linguagens
 de \script{} Python e Lua que fizemos também estão praticamente completas,
 sendo distríbuidas juntamente com a libouroboros e sendo compiladas em
 bibliotecas diferentes: \emph{libouroboros-python} e \emph{libouroboros-lua},
@@ -72,7 +72,7 @@ pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
   $ make
 \end{verbatim}
 Isso irá compilar a libouroboros, libouroboros-python, libouroboros-lua e o OPWIG
-(mais sobre ele na próxima seção). Caso queira, as seguintes opções podem ser
+(mais sobre como usar ele na próxima seção). Caso queira, as seguintes opções podem ser
 passadas para o CMake para alterar seu comportamento:
 \begin{itemize}
   \item OUROBOROS\_CREATE\_BINDINGS: se verdade, o CMake irá tentar criar as 
@@ -136,7 +136,7 @@ int main() {
 }
 \end{lstlisting}
 
-Há uma coisa faltando nesse exemplo. As máquinas virtuais precisam ser registradas no \SMgr{}.
+Há uma coisa faltando nesse exemplo. As máquinas virtuais precisam ser registradas antes no \SMgr{}.
 Enquanto os módulos gerados pelo OPWIG fazem isso automaticamente, nesse pequeno exemplo não
 usamos nenhum, então temos que fazer isso manualmente. Basta fazer essas modificações no código acima:
 
@@ -184,7 +184,7 @@ e teste novamente. O programa irá executar do mesmo modo que antes, mesmo tendo
 linguagem do \script{} usado, pois a lógica é a mesma e o OPA abstrai as interfaces.
 
 
-\section{Gerador de \emph{wrappers} \textbf{opwig}}
+\section{Gerador de \emph{wrappers} \textbf{OPWIG}}
 \label{sec:resultados:opwig}
 
 O OPWIG é uma ferramenta com o propósito de substituir o SWIG.
@@ -202,8 +202,8 @@ As suas capacidades atuais de geração de \textit{wrappers} são:
       \item Destrutor.
       \item Construtor trivial.
       \item Atributos de tipos primitivos, possivelmente constantes.
-      \item Métodos que recebam um número qualquer de argumentos de tipos
-        primitivos e retorne nada ou um valor primitivo.
+      \item Métodos não estáticos que recebam um número qualquer de argumentos
+        de tipos primitivos e retorne nada ou um valor primitivo.
     \end{itemize}
 \end{itemize}
 
@@ -266,18 +266,19 @@ Como explicado anteriormente, o OPWIG ainda não está separado das especificaç
 de linguagens de \script{}, e portanto ao ser executado ele obrigatoriamente
 irá gerar um arquivo de código com o módulo para Lua e outro para Python. Ele gera
 os arquivos na mesma pasta de onde ele está sendo executado, seguindo o seguinte
-padrão de nomeação:
+padrão de nomenclatura:
 \begin{verbatim}
   <nome da linguagem de script>_<nome do módulo>_wrap.cxx
 \end{verbatim}
 
 \subsubsection{Usando os módulos gerados}
 Para usar os módulos gerados, basta compilar eles junto com seu programa, ligado com
-a libouroboros e com suas implementações específicas que forem desejadas.
+a libouroboros e com suas implementações específicas que forem desejadas e
+necessárias.
 
-Qualquer \script{} ou código de uma dada linguagem executado pelo seu programa (como 
-carregar um \script{} com o OPA) será capaz de importar o módulo gerado usando o
-sistema padrão da linguagem para importação de módulos. E o módulo em si deverá ser
+Qualquer \script{} em uma linguagem compatível que seja carregado pelo seu programa
+(usando a OPA) será capaz de incluir o módulo gerado usando o sistema padrão da
+linguagem para inclusão de módulos externos. E o módulo em si deverá ser
 usado como qualquer outro módulo dessa linguagem.
 
 \section{Metas para a versão final}
