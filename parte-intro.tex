@@ -11,7 +11,7 @@ complicados que se tornam programas por sí sós. É um caso bastante comum em
 jogos eletrônicos, onde parte do conteúdo é a inteligência artifical dos
 personagens ou o roteiro de eventos que ocorre para cada ação do jogador.
 As ferramentas mais popularmente usadas para tratar conteúdo desse gênero são
-as chamadas linguagens de \script{}.
+as chamadas \textbf{linguagens de \script{}}. % NEEDS REFERENCE
 
 % TODO: ampliar com "Isso pode ocorrer de duas maneiras diferentes..."
 Elas podem ter seu código fonte tanto compilado e processado
@@ -22,15 +22,18 @@ pode trazer vários desafios, especialmente o de ter que aprender a usar uma API
 \script{} usada.
 
 Esta monografia apresentará um sistema de software que permite ao usuário
-integrar facilmente diversas linguagens de \script{} a um programa escrito em
-\CXX{} usando uma API unificada para incorporação e um exportador
-automatizado de interfaces em \CXX{} para essas linguagens de \script{}. São
+integrar de maneira automatizada - em primeira instância - as linguagens de
+\script{} \lang{Lua} e \lang{Python} a um programa escrito em \CXX{} usando uma
+API unificada para incorporação e um exportador automatizado de interfaces. São
 explicados todos os principais mecanismos desse sistema, assim como a teoria e a
 tecnologia por trás deles.
 
 \section{Motivação}
 \label{sec:intr:motivacao}
-O que nos levou a fazer esse sistema foi nosso trabalho no USPGameDev\footnote{
+
+Como indicado por um exemplo altamente viesado acima, uma das nossas principais
+motivações para esse trabalho é o desenvolvimento de jogos digitais. Mais
+especificamente, foi nosso trabalho no USPGameDev\footnote{
   O USPGameDev é um grupo de pesquisa e desenvolvimento de jogos da
   Universidade de São Paulo. Ver \url{uspgamedev.org} (último acesso: 
   15/09/2013).

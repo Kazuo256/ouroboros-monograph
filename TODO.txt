@@ -1,7 +1,15 @@
 
 - Agradeimentos
 - Resumo/Abstract
-- Introdução
++ Introdução
   - Explicar com mais calma, de maneira menos densa
-
+  + Motivação
+    - Escrever com mais detalhes, dando uma noção cronológica melhor
++ Parte Objetiva
+  + Conceitos e tecnologias usadas
+    - Revisar a estrutura desse capítulo
+    + Linguagens de programação
+      - A parte a partir da definição 2.1 está boa.
+    + Compiladores e máquinas virtuais
+      - Parece ok... mas faltam citações >.<
 
