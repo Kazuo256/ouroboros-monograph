@@ -2,11 +2,19 @@
 \chapter{Introdução}
 \label{sec:intr}
 
-É comum, principalmente no desenvolvimento de jogos eletrônicos, a necessidade
-de um método prático de se inserir conteúdo lógico dinâmicamente em uma
-aplicação (isto é, durante a execução dela). Linguagens de \script{} (como Lua ou
-Python) são ferramentas popularmente usadas para atender esse tipo de
-funcionalidade. Elas podem ter seu código fonte tanto compilado e processado
+Programas de computador frequentemente lidam com diversos tipos de conteúdo:
+textos, imagens, músicas, vídeos, etc. Eles são armazenados e manipulados na
+forma de dados, segundo codificações específicas. Alguns tipos de conteúdo são
+mais complexos do que outros, como acontece no banco de dados da sua rede social
+favorita, ou no registro de tomografias médicas. Algumas vezes eles são tão
+complicados que se tornam programas por sí sós. É um caso bastante comum em
+jogos eletrônicos, onde parte do conteúdo é a inteligência artifical dos
+personagens ou o roteiro de eventos que ocorre para cada ação do jogador.
+As ferramentas mais popularmente usadas para tratar conteúdo desse gênero são
+as chamadas linguagens de \script{}.
+
+% TODO: ampliar com "Isso pode ocorrer de duas maneiras diferentes..."
+Elas podem ter seu código fonte tanto compilado e processado
 dinamicamente quanto incorporado na aplicação desejada. A aplicação, por sua
 vez, torna-se capaz de acessar essas conveniências. No entanto, tal incorporação
 pode trazer vários desafios, especialmente o de ter que aprender a usar uma API
@@ -27,8 +35,8 @@ O que nos levou a fazer esse sistema foi nosso trabalho no USPGameDev\footnote{
   Universidade de São Paulo. Ver \url{uspgamedev.org} (último acesso: 
   15/09/2013).
 }.
-Lá, nós (e os outros da equipe) desenvolvemos uma plataforma para jogos
-bidimensionais (a UGDK\footnotemark), além de um jogo que usava a plataforma, ambos feitos em \CXX{}.
+Lá, nós (e os outros membros da equipe) desenvolvemos uma plataforma para jogos
+bidimensionais (a UGDK\footnotemark), além de um jogo que usava ela, ambos feitos em \CXX{}.
 
 \footnotetext{
   A UGDK é um dos principais projetos do USPGameDev, e seu
@@ -43,17 +51,17 @@ de \script{}, mas não conseguimos nos decidir qual usar. Por um lado tínhamos
 Python, com suas vastas extensões e facilidades, e por outro Lua, com sua
 simplicidade e versatilidade.
 
-Eventualmente pensamos numa idéia ``melhor de dois mundos'': usar ambas linguagens.
+Eventualmente pensamos numa idéia ``melhor de dois mundos'': usar ambas as linguagens.
 E depois de algumas discussões sobre como implementar tal idéia e outras opções,
 vimos que não só essa era uma das melhores opções para nós, como também era
-possível ser feita. Então nós dois (autores desse trabalho de formatura) começamos
+possível de ser feita. Então nós dois (autores desse trabalho de formatura) começamos
 a desenvolver o então chamado ``sistama de scripts da UGDK''. Após alguns meses
 de desenvolvimento o sistema ficou pronto para uso, porém depois que começamos 
-a usá-lo em grande porte fomos descobrindo alguns problemas no sistema.
+a usá-lo em grande porte fomos descobrindo alguns problemas nele.
 
-Finalmente, decidimos usar o sistema que desenvolvemos no nosso trabalho de 
-formatura, com o objetivo de melhorar alguns pontos do sistema e corrigir
-os problemas encontrados.
+Finalmente, decidimos usar no nosso trabalho de formatura esse sistema que
+desenvolvemos, com o objetivo de melhorar alguns pontos dele e corrigir
+os problemas que havíamos encontrado.
 
 \section{Objetivos}
 \label{sec:intr:objetivos}
