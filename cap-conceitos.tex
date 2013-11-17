@@ -31,110 +31,155 @@
 
   \section{Linguagens de Programação}
   \label{cap:conceitos:linguagens}
-  Uma das coisas mais importantes que todo programador aprende cedo ou tarde é
-  que computadores \emph{não são máquinas inteligentes}. Eles fazem apenas e
-  exatamente aquilo que mandamos eles fazerem, a menos de problemas de
-  \textit{hardware}. Por outro lado, é isso que torna eles mais confiáveis que
-  humanos no que diz respeito a muitas atividades. E o que explica essa
-  característica intrínsica dos computadores é que eles operam através de
-  instruções \cite{cpp:00}.
+    Uma das coisas mais importantes que todo programador aprende cedo ou tarde é
+    que computadores \emph{não são máquinas inteligentes}. Eles fazem apenas e
+    exatamente aquilo que mandamos eles fazerem, a menos de problemas de
+    \textit{hardware}. Por outro lado, é isso que torna eles mais confiáveis que
+    humanos no que diz respeito a muitas atividades. E o que explica essa
+    característica intrínsica dos computadores é que eles operam através de
+    instruções \cite{cpp:00}.
 
-  Quando recebemos uma instrução, tipicamente nos está sendo pedido para
-  realizar uma ação, possivelmente envolvendo objetos ou outras pessoas. Com o
-  computador, as ações que lhe são instruídas envolvem dados \cite{org&arch:00}. As
-  transformações e manipulações que ele pode executar sobre dados, assim como o
-  que os dados podem representar compõem o que chamamos de \textbf{modelo
-  computacional}, pois indicam as possíveis \textbf{computações} que podem ser
-  realizadas dentro de tal modelo. Por sua vez, dizemos que as intruções que
-  especificam a computação que desejamos que o computador faça compõem um
-  \textbf{programa}. Finalmente, isso leva ao nosso objeto de interesse: para
-  expressar esse programa ao computador usamos uma \textbf{linguagem de
-  programação}. De maneira mais formal, podemos definir os termos acima conforme
-  \cite{pl:00}:
+    Quando recebemos uma instrução, tipicamente nos está sendo pedido para
+    realizar uma ação, possivelmente envolvendo objetos ou outras pessoas. Com o
+    computador, as ações que lhe são instruídas envolvem dados
+    \cite{org&arch:00}. As transformações e manipulações que ele pode executar
+    sobre dados, assim como o que os dados podem representar compõem o que
+    chamamos de \textbf{modelo computacional}, pois indicam as possíveis
+    \textbf{computações} que podem ser realizadas dentro de tal modelo. Por sua
+    vez, dizemos que as intruções que especificam a computação que desejamos que
+    o computador faça compõem um \textbf{programa}. Finalmente, isso leva ao
+    nosso objeto de interesse: para expressar esse programa ao computador usamos
+    uma \textbf{linguagem de programação}. De maneira mais formal, podemos
+    definir os termos acima conforme \cite{pl:00}:
 
-  \vspace{2em}
+    \vspace{2em}
 
-  \definicao{
-    \begin{enumerate}
-      \item Um \textbf{modelo computacional} é uma coleção de valores e operações.
-      \item Uma \textbf{computação} é a aplicação de uma sequência de operações
-            sobre um valor para obter outro valor.
-      \item Um \textbf{programa} é a especificação de uma computação.
-      \item Uma \textbf{linguagem de programação} é uma notação para escrever
-            programas.
-    \end{enumerate}
-  }
-  
-  Essencialmente, linguagens de programação são a maneira que se encontrou para
-  deixar claro quais instruções o computador deve seguir, visto que ele as
-  seguirá à risca e portanto queremos ter certeza do que lhe estamos pedindo.
-  Agora, se queremos integrar linguagens, precisamos entender como são seus
-  modelos computacionais e como interagir com eles na prática. No caso, estamos
-  mais especificamente interessados em \CXX{} e em linguagens de \script{}.
-  Então vamos estudar, na próxima sessão, as características que elas possuem,
-  assim como as possibilidades que elas nos oferecem.
+    \definicao{
+      \vspace{-1.5em}
+      \begin{enumerate}
+        \item Um \textbf{modelo computacional} é uma coleção de valores e
+              operações.
+        \item Uma \textbf{computação} é a aplicação de uma sequência de
+              operações sobre um valor para obter outro valor.
+        \item Um \textbf{programa} é a especificação de uma computação.
+        \item Uma \textbf{linguagem de programação} é uma notação para escrever
+              programas.
+      \end{enumerate}
+    }
+    
+    Essencialmente, linguagens de programação são a maneira que se encontrou
+    para deixar claro quais instruções o computador deve seguir, visto que ele
+    as seguirá à risca e portanto queremos ter certeza do que lhe estamos
+    pedindo. Agora, se queremos integrar linguagens, precisamos entender como
+    são seus modelos computacionais e como interagir com eles na prática. No
+    caso, estamos mais especificamente interessados em \CXX{} e em linguagens de
+    \script{}. Então vamos estudar, na próxima sessão, as características que
+    elas possuem, assim como as possibilidades que elas nos oferecem.
 
-  \section{Compiladores e máquinas virtuais}
+  \section{Compilação e Interpretação}
   \label{cap:conceitos:compiladores}
 
     %TODO: Essa seção inteira precisa de referências!
 
-    A princípio, programas era implantados diretamente na máquina que os
-    executaria, que conhecemos como \emph{computador}. Isso era feito de diversas
-    maneiras, em geral envolvendo manipular fisicamente a máquina através de
-    chaves ou cartões. Conforme os computadores foram ficando mais elaborados,
-    tornou-se possível usar eles mesmos para escrever programas diretamente em
-    sua memória. Como é de se esperar, isso era feito usando alguma linguagem
-    de programação, conforme vimos na seção anterior.
-
-    Ainda assim, escrever nessas primeiras linguagens envolvia usar apenas valores
-    numéricos que representavam instruções explícitas do \emph{hardware} da
-    máquina. Essas linguagens são chamadas de \textbf{código de máquina}. E cada
-    modelo de computador trabalhava com um código de máquina diferente (eles
-    continuam assim até hoje), forçando o programador a aprender várias linguagens
-    para ser capaz de desenvolver em diferentes ambientes. A solução para isso
-    foram os \textbf{compiladores}: programas que processavam código escrito
-    \emph{em alguma outra linguagem de programação} e escreviam o equivalente -
-    segundo a semântica dessa linguagem - em código de máquina.
+    O processo que leva do programa escrito à sua execução pelo computador pode
+    ocorrer de diversas maneiras. A mais direta é quando a linguagem usada é
+    exatamente aquela que o computador foi projetado para processar. Em geral,
+    uma linguagem dessas usa apenas valores numéricos para representar
+    instruções explícitas de \emph{hardware} para manipulação de dados brutos,
+    e são conhecidas como \textbf{linguagem de máquina} \cite{org&arch:00}.
+    Para elas, o modelo computacional corresponde às operações que o processador
+    é capaz de executar e os dados que podem ser armazenados nos diversos tipos
+    de memória da máquina.
 
     \definicao{
-      Juntando o que acabamos de ver, temos:
+      \textbf{Linguagem de máquina} é toda linguagem de programação que é
+      processada diretamente por uma máquina como um computador.
+    }
+    
+    Como é de se imaginar, desenvolver com essas linguagens não é exatamente uma
+    tarefa simples. Cada arquitetura de computador possui uma versão própria
+    delas, tornando trabalhoso de fazer um mesmo programa compatível com todas
+    elas. Além disso, é preciso muitas instruções para realizar computações
+    simples, pois as operações que um processador é capaz de fazer são
+    normalmente bastante primitivas - como movimentar dados na memória, ou
+    comparar o valor dos dados em lugares diferentes dela. Para lidar com esses
+    problemas existem dois métodos que essencialmente buscam abstrair as
+    computações desejadas em instruções mais simples, isso é, em uma linguagem
+    de programação mais acessível - ou de alto nível, como se costuma dizer.
+
+    O primeiro e mais tradicional deles é traduzir programas escritos nessa
+    nova linguagem para a linguagem de máquina do computador alvo. E,
+    obviamente, não queremos fazer essa tradução nós mesmos, mas sim desenvolver
+    um programa que a faça por nós. Programas assim são ditos
+    \textbf{compiladores}, pois eles \emph{compilam} a linguagem fonte para o
+    linguagem objeto. Nesse caso, também dizemos que a linguagem fonte é uma
+    \textbf{linguagem compilada}.
+    
+    \definicao{
+      \vspace{-1.5em}
       \begin{enumerate}
-        \item \textbf{Código de máquina} é toda linguagem de programação que é
-              processada diretamente por uma máquina como um computador.
-        \item Uma \textbf{linguagem de programação compilada} é uma linguagem cujo
-              código é processado por um programa, chamado de \textbf{compilador},
-              e traduzida para código de máquina.
+        \item \textbf{Compiladores} são programas que traduzem uma linguagem
+              fonte de alto nível em uma linguagem objeto mais próxima de uma
+              linguagem de máquina.
+        \item Uma \textbf{linguagem de programação compilada} é a linguagem
+              fonte de um compilador.
+      \end{enumerate}
+    }
+    
+    Em particular, \CXX{} é uma linguagem compilada \cite{cpp:00}. Em suas
+    primeiras versões programas escritos nela eram compilados para a linguagem
+    \C{}, que por sua vez compilam para linguagens bastante próximas de uma
+    linguagem de máquina, conhecidas como linguagens de montagem; atualmente,
+    \CXX{} é compilado diretamente para essas linguagens também \cite{cpp:01}.
+    Isso significa que uma das linguagens que estamos tentando integrar está
+    bastante atrelada ao processamento a nível de \textit{hardware}, o que traz,
+    como veremos, tanto vantagens quanto dificuldades para nosso sistema.
+
+    O segundo método de usar uma linguagem de alto nível para abstrair
+    linguagens próximas a linguagens de máquina seria providenciar um programa
+    intermediário capaz de simular a execução de instruções. Chamamos esses
+    programas de \textbf{interpretadores} \cite{pl:00}. Também dizemos que sua
+    linguagem fonte é uma \textbf{linguagem interpretada}. Essencialmente, ao
+    invés de tentar levar a linguagem em si para mais perto da máquina, eles
+    trazem a máquina para mais perto da linguagem. Isso é, produzem um modelo
+    computacional mais abstrato que o de computadores reais, porém igualmente
+    expressivo. Para tanto, eles simulam uma máquina real dentro de si,
+    constituindo o que é conhecido como uma \textbf{máquina virtual}.
+
+    \definicao{
+      \vspace{-1.5em}
+      \begin{enumerate}
+        \item Uma \textbf{máquina virtual} é uma simulação de um modelo
+              computacional dentro de um programa.
+        \item \textbf{Interpretadores} são programas que processam uma linguagem
+              fonte de alto nível usando uma máquina virtual.
+        \item Uma \textbf{linguagem de programação interpretada} é a linguagem
+              fonte de um interpretador.
       \end{enumerate}
     }
 
-    As primeiras linguagens compiladas eram as \textbf{linguagens de montagem}. Os
-    termos delas eram compostos de comando mnemônicos que em geral correspondiam
-    diretamente ao código de máquina que eles representavam. Por exemplo o trecho
+    Uma das grandes e principais vantagens de linguagens interpretadas é que
+    suas abstrações podem produzir muito mais escrevendo muito menos. Outra
+    vantagem é que como elas são processadas por um programa durante sua
+    execução, então o código fonte não precisa estar completo imediatamante. O
+    interpretador pode ir recebendo as intruções uma de cada vez, conforme o
+    usuário as digita nas famosas linhas de comando. Juntando essas duas
+    características, é possível um usuário usar um terminal para acessar seu
+    sistema operacional através de uma linguagem interpretada, mas também manter
+    uma coleção de arquivos escritos na mesma linguagem implementando algumas
+    rotinas comuns e repetitivas para que ele ou ela possa executá-los quando
+    for mais conveniente. São esses arquivos auxiliares que chamamos de
+    \textbf{\script{s}} (do inglês, ``roteiros'').
 
-    \begin{verbatim}
-      add ecx, edx\end{verbatim}
+    Então, costumamos dizer que linguagens interpretadas que podem ser usadas
+    para escrever \script{s} são \textbf{linguagens de \script{}}. Infelizmente
+    não existe uma definição formal para elas, como indica \cite{script:00}. O
+    que não chega a ser um problema para nossa discussão, pois as propriedades
+    que nos interessam estão na definição das linguagens interpretadas.
 
-    \hspace{-16pt}é compilado para a sequência de valores numéricos que indicam,
-    em código de máquina, a instrução de \emph{hardware} responsável por somar os
-    valores nos registradores \lang{ecx} e \lang{edx}, escrevendo o resultado de
-    volta em um deles em seguida (isso depende da linguagem de montagem usada).
+    % TODO: Fazer ponte para próxima sessão
 
-    Depois disso, outras linguagens foram sendo inventadas que cada vez mais
-    permitiam ao programador abstrair as operações de \emph{hardware} por trás
-    do código que ele escrevia. Os responsáveis por essa tradução passaram a ser
-    os compiladores. Em certo ponto else se tornaram capazes de até otimizar o
-    código de máquina gerado ao detectar padrões conhecidos no que o programador
-    fornecia através da linguagem compilada. Havia quem chamasse código de máquina
-    e linguagens de montagem de \emph{linguagens de baixo nível}, e as demais
-    linguagens compiladas de \emph{linguagens de alto nível}.
-
-    % TODO: eficiência vs produtividade => justifica linguagens de alto nível.
-    % TODO: linguagens de script que eram linguagens interpretadas.
-    % TODO: linguagens de script que usam máquinas virtuais.
-    % TODO: se vira ae para descobrir um jeito da hora de falar essas coisas
-
-  \section{Gramáticas e analisadores léxico-sintáticos}
+  \section{As APIs de \lang{Lua} e \lang{Python}}
   \label{cap:conceitos:gramaticas}
 
     Isso será escrito na versão final da monografia.
