@@ -7,11 +7,11 @@
   sentar e comer até aparelhos elaborados para detectar doenças em nossos
   corpos. Entender o problema que se quer resolver, e saber desprender a solução
   dessa análise é um procedimento fundamental ao projetar esses produtos -- o
-  mesmo vale quando desenvolemos um \textit{software}. Para tanto, existem
+  mesmo vale quando desenvolvemos um \textit{software}. Para tanto, existem
   várias maneiras de se modelar os problemas, e uma das mais simples é na forma
   de um pergunta.
 
-  \emph{Como integrar linguagens de programação?} Um dos primeiros
+  \emph{Como integrar \CXX{} com linguagens de \script{}?} Um dos primeiros
   conceitos com o qual aspirantes a programadores têm que se habituar é que
   programas são o resultado de um código misterioso escrito usando uma dessas
   chamadas linguagens de programação. A partir desse momento, costuma-se passar
@@ -37,24 +37,22 @@
   \textit{hardware}. Por outro lado, é isso que torna eles mais confiáveis que
   humanos no que diz respeito a muitas atividades. E o que explica essa
   característica intrínsica dos computadores é que eles operam através de
-  instruções.
+  instruções \cite{cpp:00}.
 
-  Em uma primeira instância não estamos interessados em como esse funcionamento
-  ocorre, mas sim na ideia que está por trás dele. Quando recebemos uma
-  instrução, tipicamente nos está sendo pedido para realizar uma ação,
-  possivelmente envolvendo objetos ou outras pessoas. Com o computador, as ações
-  que lhe são instruídas envolvem dados\footnotemark{}. As transformações e
-  manipulações que ele pode executar sobre dados, assim como o que os dados
-  podem representar compõem o que chamamos de \textbf{modelo computacional},
-  pois indicam as possíveis \textbf{computações} que podem ser realizadas dentro
-  de tal modelo. Por sua vez, dizemos que as intruções que especificam a
-  computação que desejamos que o computador faça compõem um \textbf{programa}.
-  Finalmente, isso leva ao nosso objeto de interesse: para expressar esse
-  programa ao computador usamos uma \textbf{linguagem de programação}. De
-  maneira mais formal, podemos definir os termos acima conforme
-  \cite[Introduction]{pl:00}:
-  
-  \footnotetext{\cite[1.2 Structure and Function]{org&arch:00}.}
+  Quando recebemos uma instrução, tipicamente nos está sendo pedido para
+  realizar uma ação, possivelmente envolvendo objetos ou outras pessoas. Com o
+  computador, as ações que lhe são instruídas envolvem dados \cite{org&arch:00}. As
+  transformações e manipulações que ele pode executar sobre dados, assim como o
+  que os dados podem representar compõem o que chamamos de \textbf{modelo
+  computacional}, pois indicam as possíveis \textbf{computações} que podem ser
+  realizadas dentro de tal modelo. Por sua vez, dizemos que as intruções que
+  especificam a computação que desejamos que o computador faça compõem um
+  \textbf{programa}. Finalmente, isso leva ao nosso objeto de interesse: para
+  expressar esse programa ao computador usamos uma \textbf{linguagem de
+  programação}. De maneira mais formal, podemos definir os termos acima conforme
+  \cite{pl:00}:
+
+  \vspace{2em}
 
   \definicao{
     \begin{enumerate}
@@ -66,24 +64,15 @@
             programas.
     \end{enumerate}
   }
-
-  E com isso gostaríamos de esclarecer que quando dizemos ``integração entre
-  linguagens de programação'' estamos fazendo um abuso de expressão que na
-  verdade significa ``integração entre \emph{programas} escritos em diferentes
-  linguagens de programação''. E não ``composição de várias linguagens de
-  programação em uma única linguagem''. Além disso, isso mostra que na realidade
-  o usuário do nosso sistema estará lidando com \emph{múltiplos} programas que,
-  por estarem integrados, comportam-se como se fossem um só.
-
-  Como sabemos, existem inúmeras linguagens de programação. Ao longo dos anos,
-  várias classificações foram surgindo como tentativa de diferenciar o
-  propósito, o funcionamento e as vantagens de cada uma delas. Cada
-  classificação leva em conta um aspecto diferente da linguagem. No que diz
-  respeito a esse trabalho, estamos interessados em discriminar como os
-  programas escritos nelas são usados para realizar as computações que eles
-  representam. Em outras palavras, como essas linguagens fazem para ``rodar''
-  seus programas. Entendendo esse mecanismo, saberemos \emph{se} e \emph{como} é
-  possível interligar a execução de programas escritos em diferentes linguagens.
+  
+  Essencialmente, linguagens de programação são a maneira que se encontrou para
+  deixar claro quais instruções o computador deve seguir, visto que ele as
+  seguirá à risca e portanto queremos ter certeza do que lhe estamos pedindo.
+  Agora, se queremos integrar linguagens, precisamos entender como são seus
+  modelos computacionais e como interagir com eles na prática. No caso, estamos
+  mais especificamente interessados em \CXX{} e em linguagens de \script{}.
+  Então vamos estudar, na próxima sessão, as características que elas possuem,
+  assim como as possibilidades que elas nos oferecem.
 
   \section{Compiladores e máquinas virtuais}
   \label{cap:conceitos:compiladores}
