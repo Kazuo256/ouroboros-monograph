@@ -9,7 +9,7 @@
   dessa análise é um procedimento fundamental ao projetar esses produtos -- o
   mesmo vale quando desenvolvemos um \textit{software}. Para tanto, existem
   várias maneiras de se modelar os problemas, e uma das mais simples é na forma
-  de um pergunta.
+  de uma pergunta.
 
   \emph{Como integrar \CXX{} com linguagens de \script{}?} Um dos primeiros
   conceitos com o qual aspirantes a programadores têm que se habituar é que
@@ -33,11 +33,11 @@
   \label{cap:conceitos:linguagens}
     Uma das coisas mais importantes que todo programador aprende cedo ou tarde é
     que computadores \emph{não são máquinas inteligentes}. Eles fazem apenas e
-    exatamente aquilo que mandamos eles fazerem, a menos de problemas de
-    \textit{hardware}. Por outro lado, é isso que torna eles mais confiáveis que
-    humanos no que diz respeito a muitas atividades. E o que explica essa
-    característica intrínsica dos computadores é que eles operam através de
-    instruções \cite{cpp:00}.
+    exatamente aquilo que mandamos eles fazerem\footnote{A menos de problemas de
+    \textit{hardware}, é claro.}. Por outro lado, é isso que torna eles mais
+    confiáveis que humanos no que diz respeito a muitas atividades. E o que
+    explica essa característica intrínsica dos computadores é que eles operam
+    através de instruções \cite{cpp:00}.
 
     Quando recebemos uma instrução, tipicamente nos está sendo pedido para
     realizar uma ação, possivelmente envolvendo objetos ou outras pessoas. Com o
@@ -47,7 +47,7 @@
     chamamos de \textbf{modelo computacional}, pois indicam as possíveis
     \textbf{computações} que podem ser realizadas dentro de tal modelo. Por sua
     vez, dizemos que as intruções que especificam a computação que desejamos que
-    o computador faça compõem um \textbf{programa}. Finalmente, isso leva ao
+    o computador faça formam um \textbf{programa}. Finalmente, isso leva ao
     nosso objeto de interesse: para expressar esse programa ao computador usamos
     uma \textbf{linguagem de programação}. De maneira mais formal, podemos
     definir os termos acima conforme \cite{pl:00}:
@@ -73,10 +73,10 @@
     pedindo. Agora, se queremos integrar linguagens, precisamos entender como
     são seus modelos computacionais e como interagir com eles na prática. No
     caso, estamos mais especificamente interessados em \CXX{} e em linguagens de
-    \script{}. Então vamos estudar, na próxima sessão, as características que
+    \script{}. Então vamos estudar, nas próximas sessões, as características que
     elas possuem, assim como as possibilidades que elas nos oferecem.
 
-  \section{Compilação e Interpretação}
+  \section{Da linguagem para a máquina}
   \label{cap:conceitos:compiladores}
 
     %TODO: Essa seção inteira precisa de referências!
@@ -104,8 +104,10 @@
     normalmente bastante primitivas - como movimentar dados na memória, ou
     comparar o valor dos dados em lugares diferentes dela. Para lidar com esses
     problemas existem dois métodos que essencialmente buscam abstrair as
-    computações desejadas em instruções mais simples, isso é, em uma linguagem
+    computações desejadas em instruções mais abstratas, isso é, em uma linguagem
     de programação mais acessível - ou de alto nível, como se costuma dizer.
+
+    \subsubsection{Compilação}
 
     O primeiro e mais tradicional deles é traduzir programas escritos nessa
     nova linguagem para a linguagem de máquina do computador alvo. E,
@@ -131,9 +133,41 @@
     \C{}, que por sua vez compilam para linguagens bastante próximas de uma
     linguagem de máquina, conhecidas como linguagens de montagem; atualmente,
     \CXX{} é compilado diretamente para essas linguagens também \cite{cpp:01}.
-    Isso significa que uma das linguagens que estamos tentando integrar está
-    bastante atrelada ao processamento a nível de \textit{hardware}, o que traz,
-    como veremos, tanto vantagens quanto dificuldades para nosso sistema.
+    Isso significa que uma das linguagens que estamos tentando integrar no fundo
+    é basicamente uma linguagem de máquina disfarçada de maneira bastante
+    elegante.
+    
+    Para que mais de um programa escritos em uma linguagem assim
+    possam unir suas funcionalidades, é preciso duas coisas. Primeiramente, pelo
+    menos um deles tem que conhecer os símbolos\footnotemark{} relevantes do
+    outro; ou seja, o código que declara esses símbolos deve estar incluso no
+    programa que os usará. A segunda parte envolve, uma vez que os programas
+    estejam compilados para o código objeto, ligar esses símbolos importados às
+    suas respectivas definições no programa de origem deles. Isso é feito por um
+    programa à parte, chamado de \emph{ligador}, ou pelo próprio compilador. A
+    maneira que tanto \C{} quanto \CXX{} encontraram para lidar com esse
+    procedimento foi fornecer uma divisão para seus arquivos de código fonte:
+    uma parte seriam os \emph{arquivos de cabeçalho} - onde os símbolos são
+    declarados - e a outra seriam os \emph{arquivos de implementação} - onde a
+    definição do que os símbolos significam é feita.
+
+    \footnotetext{
+      Esses símbolos são essenciamente nomes que estão associados a partes
+      específicas de um programa, como suas variáveis e rotinas.
+    }
+
+    Isso permite que as partes de um programa com rotinas interrelacionadas
+    possam ser compiladas em programas menores para ser ligados juntos depois,
+    e assim apenas parte do programa precisa ser recompilada se só ela for
+    modificada. Também fica possível fazer um programa auxiliar que possa ser
+    ligado com qualquer outro que precise de suas funcionalidades, que é o que
+    chamamos de uma \emph{biblioteca}. A desvantagem de tudo isso são as
+    restrições impostas ao processo de desenvolvimento: tanto o compilador
+    quanto o ligador (quando necessário) precisam estar à disposição e
+    devidamente configurados, e as bibliotecas necessárias devem estar
+    acessíveis a eles.
+
+    \subsubsection{Interpretação}
 
     O segundo método de usar uma linguagem de alto nível para abstrair
     linguagens próximas a linguagens de máquina seria providenciar um programa
@@ -142,9 +176,9 @@
     linguagem fonte é uma \textbf{linguagem interpretada}. Essencialmente, ao
     invés de tentar levar a linguagem em si para mais perto da máquina, eles
     trazem a máquina para mais perto da linguagem. Isso é, produzem um modelo
-    computacional mais abstrato que o de computadores reais, porém igualmente
-    expressivo. Para tanto, eles simulam uma máquina real dentro de si,
-    constituindo o que é conhecido como uma \textbf{máquina virtual}.
+    computacional virtual ao invés de serem computadores reais, porém continuam
+    igualmente expressivos. Para tanto, eles simulam uma máquina condizente
+    dentro de si, constituindo o que é conhecido como uma \textbf{máquina virtual}.
 
     \definicao{
       \vspace{-1.5em}
@@ -160,26 +194,44 @@
 
     Uma das grandes e principais vantagens de linguagens interpretadas é que
     suas abstrações podem produzir muito mais escrevendo muito menos. Outra
-    vantagem é que como elas são processadas por um programa durante sua
-    execução, então o código fonte não precisa estar completo imediatamante. O
-    interpretador pode ir recebendo as intruções uma de cada vez, conforme o
-    usuário as digita nas famosas linhas de comando. Juntando essas duas
-    características, é possível um usuário usar um terminal para acessar seu
-    sistema operacional através de uma linguagem interpretada, mas também manter
-    uma coleção de arquivos escritos na mesma linguagem implementando algumas
-    rotinas comuns e repetitivas para que ele ou ela possa executá-los quando
-    for mais conveniente. São esses arquivos auxiliares que chamamos de
-    \textbf{\script{s}} (do inglês, ``roteiros'').
+    vantagem é que como elas são processadas por um programa durante a execução
+    deste, então o código fonte não precisa estar completo imediatamante (como
+    ocorre com a compilação). O interpretador pode ir recebendo as intruções uma
+    de cada vez, conforme o usuário as digita nas famosas linhas de comando, por
+    exemplo. Juntando essas duas  características, é possível um usuário
+    utilizar um terminal para acessar seu sistema operacional através de uma
+    linguagem interpretada, mas também manter uma coleção de arquivos escritos
+    na mesma linguagem implementando algumas rotinas comuns e repetitivas para
+    que ele ou ela possa executá-los quando for mais conveniente. São esses
+    arquivos auxiliares que chamamos de \textbf{\script{s}} (do inglês,
+    ``roteiros'').
 
-    Então, costumamos dizer que linguagens interpretadas que podem ser usadas
+    Costumamos dizer que linguagens interpretadas que podem ser usadas
     para escrever \script{s} são \textbf{linguagens de \script{}}. Infelizmente
-    não existe uma definição formal para elas, como indica \cite{script:00}. O
+    não é tão fácil definir formalmente elas, como indica \cite{script:00}. O
     que não chega a ser um problema para nossa discussão, pois as propriedades
     que nos interessam estão na definição das linguagens interpretadas.
 
-    % TODO: Fazer ponte para próxima sessão
+    E, com isso, chegamos às outras linguagens que queremos integrar:
+    \lang{Lua}\footnote{Versão 5.1, vide \cite{lua:00}} e
+    \lang{Python}\footnote{Versão 2.6, vide \cite{python:00}}, ambas
+    consideradas linguagens de \script{}. Com o objetivo de encontrar um meio de
+    usá-las junto com \CXX{}, fizemos uma pesquisa sobre o funcionamento de suas
+    respectivas máquinas virtuais. O que descobrimos, para nossa felicidade, é
+    que ambas são bibliotecas desenvolvidas em \C{}, e que seus interpretadores
+    nada mais são do que programas que usam essas bibliotecas. Eles cuidam de
+    receber o código do usuário, seja através da linha de comando ou de
+    \script{s}, e passá-los para a máquina virtual, que os processa devidamente.
+    
+    Então, obtivemos finalmente um meio de possivelmente resolver o problema
+    proposto no começo desse capítulo. \CXX{} talvez possa ser integrado com
+    \lang{Lua} ou \lang{Python} se um programa escrito nele for compilado e
+    ligado junto com as bilbiotecas dessas linguagens, obtendo assim acesso às
+    suas respecitivas máquinas virtuais. Tendo isso em mente, vamos buscar
+    esclarecer o funcionamento dessas bibliotecas na sessão a seguir, antes de
+    passarmos para a solução que propusemos no projeto em si.
 
-  \section{As APIs de \lang{Lua} e \lang{Python}}
+  \section{As bibliotecas de \lang{Lua} e \lang{Python}}
   \label{cap:conceitos:gramaticas}
 
     Isso será escrito na versão final da monografia.
