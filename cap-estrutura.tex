@@ -1,45 +1,56 @@
 \chapter{Estrutura do Projeto}
 \label{sec:estrutura}
 
-  Esse capítulo tem o objetivo de expor a estrutura que projetamos para nosso
-  sistema. Existe uma certa complexidade em entender como os diversos
-  componentes dele se relacionam - principalmente devido ao fato deles usarem
-  técnicas como geração de código automatizada e análise reflexiva de código. A
-  ideia por trás dessas técnicas também serão explicadas nesse capítulo.
+\setcounter{defcnt}{0}
+
+  No capítulo anterior revisamos e apresentamos conceitos visando responder a
+  pergunta ``Como integrar \CXX{} com linguagens de \script{}?''. Agora que
+  temos essas ferramentas a nosso dispor, vamos modelar uma solução. Para isso
+  precisamos entender, em termos práticos, o quê nosso sistema deve ser capaz
+  de fazer, e então projetar uma estrutura que satisfaça esses requisitos.
   
-  A seção \ref{sec:estrutura:geral} buscará deixar
-  claro o contexto em que o projeto funciona e como as responsabilidades
-  são distribuídas para atingir a solução modelada. As seções
-  \ref{sec:estrutura:opa} e \ref{sec:estrutura:opwig} detalham as duas
-  principais partes do projeto, e a seção \ref{sec:estrutura:integration}, por
-  fim, explica como tudo isso funciona em conjunto para atender às necessidades
-  do usuário.
+  Um usuário do nosso sistema estará tipicamente desenvolvendo uma aplicação
+  em \CXX{} que de alguma forma precisa ser capaz de interagir com \lang{Lua}
+  e \lang{Python}, simultaneamente ou não. Como vimos na sessão
+  \ref{cap:conceitos:maquina}, essa interação pode ser estabelecida de maneira
+  bastante direta entre elas se a máquina virtual da linguagem de \script{} em
+  questão tiver sido programada na linguagem compilada usada. Para evitar
+  repetitividade e simplificar o texto, diremos, do ponto de vista das
+  máquinas virtuais envolvidas, que:
+
+  \definicao{
+    \vspace{-1.5em}
+    \begin{enumerate}
+      \item A \textbf{linguagem nativa} é a linguagem na qual a máquina
+            virtual foi implementada.
+      \item A \textbf{linguagem virtual} é a linguagem que a máquina virtual
+            processa para executar suas simulações.
+    \end{enumerate}
+  }
+
+  Ou seja, \CXX{} será a nossa linguagem nativa de interesse, enquanto que
+  as linguagens virtuais serão \lang{Lua} e \lang{Python}, mas também poderiam
+  ser quaisquer outras linguagens cujas máquinas virtuais estejam programadas em
+  \C{} ou \CXX{}.
 
   \section{Visão Geral}
   \label{sec:estrutura:geral}
-  
-    Um usuário do nosso sistema estará tipicamente desenvolvendo uma aplicação
-    em uma linguagem compilada (mais especificamente, \CXX{}) que de alguma
-    forma precisa interagir com uma linguagem de \script{}. Essa interação pode
-    ser estabelecida diretamente entre elas se a máquina virtual da linguagem de
-    \script{} em questão tiver sido programada na linguagem compilada usada,
-    pois isso dará acesso:
-    
-    \begin{itemize}
-      \item[(A)]
-        À API própria da máquina virtual que permite que ela seja manipulada
-        através de sua linguagem nativa.
-      \item[(B)]
-        Ao protocolo com o qual \script{s} podem pedir à máquina virtual acesso
-        a recursos programados na linguagem nativa dela.
-    \end{itemize}
 
-    Esses dois elementos estabelecem duas vias de interação entre as linguagens
-    envolvidas. Através de (A) a linguagem compilada pode acessar e manipular
-    elementos da linguagem de \script{}, enquanto que usando (B) o contrário é
-    possível. O propósito do sistema que desenvolvemos é abstrair e automatizar
-    o uso dessas duas vias para minimizar o esforço que o usuário necessita para
-    desenvolver a interação desejada na sua aplicação.
+    Vamos dizer que tanto a aplicação quantos os \script{s} estão divididos
+    em \textbf{módulos}. Eles serão os objetos que representam o conjunto de
+    elementos provenientes de uma ou de outra linguagem que podem ser acessados
+    e manipulados. Por exemplo, se a aplicação em questão for um jogo de ação no
+    qual o jogador enfrenta inimigos virtuais, o desenvolvedor poderia usar
+    \script{s} para implementar a inteligência artifical desse inimigos, para
+    que fosse fácil ajustá-las sem ter que recompilar o jogo. Desse modo, cada
+    um desses \script{s} seria um módulo que a aplicação precisaria carregar e
+    usar durante sua execução. Eles, por sua vez, precisariam interagir com
+    módulos da aplicação para que as inteligências artificiais conseguissem
+    manipular seus personagens dentro do mundo virtual do jogo. Se elas
+    quisessem saber o quão próximo o herói está, elas precisariam usar as
+    funções do módulo de controle de posicionamento dos avatares. Se elas
+    quisessem criar um projétil para atacar o jogador, elas precisariam acessar
+    o módulo certo para conhecer a classe que representa esses objetos.
 
     \begin{figure}[ht]
       \centering
@@ -48,34 +59,38 @@
       \label{fig:overview-simple}
     \end{figure}
 
-    Vamos dizer que tanto a aplicação quantos os \script{s} estão divididos
-    em \textbf{módulos}. Eles serão os objetos das interações tanto do tipo (A)
-    quanto do tipo (B), representando o conjunto de elementos provenientes de
-    uma ou de outra linguagem que podem ser acessados e manipulados. Por
-    exemplo, se a aplicação do usuário for um jogo de ação no qual o jogador
-    enfrenta inimigos virtuais, ele poderia usar \script{s} para implementar a
-    inteligência artifical desse inimigos, para que fosse fácil ajustá-las sem
-    ter que re-compilar o jogo. Desse modo, cada um desses \script{s} seria um
-    módulo que a aplicação precisaria carregar e usar durante sua execução.
-    % Exemplificar melhor o que seriam módulos da aplicação nesse caso.
-    Eles, por sua vez, precisariam interagir com módulos da aplicação para que
-    as inteligências artificiais conseguissem manipular seus personagens dentro
-    do mundo virtual do jogo.
-
     Dessa forma, uma primeira ilustração bem simplificada da estrutura geral do
-    nosso sistema é a representada na Figura \ref{fig:overview-simple}. Existem
-    vários fatores que estão sendo omitidos nesse esquema, principalmente
-    envolvendo a interação do tipo (B). Além disso, ainda não foi dito
-    explicitamente o que significam essas interações. Esses e outros detalhes
-    serão aprofundados nas seções a seguir.
-    
-    Note que ao longo desta monografia iremos repetir algumas vezes o ato de
-    ``exportar'' e ``importar'' elementos entre linguagens. A não ser que o
-    contrário seja dito, ``exportar'' refere-se nesse contexto ao ato da
-    linguagem nativa enviar ou disponibilizar à máquina virtual elementos
-    nativos (uma interação tipo (B)), enquanto que ``importar'' será o ato
-    da linguagem nativa pegar ou adquirir elementos a partir da máquina virtual,
-    compondo uma interação tipo (A).
+    nosso sistema é a representada na Figura \ref{fig:overview-simple}. O
+    sistema Ouroboros será responsável por fornecer acesso aos módulos entre a
+    aplicação e as máquinas virtuais. Então, a estrutura que queremos para o
+    projeto deve levar isso em consideração, tratando os dois sentidos dessa
+    interação como duas partes diferentes. Dessa forma, estabelecemos duas
+    grandes funcionalidades no sistema: providenciar à aplicação a possibilidade
+    de manipular os módulos das máquinas virtuais, e deixar os módulos da
+    aplicação à disposição dos \script{s} . Esses processos são conhecidos como
+    \textbf{incorporação}\footnote{Do inglês, ``\textit{embedding}''.} e
+    \textbf{exportação}, respectivamente.
+
+    \definicao{
+      \vspace{-1.5em}
+      \begin{enumerate}
+        \item \textbf{Incorporação} é quando a aplicação programada na linguagem
+              nativa pode acessar e manipular os elementos dos módulos da
+              máquina virtual.
+        \item \textbf{Exportação} é quando módulos da aplicação na linguagem
+              nativa são registrados na máquina virtual de modo que os módulos
+              desta possam usar funcionalidades daquela.
+      \end{enumerate}
+    }
+
+    As duas próximas sessões explicarão como projetamos as partes do sistema
+    que atenderão cada um desses requisitos. Nesse ponto vale à pena destacar
+    um aspecto que ficou de lado até agora. Como o subtítulo desse trabalho
+    indica, o propósito do sistema é não só integrar as ditas linguagens, como
+    fazê-lo de maneira \textit{automatizada}. Até porque as APIs das máquinas
+    virtuais por sí sós possuem seus próprios mecanismos de fornecer essas
+    capacidades, mas são trabalhosas e específicas de usar. Isso também é
+    considerado na elaboração da estrutura do projeto, como veremos a seguir.
 
   \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
   \label{sec:estrutura:opa}
