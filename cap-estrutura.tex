@@ -120,14 +120,13 @@
     % TODO: Diagrama ilustrando relação da OPA com as APIs específicas de cada
     %       linguagem de script
 
-    \begin{itemize}
+    \begin{enumerate}
       \item Carregar um módulo a partir de um \script{};
       \item Executar rotinas implementadas na linguagem virtual;
-      \item Obter e/ou alterar valores de variáveis, objetos e atributos
-            definidos na linguagem virtual;
+      \item Acessar objetos definidos na linguagem virtual;
       \item Converter valores entre tipos da linguagem nativa e tipos da
             linguagem virtual;
-    \end{itemize}
+    \end{enumerate}
 
     Idealmente, quando o usuário requisitar um desses serviços, ele não precisa
     saber qual máquina virtual realmente vai atendê-lo. Em termos práticos, isso
@@ -137,12 +136,39 @@
     assinaturas\footnotemark{} fixos representando a operação almejada, porém
     sobrecarregadas com implementações circunstancialmente diferentes. Um jeito
     de obter esse efeito em \CXX{} é através da herança de classes, que é o
-    método que adotamos.
+    método que adotaremos.
 
     \footnotetext{
       A \emph{assinatura} de uma rotina ou função especifica que tipos de
       parâmetros ela recebe e que tipos de valores ela devolve a quem a
       evocou.
+    }
+
+    Observando os itens acima, vemos que o terceiro e o quarto podem ser
+    atendidos através de uma classe que represente objetos virtuais, isso é,
+    objetos criados dentro da máquina virtual pela linguagem dela. Assim,
+    instâncias dessa classe serviriam de acesso a esses objetos e permitiriam
+    uma operação de conversão de e para tipos da linguagem nativa. Por exemplo,
+    o usuário poderia usar uma instância dessa classe para referir-se a uma
+    cadeia de caracteres definida em um \script{} para convertê-la para o tipo
+    \lang{string} do \CXX{}. Além disso, levando em consideração que nas
+    linguagens de \script{} com que estamos trabalhamos funções são tipos de
+    primeira classe\footnotemark{}, um objeto virtual também poderia ser uma
+    função e, portanto, poderia ser evocado para desencadear a rotina
+    correspondente dentro da máquina virtual. Juntando isso à estratégia da
+    herança, temos uma classe que satisfaz os ítens 2 a 4 e ainda consegue
+    ocultar as implementações específicas para cada máquina virtual.
+
+    % TODO Diagrama!
+
+    % Para explicar as classes que faltam, falar que módulos também podem ser
+    % objetos virtuais se acrescentarmos a operação de acesso a atributos []
+
+    \footnotetext{
+      Quando funções são tipos de \emph{primeira classe}, elas podem ser
+      tratadas como se fossem um valor, o que permite que elas possam ser
+      armazenadas em variáveis, passadas como argumento para outras funções
+      e até mesmo devolvidas por outras funções também.
     }
 
     %TODO: usar o parágrafo abaixo para explicar as principais classes que o
