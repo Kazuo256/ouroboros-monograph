@@ -1,5 +1,3 @@
-\def\classname#1{\texttt{#1}}
-
 \chapter{Atividades Realizadas}
 \label{sec:atividades}
 
@@ -266,15 +264,15 @@
       virtuais disponíveis. O usuário pode tanto registrá-las manualmente com um simples método, quanto
       delegar essa responsabilidade para o código gerado pelo OPWIG, como veremos mais adiante.
       Caso seja necessário, ele pode buscar uma máquina virtual registrada. As máquinas virtuais
-      são representadas no nosso sistema pela classe \LangWrap{}, que é uma classe abstrata,
+      são representadas no nosso sistema pela classe \VMac{}, que é uma classe abstrata,
       devendo ser implementada para cada máquina virtual. Exemplo:
       \begin{lstlisting}
         //Registrando uma maquina virtual.
-        LangWrapper* vm = new python::PythonWrapper();
+        VirtualMachine* vm = new python::PythonMachine();
         SCRIPT_MANAGER()->Register(vm);
         
         //Buscando uma maquina virtual.
-        LangWrapper* pyvm = SCRIPT_MANAGER()->GetWrapper("Python");
+        VirtualMachine* pyvm = SCRIPT_MANAGER()->GetMachine("Python");
         //pyvm corresponde ao mesmo vm declarado antes.
       \end{lstlisting}
     \item Executar código: o \SMgr{} permite ao usuário executar um código qualquer, dado como uma
@@ -293,10 +291,10 @@
       \end{lstlisting}
   \end{itemize}
   
-  \subsection{\LangWrap{}}
-  \label{sec:atividades:opa:langwrapper}
-  O \LangWrap{} é uma das duas classes abstratas do sistema que devem ser implementadas para
-  cada linguagem que se deseja ser compatível com a OPA. O \LangWrap{} representa a máquina
+  \subsection{\VMac{}}
+  \label{sec:atividades:opa:vmac}
+  A \VMac{} é uma das duas classes abstratas do sistema que devem ser implementadas para
+  cada linguagem que se deseja ser compatível com a OPA. A \VMac{} representa a máquina
   virtual da linguagem em si, sendo usada internamente pelo \SMgr{}. Raramente ela será
   usada diretamente pelo usuário. Alguns métodos importantes de sua interface são:
   
@@ -323,7 +321,7 @@
   
   Fora métodos para as operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto
   importante da interface do \VData{} é um método para retornar a instância (contida no \SMgr{}) 
-  da implementação do \LangWrap{} que representa a máquina virtual responsável pelo
+  da implementação do \VMac{} que representa a máquina virtual responsável pelo
   \VData{} em questão.
   
   

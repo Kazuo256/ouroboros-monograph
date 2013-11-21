@@ -144,22 +144,22 @@ usamos nenhum, então temos que fazer isso manualmente. Basta fazer essas modifi
 ... [includes anteriores] ...
 #include <opa/config.h>
 #ifdef OUROBOROS_LUA_BINDINGS
-#include <languages/lua/luawrapper.h>
+#include <languages/lua/luamachine.h>
 #endif
 #ifdef OUROBOROS_PYTHON_BINDINGS
-#include <languages/python/pythonwrapper.h>
+#include <languages/python/pythonmachine.h>
 #endif
 
 using ...
 
 int main () {
 #ifdef OUROBOROS_LUA_BINDINGS
-    if (SCRIPT_MANAGER()->GetWrapper("Lua") == nullptr)
-        SCRIPT_MANAGER()->Register(new opa::lua::LuaWrapper());    
+    if (SCRIPT_MANAGER()->GetMachine("Lua") == nullptr)
+        SCRIPT_MANAGER()->Register(new opa::lua::LuaMachine());    
 #endif
 #ifdef OUROBOROS_PYTHON_BINDINGS
-    if (SCRIPT_MANAGER()->GetWrapper("Python") == nullptr)
-        SCRIPT_MANAGER()->Register(new opa::python::PythonWrapper());
+    if (SCRIPT_MANAGER()->GetMachine("Python") == nullptr)
+        SCRIPT_MANAGER()->Register(new opa::python::PythonMachine());
 #endif
 
     //inicializando
