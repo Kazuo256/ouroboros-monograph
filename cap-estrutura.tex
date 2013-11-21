@@ -50,8 +50,14 @@
     do mundo virtual do jogo. Se elas quisessem saber o quão próximo o herói
     está, elas precisariam usar as funções do módulo de controle de
     posicionamento dos avatares. Se elas quisessem criar um projétil para atacar
-    o jogador, elas precisariam acessar o módulo que contenha a classe que
-    representa o projétil desejado.
+    o jogador, elas precisariam acessar o módulo que contenha a
+    classe\footnotemark{} que representa o projétil desejado.
+
+    \footnotetext{
+      Classes são estruturas presentes em linguagens de programação
+      \emph{orientadas a objetos}. Seu papel é definir os dados e os
+      comportamentos que um conjunto de objetos deve ter.
+    }
 
     \begin{figure}[ht]
       \centering
@@ -82,50 +88,66 @@
       \end{enumerate}
     }
 
-    As duas próximas sessões explicarão como projetamos as partes do sistema
-    que atenderão cada um desses requisitos. Nesse ponto vale à pena destacar
-    um aspecto que ficou de lado até agora. Como o subtítulo desse trabalho
-    indica, o propósito do sistema é não só integrar as ditas linguagens, como
-    fazê-lo de maneira \textit{automatizada}. Até porque as APIs das máquinas
-    virtuais por sí sós possuem seus próprios mecanismos de fornecer
-    incorporação e exportação, indicando que nosso projeto seria redundante,
-    não fosse o fato que elas são trabalhosas e específicas demais de usar. A
-    intenção é que o usuário do nosso sistema não tenha que se preocupar com os
-    detalhes de cada máquina virtual quando estiver desenvolvendo a aplicação
-    dele e seja capaz de escrever normalmente os \script{s} que trabalhem com
-    ela - isso é, podendo acessar módulos externos através dos mecanismos usuais 
-    que a linguagem virtual fornece.
+    Nesse ponto vale à pena destacar um aspecto que ficou de lado até agora.
+    Como o subtítulo desse trabalho indica, o propósito do sistema é não só
+    integrar as ditas linguagens, como fazê-lo de maneira \textit{automatizada}.
+    Até porque as APIs das máquinas virtuais por sí sós possuem seus próprios
+    mecanismos de fornecer incorporação e exportação, indicando que nosso
+    projeto seria redundante, não fosse o fato que elas são trabalhosas e
+    específicas demais de usar. A intenção é que o usuário do nosso sistema não
+    tenha que se preocupar com os detalhes de cada máquina virtual quando
+    estiver desenvolvendo a aplicação dele e seja capaz de escrever normalmente
+    os \script{s} que trabalhem com ela - isso é, podendo acessar módulos
+    externos através dos mecanismos usuais que a linguagem virtual fornece.
 
-  \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
+    Logo, nosso sistema consistirá majoritariamente de uma biblioteca \CXX{}
+    que disponibiliza incorporação e exportação automatiza de e para \script{s}.
+    Faremos isso aproveitando as possibilidades de abstração da linguagem
+    escolhida para encapsular os comportamentos desejados. As duas próximas
+    sessões explicarão como projetamos as partes dessa biblioteca que atenderão
+    cada um desses requisitos.
+
+  \section{API unificada para incorporação de \script{s}}
   \label{sec:estrutura:opa}
-  
-    Uma máquina virtual de uma linguagem de \script{} é implementada em uma outra
-    linguagem, que chamamos de sua linguagem nativa. Enquanto nosso sistema trabalha
-    com as linguagens nativas \C{} ou \CXX{}, podem existir implementações da máquina
-    virtual para diversas linguagens. É comum a implementação de uma máquina virtual
-    disponibilizar uma API para sua linguagem nativa, provendo funções, constantes
-    e outros elementos para que a linguagem nativa consiga acessar e manipular a
-    máquina virtual e seu conteúdo. Isso que representa, na prática, a interação do
-    tipo (A).
 
-    Infelizmente, para um usuário comum que está desenvolvendo um programa em
-    linguagem nativa, usar a API de uma máquina virtual é normalmente uma tarefa
-    difícil e trabalhosa pela complexidade da API e pelo tempo necessário para
-    aprender a usá-la. Foi para resolver esse problema que desenvolvemos a
-    biblioteca de abstração de APIs de linguagens de \script{}, também conhecida
-    como \textit{libouroboros} ou simplesmente como \emph{Ouroboros Project API}
-    (OPA).
-    
-    A libouroboros é a parte do nosso projeto que provê a interação do tipo (A),
-    como explicada acima. Ela consiste em um conjunto de classes e funções em 
-    \CXX{} que generalizam o meio com o qual se realiza diversas operações com 
-    a API da linguagem de \script{}, como:
+    Como vimos na sessão \ref{cap:conceitos:apis}, as máquinas virtuais com que
+    estamos trabalhando possuem um API própria através da qual podemos manipular
+    seu conteúdo. Para evitar que o usuário acesse elas diretamente, podemos
+    ocultá-las por trás de uma camada que constitua uma nova API. Ela unificará
+    o acesso às funcionalidades de todas as máquinas virtuais compatíveis. Mais
+    especificamente, ela fornecerá os seguintes serviços:
+
+    % TODO: Diagrama ilustrando relação da OPA com as APIs específicas de cada
+    %       linguagem de script
+
     \begin{itemize}
-      \item carregar um \script{};
-      \item executar uma função na máquina virtual;
-      \item obter/configurar um objeto/atributo/valor na máquina virtual;
-      \item converter valores entre linguagem nativa e a máquina virtual;
+      \item Carregar um módulo a partir de um \script{};
+      \item Executar rotinas implementadas na linguagem virtual;
+      \item Obter e/ou alterar valores de variáveis, objetos e atributos
+            definidos na linguagem virtual;
+      \item Converter valores entre tipos da linguagem nativa e tipos da
+            linguagem virtual;
     \end{itemize}
+
+    Idealmente, quando o usuário requisitar um desses serviços, ele não precisa
+    saber qual máquina virtual realmente vai atendê-lo. Em termos práticos, isso
+    significa que quando ele evocar a rotina desejada, queremos que na verdade a
+    rotina executada seja aquela que corresponda à máquina virtual apropriada
+    ``sem que ele perceba''. Ou seja, precisamos de funções com nomes e
+    assinaturas\footnotemark{} fixos representando a operação almejada, porém
+    sobrecarregadas com implementações circunstancialmente diferentes. Um jeito
+    de obter esse efeito em \CXX{} é através da herança de classes, que é o
+    método que adotamos.
+
+    \footnotetext{
+      A \emph{assinatura} de uma rotina ou função especifica que tipos de
+      parâmetros ela recebe e que tipos de valores ela devolve a quem a
+      evocou.
+    }
+
+    %TODO: usar o parágrafo abaixo para explicar as principais classes que o
+    %      sistema precisa ter para suportar incorporação
+
     Uma parte dessa API é uma interface polimórfica que, ao ser implementada usando
     as rotinas da máquina virtual de uma linguagem de \script{}, possibilita que
     a \emph{libouroboros} reconheça e trabalhe com tal linguagem. Essa
@@ -135,12 +157,6 @@
     unificada. Desse jeito, ele não precisa saber sobre esse gerenciamento
     interno, nem se preocupar com a API da linguagem de \script{}, a não ser que
     seja ele quem vá adicionar o suporte a ela no sistema.
-
-    % TODO: Diagrama ilustrando relação da OPA com as APIs específicas de cada
-    %       linguagem de script
-    
-    Por padrão, o projeto terá as implementações para \textit{Lua} e
-    \textit{Python}, e portanto essas linguagens serão compatíveis com a OPA.
     
     %TODO: subsection: conversão de valores (entre linguagem nativa e máquina virtual)
     %TODO: subsection: virtualobj (possiveis subsubsection pra falar do encapsulamento do vdata, etc)
