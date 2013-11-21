@@ -1,9 +1,8 @@
 \chapter{Atividades Realizadas}
 \label{sec:atividades}
 
-  %TODO: tirar o "até o momento" na versão final
-  O objetivo desse capítulo é relatar as diversas atividades realizadas (até o
-  momento) no planejamento e desenvolvimento do Projeto Ouroboros. Como ele é
+  O objetivo desse capítulo é relatar as diversas atividades realizadas no 
+  planejamento e desenvolvimento do Projeto Ouroboros. Como ele é
   anterior ao nosso trabalho de formatura, descrevemos também as atividades dos
   anos anteriores. Explicamos como de fato implementamos a solução apresentada no
   capítulo anterior, as dificuldades técnicas encontradas e todos os outros
@@ -21,10 +20,8 @@
     \url{http://en.wikipedia.org/wiki/Game\_engine} (último acesso: 15/09/2013)}
     de desenvolvimento de jogos eletrônicos bidimensionais (ou
     simplesmente ``jogos 2D'') programada pela equipe USPGameDev, da qual
-    fazemos parte. Nós desenvolvemos a porção que corresponde ao
-    % "ao sistema atual" significa o quê?
-    sistema atual quando acreditamos que seria útil que quem estivesse usando a
-    UGDK pudesse facilmente integrar seus jogos com \script{s}.
+    fazemos parte. Nós desenvolvemos o sistema quando acreditamos que seria útil
+    que quem estivesse usando a UGDK pudesse facilmente integrar seus jogos com \script{s}.
 
     Mais especificamente, queríamos que essa integração fosse possível em um
     outro projeto, também do USPGameDev: o jogo eletrônico chamado \emph{Horus
@@ -49,15 +46,6 @@
     código.
 
     %TODO colocar imagens do horus antes e depois do sistema de scripts
-
-  %\classname{UmaClasse} 
-  %
-  %\begin{codebox}
-  %    \Procname{$\proc{XTR-mul}(x, y)$}
-  %    \zi $\id{temp} \gets x_1 * y_2 + x_2 * y_1$
-  %    \zi \Return $\proc{XTRElem}(x_2 * y_2 - \id{temp}, x_1 * y_1 -
-  %    \id{temp})$
-  %\end{codebox}
 
   \section{Decisões de projeto}
   \label{sec:actividads:decisoes}
@@ -321,7 +309,7 @@
   
   Fora métodos para as operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto
   importante da interface do \VData{} é um método para retornar a instância (contida no \SMgr{}) 
-  da implementação do \VMac{} que representa a máquina virtual responsável pelo
+  da implementação da \VMac{} que representa a máquina virtual responsável pelo
   \VData{} em questão.
   
   
@@ -376,7 +364,9 @@
   anterior. Os problemas eram:
   
   \begin{itemize}
-    \item A determinação de \textit{disown} depende da API do usuário e não é prático usar.
+    \item A determinação de \textit{disown} depende da API do usuário e o design do SWIG é
+      imprático para reconhecer essas especificações.
+      
       \textit{Disown} é o ato de fazer com que algum método da interface \CXX{} retire a posse
       de uma instância de uma classe \CXX{} que ele recebe como argumento da máquina virtual. 
       Quando a máquina virtual cria algum objeto \CXX{}, ou seja, um objeto da linguagem de 
@@ -388,12 +378,12 @@
       momento após a máquina virtual tê-la removido da memória. Portanto fizemos que métodos
       da interface \CXX{} que recebem instâncias de classes e cuidam da remoção delas 
       internamente tiram a posse de tal instância da máquina virtual.
-      % TODO: Faltou falar mais sobre o verdadeiro problema: a impraticidade do design do
-      %       SWIG em reconhecer essas especificações. A questão da posse em si é
-      %       inerente ao problema, e não tem como ser evitada.
+      
+      A questão da posse de um objeto entre \CXX{} e uma máquina virtual é inerente ao
+      problema e ao nosso ver não tem como ser evitada.
     \item O SWIG não aceita o aninhamento de classes, \textit{structs} e \textit{unions}, e 
-      %TODO: citation neeeded!
-      aparentemente não pretende aecitar tão cedo. Aninhar tais estruturas de \CXX{} é o ato
+      %TODO: citation needed!
+      aparentemente não pretende aceitar tão cedo. Aninhar tais estruturas de \CXX{} é o ato
       de definir algumas delas dentro de outra.
     \item SWIG não tem suporte a herança de classes \CXX{} nos \script{s}. A nossa ``solução''
       para isso foi criar um sistema de \textit{proxies}\footnotemark: classes intermediárias em
