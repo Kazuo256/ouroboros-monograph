@@ -11,12 +11,27 @@
 \chapter{Próximos passos}
 \label{sec:proximos_passos}
 
-Resumo de possíveis próximos passos (escreveremos mais na versão final):
+Para o projeto como um todo:
 \begin{itemize}
-  \item Módulos CMake para facilitar uso do sistema por usuários.
-  \item \emph{Scriptception}: possibilitar uma linguagem de \script{} usar diretamente
+  \item \emph{\textbf{Scriptception}}: possibilitar uma linguagem de \script{} usar diretamente
     outra linguagem de \script{} facilmente.
-  \item Adicionar suporte padrão a outras linguagens além de Python e Lua, como Ruby, Perl
-    e Octave.
-  \item Suportar uso multithreaded do Ouroboros.
+  \item \textbf{Mais linguagens}: Adicionar suporte padrão a outras linguagens além de Python e Lua,
+    como Ruby, Perl e Octave.
+  \item \textbf{Multithread}: Suportar uso multithreaded do Ouroboros.
+  \item \textbf{Tutoriais}: Alguns tutoriais sobre como usar as diferentes partes do
+    sistema também seria bem útil para ajudar os usuários.
+\end{itemize}
+
+Para completar o OPWIG:
+\begin{itemize}
+  \item \textbf{Pré-processador}: O pré-processador de \C{}/\CXX{} é uma parte 
+    importante da linguagem, podendo até definir trechos de código condicionalmente.
+    Colocar um pré-processador no \textit{parser} possibilitaria reconhecer
+    códigos \CXX{} bem mais complexos. Nós vamos analisar a dificuldade de implementar
+    essa funcionalidade, e se acharmos que não gastará muito tempo vamos colocá-la -
+    para tal provavelmente vamos procurar alguma ferramenta pronta que ajude nisso.
+  \item \textbf{Exportar \lang{Enum}s}: \lang{Enum} é uma estrutura de dados de \CXX{} 
+    que representa um tipo e seus possíveis valores. O \textit{parser} do OPWIG já
+    é capaz de reconhecer essas estruturas, porém o gerador de código ainda não
+    exporta ela para as linguagens de \script{}.
 \end{itemize}

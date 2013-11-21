@@ -1,8 +1,8 @@
-\chapter{Estado Atual do Projeto}
+\chapter{Resultados}
 \label{sec:resultados}
 
 Neste capítulo iremos apresentar os resultados obtidos ao longo do
-desenvolvimento do Projeto Ouroboros até agora. Parte desses resultados foram
+desenvolvimento do Projeto Ouroboros. Parte desses resultados foram
 obtidos antes do trabalho de formatura, mas ainda assim foram aprimorados
 durante o processo de desenvolvimento do trabalho.
 
@@ -11,28 +11,30 @@ Separadamente, cada resultado corresponde a uma forma generalizada de implementa
 as interações entre linguagens especificadas na seção \ref{sec:estrutura:geral}.
 A interação do tipo (A) foi implementada pela libouroboros (seção 
 \ref{sec:resultados:libouroboros}), e a interação do tipo (B) pelo 
-OPWIG (seção \ref{sec:resultados:opwig}).
+OPWIG (seção \ref{sec:resultados:opwig})
 
 
 \section{Biblioteca \textbf{libouroboros}}
 \label{sec:resultados:libouroboros}
-A libouroboros, que é basicamente uma biblioteca para \CXX{} contendo o OPA,
-já tem praticamente todas as funcionalidades desejadas implementadas e
-funcionando normalmente. Contém um sistema para gerenciar as máquinas
+A libouroboros é uma biblioteca \CXX{} que como o nome já indica, contém
+o sistema ouroboros.
+
+Ela contém o OPA, com praticamente todas as funcionalidades desejadas 
+implementadas e funcionando normalmente: um sistema para gerenciar as máquinas
 virtuais desejadas, para carregar \script{s} independente de sua
 linguagem, e uma interface simples, genérica e robusta para
 que o usuário de \CXX{} mexa com a máquina virtual e seus \script{s}.
 
-É provável que ainda alteremos algumas coisas nela, arrumando alguma
-coisa ou implementando novas funcionalidades. Algo que ainda iremos
-fazer é adaptar seu código de conversão de valores de tipos de usuários
-para condizer com a interface do OPWIG, apagando todas referências ao
-SWIG.
+E ela também contém o código do OPWIG (mais sobre ele na próxima seção
+\ref{sec:resultados:opwig}).
+
+É provável que ainda alteremos algumas coisas no sistema, arrumando alguma
+coisa ou implementando novas funcionalidades.
 
 A libouroboros também é facilmente compilada em várias plataformas usando
 o CMake para gerar arquivos relativos à compilação, como \textit{Makefile}s
-no Linux. As implementações das interfaces abstratas da OPA para as linguagens
-de \script{} Python e Lua que fizemos também estão praticamente completas,
+no Linux. As implementações que fizemos das interfaces abstratas da OPA e do 
+OPWIG para as linguagens de \script{} Python e Lua também estão totalmente funcionais,
 sendo distríbuidas juntamente com a libouroboros e sendo compiladas em
 bibliotecas diferentes: \emph{libouroboros-python} e \emph{libouroboros-lua},
 para Python e Lua, respectivamente. Assim é fácil incorporá-las em um
@@ -71,9 +73,9 @@ pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
   $ cmake .
   $ make
 \end{verbatim}
-Isso irá compilar a libouroboros, libouroboros-python, libouroboros-lua e o OPWIG
-(mais sobre como usar ele na próxima seção). Caso queira, as seguintes opções podem ser
-passadas para o CMake para alterar seu comportamento:
+Isso irá compilar a libouroboros, libouroboros-python, libouroboros-lua e os OPWIGs
+correspondentes (mais sobre como usar ele na próxima seção). Caso queira, as
+seguintes opções podem ser passadas para o CMake para alterar seu comportamento:
 \begin{itemize}
   \item OUROBOROS\_CREATE\_BINDINGS: se verdade, o CMake irá tentar criar as 
     implementações de linguagens (padrão é sim).
@@ -194,9 +196,9 @@ As suas capacidades atuais de geração de \textit{wrappers} são:
 \begin{itemize}
   \item \lang{namespaces} são traduzidos em módulos e sub-módulos na máquina
     virtual, de acordo com a estrutura dos \lang{namespaces}.
-  \item Variáveis globais de tipos primitivos, possivelmente constantes.
+  \item Variáveis globais, possivelmente constantes.
   \item Funções globais que recebam um número qualquer de argumentos de tipos
-    primitivos e retorne nada ou um valor primitivo.
+    primitivos ou complexos (classes de usuário) e retorne nada ou um valor desses tipos.
   \item Classes simples, com:
     \begin{itemize}
       \item Destrutor.
@@ -206,6 +208,9 @@ As suas capacidades atuais de geração de \textit{wrappers} são:
         de tipos primitivos e retorne nada ou um valor primitivo.
     \end{itemize}
 \end{itemize}
+Os tipos de atributos, váriaveis, paramêtros e valores devolvidos que são reconhecidos
+são tanto os primitivos (naturais da linguagem nativa, como \lang{int} ou \lang{double})
+quanto os complexos (classes do usuário que foram exportadas).
 
 Além disso o código gerado pelo OPWIG também tem um bloco de inicialização
 (\textit{bootstrap}) que registra a máquina virtual correspondente no \SMgr{},
@@ -226,19 +231,35 @@ uma delas (a geração de \textit{wrappers}).
 Aqui iremos explicar como usar o OPWIG, desde compilação até execução da ferramenta
 e integração do código gerado com seu programa.
 
+Note que enquanto nos referimos ao OPWIG como ``uma'' ferramenta, ele na verdade
+é uma biblioteca. Por simplicidade de código e organização do sistema, 
+todo o código do OPWIG é compilado junto com o OPA na libouroboros, enquanto que 
+a implementação do OPWIG para cada linguagem é compilada com a implementação do
+OPA para cada linguagem na libouroboros-lua, por exemplo.
+
+Então para de fato usar o OPWIG é necessário um outro arquivo de código, compilado
+num executável separado, que execute o OPWIG para uma linguagem de \script{} especifica.
+Tais executáveis são as ferramentas de fato, e cada um deverá ser ligado junto com a
+libouroboros e a implementação da libouroboros para a linguagem de \script{} em questão. 
+Damos o nome de ``opwig-linguagem'' para esses executáveis do OPWIG, como por exemplo
+\textbf{opwig-lua} e \textbf{opwig-python}.
+
+A interface do OPWIG disponibilizada pela libouroboros e os módulos de CMake
+que criamos fazem essa terefa de criar executáveis do OPWIG para cada linguagem ser trivial,
+e o CMake do Ouroboros já usa desse dispositivo para definir o opwig-lua e opwig-python.
+
 \subsubsection{Compilação}
-Como ainda não disponibilizamos um pacote com a ferramenta pronta, será necessário
-compilar o OPWIG. Para tal, basta usar o CMake tal como já explicamos anteriormente:
+Como ainda não disponibilizamos um pacote com as ferramentas prontas, será necessário
+compilar os OPWIGs. Para tal, basta usar o CMake tal como já explicamos anteriormente:
 \begin{verbatim}
   $ cmake .
-  $ make opwig
+  $ make opwig-lua
+  $ make opwig-python
 \end{verbatim}
-E lembrando que o comando \lang{make} (sem parâmetros) compila o OPWIG juntamente com
+E lembrando que o comando \lang{make} (sem parâmetros) compila ambos OPWIG juntamente com
 as libouroboros.
 
-Note que ao contrário da libouroboros e das suas implementações específicas para cada
-linguagem, o OPWIG ainda não teve suas especificações para Lua e Python isoladas dele.
-Portanto ele será compilado com elas e as implementações correspondentes da libouroboros.
+O opwig-lua depende da libouroboros-lua, e analogamente o opwig-python depende da libouroboros-python.
 
 É possível também compilar o extenso conjunto de testes unitários do OPWIG, que
 criamos para testar suas funcionalidades usando o seguinte comando:
@@ -253,20 +274,21 @@ E para executá-los:
 \subsubsection{Execução}
 Após compilado, executar o programa é simples:
 \begin{verbatim}
-  $ opwig --module-name=NOME ARQUIVO-1 ARQUIVO-2 ... ARQUIVO-N
+  $ opwig-python --module-name=NOME ARQUIVO-1 ARQUIVO-2 ... ARQUIVO-N
 \end{verbatim}
 Onde:
 \begin{itemize}
+  \item \textbf{opwig-python} é o OPWIG em questão, troque para qual OPWIG você quer executar 
+    (outro exemplo seria o opwig-lua).
   \item \textbf{NOME}: é o nome do módulo que será gerado.
   \item \textbf{ARQUIVO-i}: são os arquivos de cabeçalho em \CXX{} que contêm a interface
     que você deseja que seja exportada no módulo.
 \end{itemize}
 
-Como explicado anteriormente, o OPWIG ainda não está separado das especificações
-de linguagens de \script{}, e portanto ao ser executado ele obrigatoriamente
-irá gerar um arquivo de código com o módulo para Lua e outro para Python. Ele gera
-os arquivos na mesma pasta de onde ele está sendo executado, seguindo o seguinte
-padrão de nomenclatura:
+Cada ferramenta do OPWIG é especifica para uma linguagem e portanto ao ser executado
+ele obrigatoriamente irá gerar um arquivo de código com o módulo exportado para a
+linguagem de \script{} respectiva. Ele gera o arquivo na mesma pasta de onde ele está 
+sendo executado, seguindo o seguinte padrão de nomenclatura:
 \begin{verbatim}
   <nome da linguagem de script>_<nome do módulo>_wrap.cxx
 \end{verbatim}
@@ -280,36 +302,3 @@ Qualquer \script{} em uma linguagem compatível que seja carregado pelo seu prog
 (usando a OPA) será capaz de incluir o módulo gerado usando o sistema padrão da
 linguagem para inclusão de módulos externos. E o módulo em si deverá ser
 usado como qualquer outro módulo dessa linguagem.
-
-\section{Metas para a versão final}
-\label{sec:resultados:pendencias}
-Nossas metas para a versão final do trabalho são as seguintes:
-
-\begin{itemize}
-  \item \textbf{Conversão de Tipos do Usuário}: Isso permitiria a exportação de
-    funções e variáveis com tipos definidos pelo usuário que foram exportados também.
-  \item \textbf{Pré-processador}: O pré-processador de \C{}/\CXX{} é uma parte 
-    importante da linguagem, podendo até definir trechos de código condicionalmente.
-    Colocar um pré-processador no \textit{parser} possibilitaria reconhecer
-    códigos \CXX{} bem mais complexos. Nós vamos analisar a dificuldade de implementar
-    essa funcionalidade, e se acharmos que não gastará muito tempo vamos colocá-la -
-    para tal provavelmente vamos procurar alguma ferramenta pronta que ajude nisso.
-  \item \textbf{Remover o SWIG completamente}: Enquanto o propósito do OPWIG é substituir
-    o SWIG, ainda não removemos ele completamente do projeto ainda.
-  \item \textbf{Exceções na OPA}: Modificar o OPA para usar \textit{exceções} de \CXX{}
-    quando ocorrerem problemas, para melhorar o sistema e as opções de tratamento de
-    erros para os usuários.
-  \item \textbf{Separar linguagens no OPWIG}: Assim como na libouroboros, queremos que
-    a implementação de cada linguagem para o OPWIG seja definida e compilada separadamente
-    do código principal do OPWIG.
-  \item \textbf{Módulos CMake}: Criar módulos CMake para facilitar o uso do sistema
-    pelos usuários.
-  \item \textbf{Exportar \lang{Enum}s}: \lang{Enum} é uma estrutura de dados de \CXX{} 
-    que representa um tipo e seus possíveis valores. O \textit{parser} do OPWIG já
-    é capaz de reconhecer essas estruturas, porém o gerador de código ainda não
-    exporta ela para as linguagens de \script{}.
-  \item \textbf{Documentação}: Boa parte da interface do sistema com o usuário ainda
-    não está documentada. Isso facilitaria o uso do sistema para os usuários.
-  \item \textbf{Tutoriais}: Alguns tutoriais sobre como usar as diferentes partes do
-    sistema também seria bem útil para ajudar os usuários.
-\end{itemize}
