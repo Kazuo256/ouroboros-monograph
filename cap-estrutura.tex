@@ -6,15 +6,15 @@
   No capítulo anterior revisamos e apresentamos conceitos visando responder a
   pergunta ``Como integrar \CXX{} com linguagens de \script{}?''. Agora que
   temos essas ferramentas a nosso dispor, vamos modelar uma solução. Para isso
-  precisamos entender, em termos práticos, o quê nosso sistema deve ser capaz
+  precisamos entender, em termos práticos, o que nosso sistema deve ser capaz
   de fazer, e então projetar uma estrutura que satisfaça esses requisitos.
   
   Um usuário do nosso sistema estará tipicamente desenvolvendo uma aplicação
   em \CXX{} que de alguma forma precisa ser capaz de interagir com \lang{Lua}
-  e \lang{Python}, simultaneamente ou não. Como vimos na sessão
+  e \lang{Python}, possivelmente ambas ao mesmo tempo. Como vimos na sessão
   \ref{cap:conceitos:maquina}, essa interação pode ser estabelecida de maneira
   bastante direta entre elas se a máquina virtual da linguagem de \script{} em
-  questão tiver sido programada na linguagem compilada usada. Para evitar
+  questão tiver sido programada na linguagem compilada em questão. Para evitar
   repetitividade e simplificar o texto, diremos, do ponto de vista das
   máquinas virtuais envolvidas, que:
 
@@ -36,35 +36,34 @@
   \section{Visão Geral}
   \label{sec:estrutura:geral}
 
-    Vamos dizer que tanto a aplicação quantos os \script{s} estão divididos
-    em \textbf{módulos}. Eles serão os objetos que representam o conjunto de
-    elementos provenientes de uma ou de outra linguagem que podem ser acessados
-    e manipulados. Por exemplo, se a aplicação em questão for um jogo de ação no
-    qual o jogador enfrenta inimigos virtuais, o desenvolvedor poderia usar
-    \script{s} para implementar a inteligência artifical desse inimigos, para
-    que fosse fácil ajustá-las sem ter que recompilar o jogo. Desse modo, cada
-    um desses \script{s} seria um módulo que a aplicação precisaria carregar e
-    usar durante sua execução. Eles, por sua vez, precisariam interagir com
-    módulos da aplicação para que as inteligências artificiais conseguissem
-    manipular seus personagens dentro do mundo virtual do jogo. Se elas
-    quisessem saber o quão próximo o herói está, elas precisariam usar as
-    funções do módulo de controle de posicionamento dos avatares. Se elas
-    quisessem criar um projétil para atacar o jogador, elas precisariam acessar
-    o módulo certo para conhecer a classe que representa esses objetos.
+    Para auxiliar a modelagem da estrutura, vamos dizer que tanto a aplicação
+    quantos os \script{s} estão divididos em \textbf{módulos}. Eles serão os
+    objetos que representam o conjunto de elementos provenientes de uma ou de
+    outra linguagem que podem ser acessados e manipulados. Por exemplo, se a
+    aplicação em questão for um jogo de ação no qual o jogador enfrenta inimigos
+    virtuais, o desenvolvedor poderia usar \script{s} para implementar a
+    inteligência artifical desse inimigos, para que fosse fácil ajustá-las sem
+    ter que recompilar o jogo. Desse modo, cada um desses \script{s} seria um
+    módulo que a aplicação precisaria carregar e usar durante sua execução.
+    Eles, por sua vez, precisariam interagir com módulos da aplicação para que
+    as inteligências artificiais conseguissem manipular seus personagens dentro
+    do mundo virtual do jogo. Se elas quisessem saber o quão próximo o herói
+    está, elas precisariam usar as funções do módulo de controle de
+    posicionamento dos avatares. Se elas quisessem criar um projétil para atacar
+    o jogador, elas precisariam acessar o módulo que contenha a classe que
+    representa o projétil desejado.
 
     \begin{figure}[ht]
       \centering
       \includegraphics[width=.8\textwidth]{overview-simple.png}
-      \caption{Esquematização bem simplificada do sistema.}
+      \caption{Esquematização bem simplificada do funcionamento sistema.}
       \label{fig:overview-simple}
     \end{figure}
 
-    Dessa forma, uma primeira ilustração bem simplificada da estrutura geral do
+    Dessa forma, uma primeira ilustração bem simplificada do funcionamento do
     nosso sistema é a representada na Figura \ref{fig:overview-simple}. O
     sistema Ouroboros será responsável por fornecer acesso aos módulos entre a
-    aplicação e as máquinas virtuais. Então, a estrutura que queremos para o
-    projeto deve levar isso em consideração, tratando os dois sentidos dessa
-    interação como duas partes diferentes. Dessa forma, estabelecemos duas
+    aplicação e as máquinas virtuais. Dessa forma, estabelecemos duas
     grandes funcionalidades no sistema: providenciar à aplicação a possibilidade
     de manipular os módulos das máquinas virtuais, e deixar os módulos da
     aplicação à disposição dos \script{s} . Esses processos são conhecidos como
@@ -88,9 +87,14 @@
     um aspecto que ficou de lado até agora. Como o subtítulo desse trabalho
     indica, o propósito do sistema é não só integrar as ditas linguagens, como
     fazê-lo de maneira \textit{automatizada}. Até porque as APIs das máquinas
-    virtuais por sí sós possuem seus próprios mecanismos de fornecer essas
-    capacidades, mas são trabalhosas e específicas de usar. Isso também é
-    considerado na elaboração da estrutura do projeto, como veremos a seguir.
+    virtuais por sí sós possuem seus próprios mecanismos de fornecer
+    incorporação e exportação, indicando que nosso projeto seria redundante,
+    não fosse o fato que elas são trabalhosas e específicas demais de usar. A
+    intenção é que o usuário do nosso sistema não tenha que se preocupar com os
+    detalhes de cada máquina virtual quando estiver desenvolvendo a aplicação
+    dele e seja capaz de escrever normalmente os \script{s} que trabalhem com
+    ela - isso é, podendo acessar módulos externos através dos mecanismos usuais 
+    que a linguagem virtual fornece.
 
   \section{Biblioteca de abstração de APIs de linguagens de \emph{script}.}
   \label{sec:estrutura:opa}
