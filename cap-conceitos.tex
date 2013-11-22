@@ -256,4 +256,52 @@
     protocolo de sequência (uma lista ou uma tupla em Python, por exemplo, usam esse protocolo) -
     facilitando o uso de sequências pelo código \C{}.
     
+    Por exemplo, suponha o seguinte script Python, :
+    \lstset{language=Python}
+    \begin{lstlisting}
+    # teste.py
+    def pow(x,y):
+        return x**y
+    \end{lstlisting}
+    \lstset{language=C++}
+    
+    Para executar a função \emph{pow} em \CXX{} fazemos o seguinte:
+    \begin{lstlisting}
+    #include <Python.h>
+    
+    double executaPow(double x, double y) {
+        //primeiro importamos o modulo
+        PyObject* teste = PyImport_ImportModule("teste"); //new ref
+        
+        //gracas a facilidade da API, com uma unica chamada podemos
+        // 1. pegar uma funcao do modulo
+        // 2. construir uma tupla com os parametros a serem passados
+        // 3. executar a tal funcao, passando os parametros.
+        //e tambem possivel realizar essas operacoes separadamente,
+        //cada uma e uma outra chamada de funcao da API.
+        PyObject* result = PyObject_CallMethod(teste, "pow", "(dd)", x, y); //new ref
+        
+        //convertermos o resultado para C
+        double resultado = PyFloat_AsDouble(result);
+        
+        //corrigimos as contagens de referencia
+        Py_DECREF(teste);
+        Py_DECREF(result);
+        
+        //e retornamos o resultado
+        return resultado;
+    }
+    \end{lstlisting}
+    
+    Como é possível notar no exemplo acima, outra facilidade da API é ela usa um sistema 
+    primitivo de orientação a objetos em \C{}, e quase tudo em Python (um módulo, uma 
+    classe, uma função, etc) é representado em \C{} por um ponteiro para \emph{PyObject}, 
+    que além de informações sobre o tipo do objeto e outros valores, contém a contagem de 
+    referência do objeto. Quando a contagem de referências de um objeto se torna zero, a 
+    máquina virtual deleta aquele objeto. E ai está um dos piores pontos da API Python: 
+    enquanto a máquina virtual gerencia automaticamente as contagens de referência
+    quando ela processa código em Python, o usuário que usar a API \C{} tem incrementar e 
+    decrementar manualmente as contagens dos objetos que ele está usando, o que é trabalhoso e 
+    propenso a erros.
+    
     
