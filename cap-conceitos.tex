@@ -246,4 +246,14 @@
       O esquema de módulos é o seguinte...
 
     \subsection{\lang{Python}}
-
+    Ao contrário de Lua, Python trabalha internamente com um \emph{heap} para guardar seus objetos.
+    Porém raramente o usuário precisa mexer com o heap diretamente. De fato, ao longo do desenvolvimento
+    desse projeto nunca precisamos mexer nele.
+    
+    A API \C{} do Python é bem compreensiva e documentada, com muitas funções e macros para ajudar 
+    o usuário, nos diversos aspectos da interação com a máquina virtual, como conversão de valores,
+    tratamento de objetos e de diversos ``protocolos'' que os objetos podem usar, como o
+    protocolo de sequência (uma lista ou uma tupla em Python, por exemplo, usam esse protocolo) -
+    facilitando o uso de sequências pelo código \C{}.
+    
+    
