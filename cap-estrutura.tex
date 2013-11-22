@@ -135,7 +135,15 @@
     assinaturas\footnotemark{} fixos simbolizando a operação almejada, porém
     sobrecarregadas com implementações circunstancialmente diferentes. Um jeito
     de obter esse efeito em \CXX{} é através da herança de classes, que é o
-    método que adotaremos.
+    método que adotaremos. Basicamente, sempre que formos implementar uma
+    funcionalidade que dependa do funcionamento das máquians virtuais,
+    definiremos uma classe abstrata com as assinaturas desejadas e herdaremos
+    ela em classes específicas para cada linguagem de \script{}, que
+    implementarão o que de fato acontece quanda as funções da classe original
+    são chamadas. Quando objetos dessas classes forem instanciados, os
+    mecanismos de \CXX{} garantirão que a implementação usada corresponderá à
+    classe verdadeira deles (relativa a alguma máquina virtual), por mais que a
+    aplicação do usuário só conheça a classe abstrata mãe.
 
     \footnotetext{
       A \emph{assinatura} de uma rotina ou função especifica que tipos de
@@ -147,38 +155,37 @@
       \centering
       \caption{}
       \begin{subfigure}{.8\textwidth}
-        \centering
-        \includegraphics[width=.5\textwidth]{api-unificada.png}
-        \vspace{1em}
-
+        \begin{center}
+          \includegraphics[width=.5\textwidth]{api-unificada.png}
+          \vspace{1em}
+        \end{center}
         \textit{
-          \textbf{Exemplo}: a aplicação do usuário pede para carregar um certo módulo
-          \script{}. A API unificada deve discernir qual máquina virtual é a
-          apropriada para tal e delegar a tarefa, sem que o usuário precise saber.%
+          Nesse exemplo, a aplicação do usuário pede para carregar um certo
+          módulo \script{}. A API unificada deve discernir qual máquina virtual
+          é a apropriada para tal (no caso, a máquina C) e delegar a tarefa, sem
+          que o usuário precise saber.
         }
       \end{subfigure}
       \label{fig:api-unificada}
     \end{figure}
 
-    Observando os itens acima, vemos que o terceiro e o quarto podem ser
-    atendidos através de uma classe que represente objetos virtuais, isso é,
-    objetos criados dentro da máquina virtual pela linguagem dela. Assim,
-    instâncias dessa classe serviriam de acesso a esses objetos e permitiriam
-    uma operação de conversão de e para tipos da linguagem nativa. Por exemplo,
-    o usuário poderia usar uma instância dessa classe para referir-se a uma
-    cadeia de caracteres definida em um \script{} para convertê-la para o tipo
-    \lang{string} do \CXX{}. Além disso, levando em consideração que nas
-    linguagens de \script{} com que estamos trabalhamos funções são tipos de
-    primeira classe\footnotemark{}, um objeto virtual também poderia ser uma
-    função e, portanto, poderia ser evocado para desencadear a rotina
-    correspondente dentro da máquina virtual. Juntando isso à estratégia da
-    herança, temos uma classe que satisfaz os ítens 2 a 4 e ainda consegue
-    ocultar as implementações específicas para cada máquina virtual.
-
-    % TODO Diagrama!
-
-    % Para explicar as classes que faltam, falar que módulos também podem ser
-    % objetos virtuais se acrescentarmos a operação de acesso a atributos []
+    Vamos, então, usar os serviços listados acima para escolher a combinação de
+    classes que a API unificada oferecerá. Uma maneira de fornecer acesso a
+    objetos virtuais, como especifica o item 3, é encapsular seu comportamento
+    em uma classe própria. Dessa forma, quando instâncias dessa classe fossem
+    manipuladas pela aplicação do usuário, elas internamente executariam as
+    operações necessárias na máquina virtual para que o efeito desejado
+    refletisse nela. E com isso ganhamos o item 4 de graça, pois basta colocar
+    nessa classe métodos que convertam o valor interno do objeto virtual para
+    \CXX{} e vice-versa. Por exemplo, o usuário poderia usar uma instância dessa
+    classe para referir-se a uma cadeia de caracteres definida em um \script{}
+    para convertê-la para o tipo \lang{string} em \CXX{}. O item 2 também
+    é facilmente satisfeito pois, levando em consideração que nas linguagens de
+    \script{} com que estamos trabalhando funções são tipos de primeira
+    classe\footnotemark{}, um objeto virtual também seria capaz de conter uma
+    delas de forma que ao ser evocado desencadearia a rotina correspondente
+    dentro da máquina virtual. A figura \ref{fig:api-vobjs} exemplifica essas
+    ideias.
 
     \footnotetext{
       Quando funções são tipos de \emph{primeira classe}, elas podem ser
@@ -187,23 +194,66 @@
       e até mesmo devolvidas por outras funções também.
     }
 
-    %TODO: usar o parágrafo abaixo para explicar as principais classes que o
-    %      sistema precisa ter para suportar incorporação
+    Fica faltando apenas o item 1, com o qual podemos seguir o mesmo raciocínio
+    que usamos com funções: podemos tratar módulos como objetos virtuais. Assim,
+    quando o usuário pede para carregar um \script{}, ele recebe uma instância
+    de objeto virtual que abstrai o módulo em si. Isso exige que a classe
+    tenha operações de acesso a membros dos objetos, para a aplicação poder
+    alcançar os objetos virtuais que estão ``dentro'' do módulo. Para completar,
+    a técnica de sobrecarga via herança nos permite criar, para cada máquina
+    virtual, implementações diferentes dessa classe que representa objetos
+    virtuais e mesmo assim exigir que o usuário use apenas uma classe base com
+    as assinaturas de todas essas operações que vimos. 
 
-    Uma parte dessa API é uma interface polimórfica que, ao ser implementada usando
-    as rotinas da máquina virtual de uma linguagem de \script{}, possibilita que
-    a \emph{libouroboros} reconheça e trabalhe com tal linguagem. Essa
-    implementação deve satisfazer nossa interface, isso é, as operações
-    descritas acima. A nossa API administrará as diversas implementações
-    disponíveis apresentando ao usuário final da OPA apenas a interface
-    unificada. Desse jeito, ele não precisa saber sobre esse gerenciamento
-    interno, nem se preocupar com a API da linguagem de \script{}, a não ser que
-    seja ele quem vá adicionar o suporte a ela no sistema.
-    
-    %TODO: subsection: conversão de valores (entre linguagem nativa e máquina virtual)
-    %TODO: subsection: virtualobj (possiveis subsubsection pra falar do encapsulamento do vdata, etc)
-    %TODO: subsection: importação de um módulo de script para a linguagem nativa
-  
+    \begin{figure}[ht]
+      \centering
+      \caption{}
+      \begin{subfigure}{.8\textwidth}
+        \begin{center}
+          \includegraphics[width=.7\textwidth]{api-vobjs.png}
+          \vspace{1em}
+        \end{center}
+        \textit{
+          Cada instância da classe que representará objetos virtuais encapsula
+          um valor dentro de alguma máquina virtual. Note que mais de uma
+          instância pode interagir com um mesmo valor.
+        }
+      \end{subfigure}
+      \label{fig:api-vobjs}
+    \end{figure}
+
+    Por uma questão de projeto de código, são necessárias ainda mais duas
+    classes. Afinal, quando o usuário quiser carregar um módulo para obter seu
+    respectivo objeto virtual, que parte da nossa API ele deverá usar? A classe
+    dos objetos virtuais não pode ser instanciada sozinha (até porque ela é
+    abstrata). Normalmente, quem tem as informações necessárias para tanto são
+    as própsicas máquinas virtuais. Então, uma solução seria definir uma classe
+    para as máquinas virtuais também, novamente usando herança para abstrair o
+    funcionamento delas ao mesmo tempo deixando assinaturas relevantes ficam
+    expostas. A terceira classe seria justamente para gerenciar as instâncias de
+    máquinas virtuais. As relações entre essas três classes e o usuário estão
+    representadas na figura \ref{fig:api-classes}.
+
+    Chamamos a parte do nosso sistema que corresponde a essa API unificada de
+    \emph{\textbf{Ouroboros Project API}} ou simplesmente \textbf{OPA}.
+
+    \begin{figure}[ht]
+      \centering
+      \caption{}
+      \begin{subfigure}{.8\textwidth}
+        \begin{center}
+          \includegraphics[width=\textwidth]{api-classes.png}
+          \vspace{1em}
+        \end{center}
+        \textit{
+          Isso não chega a ser uma diagrama UML, apenas uma representação
+          simbólica das classes. A especificação mais detalhada delas será
+          exposta no capítulo \ref{sec:atividades}. Mas emprestamos a notação
+          de herança.
+        }
+      \end{subfigure}
+      \label{fig:api-classes}
+    \end{figure}
   
   \section{Gerador de \emph{wrappers} e interfaces.}
   \label{sec:estrutura:opwig}
