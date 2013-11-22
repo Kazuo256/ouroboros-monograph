@@ -111,21 +111,12 @@
   \label{sec:estrutura:opa}
 
     Como vimos na sessão \ref{cap:conceitos:apis}, as máquinas virtuais com que
-    estamos trabalhando possuem um API própria através da qual podemos manipular
-    seu conteúdo. Para evitar que o usuário acesse elas diretamente, podemos
-    ocultá-las por trás de uma camada que constitua uma nova API. Ela unificará
-    o acesso às funcionalidades de todas as máquinas virtuais compatíveis. Mais
+    estamos trabalhando possuem uma API própria através da qual podemos
+    manipular seu conteúdo. Para evitar que o usuário acesse elas diretamente
+    (e tenha que lidar com os mecanismos dela ele mesmo), podemos encapsulá-las
+    por trás de uma camada que constitua uma nova API. Ela unificará o acesso às
+    funcionalidades de todas as máquinas virtuais compatíveis. Mais
     especificamente, ela fornecerá os seguintes serviços:
-
-    \begin{figure}[ht]
-      \centering
-      \includegraphics[width=.5\textwidth]{api-unificada-caso1.png}
-      \caption{Sbrubles}
-      \label{fig:api-unificada-1}
-    \end{figure}
-
-    % TODO: Diagrama ilustrando relação da OPA com as APIs específicas de cada
-    %       linguagem de script
 
     \begin{enumerate}
       \item Carregar um módulo a partir de um \script{};
@@ -137,10 +128,11 @@
 
     Idealmente, quando o usuário requisitar um desses serviços, ele não precisa
     saber qual máquina virtual realmente vai atendê-lo. Em termos práticos, isso
-    significa que quando ele evocar a rotina desejada, queremos que na verdade a
-    rotina executada seja aquela que corresponda à máquina virtual apropriada
-    ``sem que ele perceba''. Ou seja, precisamos de funções com nomes e
-    assinaturas\footnotemark{} fixos representando a operação almejada, porém
+    significa que quando ele evocar a rotina que representa o serviço desejado,
+    queremos que na verdade a rotina executada seja aquela que corresponda à
+    máquina virtual apropriada ``sem que ele perceba'', como na figura
+    \ref{fig:api-unificada}. Ou seja, precisamos de funções com nomes e
+    assinaturas\footnotemark{} fixos simbolizando a operação almejada, porém
     sobrecarregadas com implementações circunstancialmente diferentes. Um jeito
     de obter esse efeito em \CXX{} é através da herança de classes, que é o
     método que adotaremos.
@@ -150,6 +142,23 @@
       parâmetros ela recebe e que tipos de valores ela devolve a quem a
       evocou.
     }
+
+    \begin{figure}[ht]
+      \centering
+      \caption{}
+      \begin{subfigure}{.8\textwidth}
+        \centering
+        \includegraphics[width=.5\textwidth]{api-unificada.png}
+        \vspace{1em}
+
+        \textit{
+          \textbf{Exemplo}: a aplicação do usuário pede para carregar um certo módulo
+          \script{}. A API unificada deve discernir qual máquina virtual é a
+          apropriada para tal e delegar a tarefa, sem que o usuário precise saber.%
+        }
+      \end{subfigure}
+      \label{fig:api-unificada}
+    \end{figure}
 
     Observando os itens acima, vemos que o terceiro e o quarto podem ser
     atendidos através de uma classe que represente objetos virtuais, isso é,
