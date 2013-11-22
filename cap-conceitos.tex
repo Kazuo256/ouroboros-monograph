@@ -252,18 +252,16 @@
     
     A API \C{} do Python é bem compreensiva e documentada, com muitas funções e macros para ajudar 
     o usuário, nos diversos aspectos da interação com a máquina virtual, como conversão de valores,
-    tratamento de objetos e de diversos ``protocolos'' que os objetos podem usar, como o
+    tratamento de objetos e de diversos protocolos que os objetos podem usar, como o
     protocolo de sequência (uma lista ou uma tupla em Python, por exemplo, usam esse protocolo) -
     facilitando o uso de sequências pelo código \C{}.
     
-    Por exemplo, suponha o seguinte script Python, :
-    \lstset{language=Python}
-    \begin{lstlisting}
+    Por exemplo, suponha o seguinte script Python:
+    \begin{lstlisting}[language=python]
     # teste.py
     def pow(x,y):
         return x**y
     \end{lstlisting}
-    \lstset{language=C++}
     
     Para executar a função \emph{pow} em \CXX{} fazemos o seguinte:
     \begin{lstlisting}
@@ -272,6 +270,13 @@
     double executaPow(double x, double y) {
         //primeiro importamos o modulo
         PyObject* teste = PyImport_ImportModule("teste"); //new ref
+        if (teste == nullptr) {
+            // deu erro na importacao do modulo, python setou uma 
+            // excecao na API que pode ser vista...
+            // entao aqui voce deve ver essa excecao do python,
+            // e retornar um valor de erro ou soltar uma excecao de C++
+            return 0;
+        }
         
         //gracas a facilidade da API, com uma unica chamada podemos
         // 1. pegar uma funcao do modulo
@@ -280,6 +285,11 @@
         //e tambem possivel realizar essas operacoes separadamente,
         //cada uma e uma outra chamada de funcao da API.
         PyObject* result = PyObject_CallMethod(teste, "pow", "(dd)", x, y); //new ref
+        if (result == nullptr) {
+            // deu erro na chamada de funcao, o mesmo do caso teste==nullptr
+            // acima se aplica aqui.
+            return 0;
+        }
         
         //convertermos o resultado para C
         double resultado = PyFloat_AsDouble(result);

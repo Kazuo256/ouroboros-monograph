@@ -217,10 +217,11 @@
   
   \subsection{\SMgr{}}
   \label{sec:atividades:opa:smgr}
-  %TODO: explicar melhor o problema da origem dos vobjs
-  Mas como que o usuário cria um \VObj{}? De algum lugar tem que vir os primeiros \VObj{s}, relativos
-  aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface comum
-  entre linguagens, e praticamente a única outra classe que o usuário precisa usar além dos \VObj{s}:
+  Mas como que o usuário cria um \VObj{}? Pela dependência de ser relacionado a uma máquina virtual,
+  não é fácil manter a abstração das linguagens se o usuário tiver quer criar um \VObj{} para um outra
+  máquina. Fora que um \VObj{} sem nada é inútil, então de algum lugar tem que vir os primeiros \VObj{s},
+  relativos aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface 
+  comum entre linguagens, e praticamente a única outra classe que o usuário precisa usar além dos \VObj{s}:
   o \SMgr{}.
   
   O \SMgr{} é uma classe que segue o padrão de projeto
@@ -335,10 +336,23 @@
   gerada pelo SWIG para conseguir converter instâncias de tipos do usuário entre \CXX{} e as
   máquinas virtuais.
   
-  % TODO: Exemplos (de como usar o swig)!
-  O SWIG usa arquivos separados, seguindo a interface deles, para determinar quais arquivos
-  de \CXX{} ele irá processar, e como irá gerar o \textit{wrapper} para tal código. Nesses arquivos
-  de interface do SWIG é também possível incluir código que será posto no código gerado, ou usado
+  O SWIG usa arquivos separados de extensão \emph{.i}, chamados de ``arquivos de interface do 
+  SWIG'', como o seguinte:
+  \begin{lstlisting}
+  %module NOME_DO_MODULO
+
+  %include "std_string.i"
+  %include "std_vector.i"
+  
+  %{
+  #include <src/coisas/coisa.h>
+  %}
+
+  %include <src/coisas/coisa.h>
+  \end{lstlisting}
+  Para determinar quais arquivos de \CXX{} ele irá processar, e como irá gerar o 
+  \textit{wrapper} para tal código. Nesses arquivos de interface do SWIG é também 
+  possível incluir código que será posto no código gerado, ou usado
   internamente no código gerado em algumas etapas, como por exemplo nas conversões de valores
   que existem nos \textit{wrappers}. O segundo tipo de integrações com o SWIG que fizemos está
   nesses arquivos.
@@ -355,6 +369,68 @@
       a incapacidade de herdar tipos de \CXX{} nas linguagens de \script{}. Veremos mais
       sobre esses problemas na próxima seção.
   \end{enumerate}
+  
+  Aqui está um exemplo mais detalhado de um arquivo de interface do SWIG, com nossas 
+  adições:
+  \begin{lstlisting}
+  %module NOME_DO_MODULO
+
+  // inclui algumas definicoes nossas e do SWIG para simplificar este arquivo.
+  %include <module/export.swig>
+  %include <module/proxy.swig>
+  %include <module/widetypes.swig>
+  %include "std_string.i"
+  %include "std_vector.i"
+  
+  // nessa secao e incluso, seguindo sintaxe C++, as coisas
+  // que serao usadas por esse modulo.
+  %{
+  #include <src/coisas/coisa.h>
+  #include <src/coisas/mais_coisa.h>
+  %}
+
+  // se necessario, com essa(s) linha(s) voce pode fazer esse modulo referenciar 
+  // outro modulo caso ele use coisas do outro.
+  %import(module="outro_modulo") <src/outras_coisas/outro.h>
+
+  // se necessario, com essa(s) linha(s) voce pode ignorar coisas do C++ para 
+  // que elas nas sejam exportadas.
+  %ignore coisas::CoisaEstranha;
+  
+  // se necessario, com essa linha voce pode definir quais metodos e funcoes
+  // que devolvem objetos novos - isso e necessario para o controle correto 
+  // da memoria
+  %newobject coisas::CoisaBase::Foo;
+  
+  // Nao e possivel exportar templates de C++, mas voce pode exportar uma 
+  // especializacao, se necessario:
+  %template(IntCoisa) coisas::CoisaVariavel<int>;
+
+  // se necessario, com essa linha voce pode habilitar o proxies para tal 
+  // classe de C++, para que ela possa ser herdada pelos scripts. Note que
+  // isso nao eh tudo que deve ser feito.
+  proxy_class(coisas::CoisaBase)
+
+  // finalmente isso diz pro SWIG quais coisas exportar, no caso, tudo em
+  // tal arquivo, exceto se algo foi ignorado.
+  %include <src/coisas/coisa.h>
+  
+  // esse par enable/disable_disown e essencialmente o contrario do %newobject
+  // acima, ele define que parametros de funcoes com o tipo/nome definidos
+  // aqui terao sua posse roubada pelo C++. 
+  // Disown sera explicado em detalhes mais adiante.
+  enable_disown(coisas::CoisaBase* c)
+  %include <src/coisas/mais_coisa.h>
+  disable_disown(coisas::CoisaBase* c)
+
+  // aqui definimos quais classes que estamos exportando
+  namespace coisas {
+      export_class(CoisaBase)
+  }
+
+  // e confirmamos as classes exportadas, para o OPA poder converte-las
+  confirm_exports(ugdk_drawable)
+  \end{lstlisting}
   
   
   \section{Problemas com SWIG}
