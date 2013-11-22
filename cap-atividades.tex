@@ -49,9 +49,7 @@
 
   \section{Decisões de projeto}
   \label{sec:actividads:decisoes}
-  % TODO: checar toda essa seção (e sub-seções) por erros, e provavelmente
-  %       tem que arrumar um monte de coisa pra indicar o que é ou onde 
-  %       encontrar essas ferramentas (como CMake, Git, etc).
+  % TODO: checar toda essa seção (e sub-seções) por erros.
 
   \subsection{Decisões anteriores ao Trabalho de Formatura}
   Quando começamos a desenvolver o nosso ``sistema de \script{s}'',
@@ -68,18 +66,27 @@
   funcionar com possivelmente qualquer linguagem de \script{}, sendo que
   inicialmente iríamos incluir compatibilidade com Lua (a qual o Wilson conhece
   bem) e Python (usada regularmente pelo Fernando). Para prover a geração de 
-  \textit{wrappers}, escolhemos o SWIG, que foi a melhor opção para o que 
+  \textit{wrappers}, escolhemos o \emph{Simplified Wrapper and Interface Generator} 
+  (SWIG\cite{swig:00}), que foi a melhor opção para o que 
   necessitávamos segundo nossa pesquisa (o que essa ferramenta faz e como
   usamos ela será melhor explicado mais adiante, na seção \ref{sec:actividads:integracaoswig}).
   
-  Como os projetos do USPGameDev usavam CMake para simplificar sua compilação
-  em diversas plataformas e compiladores, nós também usamos essa ferramenta.
-  Usualmente progamávamos em Linux (Debian ou Ubuntu) usando \lang{g++} como compilador,
-  ou em Windows com o Visual Studio 2010. Para controle de versão do código fonte
-  usamos o mesmo repositório da UGDK, que usava Git, hospedado no GitHub.
+  Como os projetos do USPGameDev usavam CMake\footnote{Sistema de compilação multi-plataforma
+  e \textit{open-source}. Disponível em \url{http://www.cmake.org}. Acesso em: 22/11/2013} 
+  para simplificar sua compilação em diversas plataformas e compiladores, nós também usamos essa ferramenta.
+  Usualmente progamávamos em Linux (Debian\footnote{Uma distribuição de Linux. Disponível em 
+  \url{http://www.debian.org}. Acesso em 22/11/2013.} ou Ubuntu\footnote{Outra distribuição de Linux. 
+  Disponível em \url{http://www.ubuntu.com}. Acesso em 22/11/2013.}) usando \lang{g++}\footnote{
+  Compilador para C++ do projeto GNU. Disponível em \url{http://gnu.gcc.org}. Acesso em 22/11/2013.}
+  como compilador, ou em Windows com o Visual Studio\footnote{Ambiente de desenvolvimento para
+  \CXX{} e algumas outras linguagens feito pela Microsoft para Windows, contendo \textit{IDE}, 
+  compilador e outras ferramentas. Mais informações em \url{http://www.visualstudio.com/}. 
+  Acesso em: 22/11/2013.} 2010. Para controle de versão do código fonte usamos o mesmo repositório 
+  da UGDK, que usava Git\footnote{Ferramenta de controle de versão livre e \textit{open-source}.
+  Disponível em \url{http://git-scm.com/}. Acesso em: 22/11/2013.}, hospedado no GitHub\footnote{
+  Serviço de hospedagem de repositórios Git. Disponível em \url{https://github.com/}. 
+  Acesso em: 22/11/2013.}.
 
-  %TODO: HOLY CRAP PRECISAMOS REFERENCIAR TODAS ESSAS FERRAMENTAS!
-  
   \subsection{Mudanças no Projeto para o Trabalho de Formatura}
   Quando começamos o trabalho de formatura, fizemos algumas mudanças nas nossas
   decisões de projeto originais. Primeiramente, separamos o sistema para ser um
@@ -95,7 +102,7 @@
   compiladores reconhecem todas suas novas funcionalidades. Mais notavelmente,
   não conseguimos mais compilar no Windows com o Visual Studio 2010, e nem com
   sua versão mais recente, Visual Studio 2012. No Linux, tivemos que usar uma
-  versão mais recente do \lang{gcc}, a 4.7. Apesar de existirem versões ainda mais 
+  versão mais recente do \lang{g++}, a 4.7. Apesar de existirem versões ainda mais 
   recentes, essa era a mínima necessária. Como ela não é fornecido por padrão
   nos pacotes do Ubuntu LTS\footnotemark{} atual, tivemos que adaptar nossos
   ambientes de desenvolvimento para conseguir usar um \lang{g++} mais recente.
@@ -316,13 +323,11 @@
   
   \section{Integração com SWIG}
   \label{sec:actividads:integracaoswig}
-  O \emph{Simplified Wrapper and Interface Generator} (SWIG\footnotemark{}) é uma ferramenta
-  para exportar uma interface \C{}/\CXX{} para diversas linguagens de \script{} de alto nível.
-  Um dos usos padrão dessa ferramenta (e a forma como usamos) é gerar o código de \textit{wrapper}
-  necessário para criar módulos em linguagem nativa para uma determinada linguagem de \script{}.
+  O SWIG é uma ferramenta para exportar uma interface \C{}/\CXX{} para diversas 
+  linguagens de \script{} de alto nível. Um dos usos padrão dessa ferramenta (e 
+  a forma como usamos) é gerar o código de \textit{wrapper} necessário para criar 
+  módulos em linguagem nativa para uma determinada linguagem de \script{}.
   E é isso que possibilita tal linguagem ter acesso a uma interface implementada em \CXX{}.
-  
-  \footnotetext{Disponível em: \url{http://www.swig.org/} (último acesso:0 2/092013)}
   
   Usamos o SWIG pois enquanto nossa interface comum, o OPA - definido na seção anterior -, 
   possibilita que o \CXX{} use linguagens de \script{}, também precisávamos de algo para que linguagens 
