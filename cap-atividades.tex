@@ -106,7 +106,6 @@
   recentes, essa era a mínima necessária. Como ela não é fornecido por padrão
   nos pacotes do Ubuntu LTS\footnotemark{} atual, tivemos que adaptar nossos
   ambientes de desenvolvimento para conseguir usar um \lang{g++} mais recente.
-  %melhorar essa parte... ta meio estranho essa coisa do g++
 
   \footnotetext{
     \emph{Long Term Service}.
@@ -463,7 +462,6 @@
       A questão da posse de um objeto entre \CXX{} e uma máquina virtual é inerente ao
       problema e ao nosso ver não tem como ser evitada.
     \item O SWIG não aceita o aninhamento de classes, \textit{structs} e \textit{unions}, e 
-      %TODO: citation needed!
       aparentemente não pretende aceitar tão cedo. Aninhar tais estruturas de \CXX{} é o ato
       de definir algumas delas dentro de outra.
     \item SWIG não tem suporte a herança de classes \CXX{} nos \script{s}. A nossa ``solução''
@@ -503,13 +501,11 @@
   antes do trabalho de formatura. E o principal ponto do trabalho é exatamente o de substituir 
   o SWIG por uma ferramenta própria que criamos, a fim de simplificar o uso e corrigir os
   erros listados na seção anterior. Mantemos o OPA, fazendo algumas alterações para resolver
-  erros, melhorar o sistema ou substituir as partes relativas ao SWIG para a nossa nova ferramenta.
-  
-  Foi então que surgiu o nosso próprio gerador de \textit{wrappers}, o \emph{Ouroboros Project 
-  Wrapper and Interface Generator} (OPWIG).
+  erros, melhorar o sistema ou substituir as partes relativas ao SWIG para a nossa nova ferramenta:
+  o nosso gerador de \textit{wrappers}, o \emph{Ouroboros Project Wrapper and Interface Generator} (OPWIG).
   
   Enquanto o OPWIG ainda não é capaz de substituir completamente o SWIG, ele já realiza algumas
-  tarefas básicas importantes, como exportar funções, variáveis e classes simples. E continuamos
+  tarefas básicas importantes, como exportar funções, variáveis e classes. E continuamos
   o seu desenvolvimento num passo constante razoável. Infelizmente não podemos ainda falar que
   já conseguimos resolver os problemas do SWIG pois como nossa ferramenta ainda está no começo
   do desenvolvimento, ainda não chegamos no ponto de ocorrer tais erros. 
@@ -528,9 +524,7 @@
   \script{} e seus sub-módulos nela.
   
   Internamente, o OPWIG contém:
-    \cite{flex:00}
   \begin{itemize}
-    % TODO: Falar sobre o flexc++ e o bisonc++
     \item Um \textit{parser} de \CXX{}.
     \item Classes representando metadados de \CXX{}.
     \item Um gerador de código, que gera código de acordo com uma ``especificação''
@@ -541,8 +535,80 @@
       que o OPWIG seja capaz de gerar código para tal linguagem. Novamente, por padrão, nós
       criamos a implementação para Lua e Python.
   \end{itemize}
- 
+  
+  \subsection{O \textit{Parser} de \CXX{}}
+  Um dos pontos mais importantes desse projeto, e que ocupou boa parte do nosso primeiro semestre em 2013
+  foi o desenvolvimento do \textit{parser} de \CXX{}. Um \textit{parser} é uma ferramenta que analisa uma
+  sequência de símbolos numa dada linguagem, de acordo com as regras gramaticais de tal linguagem, e gera 
+  uma estrutura de dados que representa o texto analisado, ao mesmo tempo que testa se o texto é 
+  correto sintáticamente.
+  
+  No nosso caso, queremos analisar código \CXX{} e gerar metadados que representem as declarações feitas no
+  código, como váriaveis, funções e classes declaradas. Esse processo tem três etapas:
+  \begin{itemize}
+    \item A \textbf{análise léxica}, que consiste em transformar os caracteres do texto lido em símbolos 
+      significativos, chamados de \textit{tokens}, de acordo com uma gramática de expressões regulares. 
+      Para facilitar a implementação dessa etapa no OPWIG, usamos o gerador de analisador léxico
+      \textbf{Flexc++}\cite{flex:00}.
+      
+    \item A \textbf{análise sintática}, que seguindo as regras gramaticais da linguagem sendo lida, 
+      descobre se os \textit{tokens} devolvidos pela análise léxica formam uma expressão válida.
+      
+      \textit{Parser} significa analisador sintático, mas é comum encontrar estas três etapas sendo
+      realizadas juntas por uma ferramenta, e como a análise sintática é o passo mais importante, usualmente
+      tal ferramenta é também chamada de \textit{parser}. Para implementar o analisador sintático,
+      usamos o gerador de \textit{parsers} \textbf{Bisonc++}\cite{bison:00}.
+      
+    \item A \textbf{análise semântica}, que deve descobrir as implicações da expressão que acabou de ser
+      validada pela análise sintática e tomar uma ação apropriada.
+  \end{itemize}
+  
+  Tanto o Flexc++ quanto o Bisonc++ usam arquivos separados para descrever suas respectivas gramáticas, que
+  nós implementamos seguindo a gramática do \CXX{}. Na gramática do Bisonc++ podemos especificar ações
+  (blocos de código \CXX{}) a serem executadas quando uma expressão é validada. Nós programamos tais ações
+  para criar os metadados que representam as declarações do código \CXX{} analisado, dando ínicio a 
+  análise semântica.
+  
+  \subsection{Metadados de \CXX{}}
+  Os metadados de \CXX{} são um conjunto de classes que representam a estrutura e as declarações de
+  código \CXX{}. No momento, temos:
+  \begin{itemize}
+    \item Metadados de objetos normais: váriaveis, funções e enumerações.
+    \item Metadados de escopos: classes e \textit{namespaces}, que além de seus atributos próprios
+      também contém uma coleção de outros metadados, tantos normais como outros escopos.
+  \end{itemize}
+  
+  Mas esses metadados por si só não realizam nada, eles simplesmente contém dados. O OPWIG gera 
+  eles usando o \textit{parser}, e consome eles com o gerador de código.
+  
+  \subsection{Gerador de código}
+  O gerador de código, junto com a especificação de uma linguagem de \script{} transforma os metadados
+  em um arquivo de código \CXX{} conténdo os \textit{wrappers} para o código que foi analisado. Ele 
+  é razoavelmente simples, criando o arquivo de \textit{wrapper} a partir de um conjunto de blocos
+  ordenados gerados tanto pelo OPWIG em si quanto pela especificação de uma linguagem de \script{}:
+  \begin{enumerate}
+    \item Cabeçalho: definido pela especificação da linguagem de \script{}, esse bloco deve conter
+      definições comuns para o \textit{wrapper}.
+    \item \textit{Includes}: definido pelo gerador de código, esse bloco contém os \textit{includes}
+      dos arquivos de código que foram analisados para criar um módulo.
+    \item Central: definido pela especificação da linguagem de \script{}, esse bloco é similar ao 
+      cabeçalho, mas é posicionado após os \textit{includes}. Assim se necessário o usuário pode
+      escrever código antes ou depois dos \textit{includes}.
+    \item Metadados: definido pela especificação da linguagem de \script{}, esse bloco na verdade é
+      um conjunto de outros blocos, relativos aos metadados de \CXX{}. Metadados normais geram um
+      bloco, enquanto metadados de escopo geram vários: um para o ``início'' do escopo, vários
+      para os metadados contidos nele, e outro para o final do escopo. Esses blocos devem definir
+      o código necessário para exportar tal declaração do \CXX{} para a linguagem de \script{}.
+    \item Final: definido pela especificação da linguagem de \script{}, esse bloco deve conter
+      qualquer código necessário para finalizar o \textit{wrapper} para a linguagem de \script{}.
+      Usualmente isso inclui tabelas das funções e classes exportadas e uma função de inicialização
+      do módulo gerado.
+    \item \textit{Bootstrap}: definido pelo gerador de código, esse bloco é responsável por
+      registrar a máquina virtual da linguagem de \script{} ao \SMgr{}, caso ela não tenha sido
+      registrada, e registrar os módulos gerados na máquina virtual.
+  \end{enumerate}
+  
 
   \section{Módulos de CMake}
   
-    Isso será escrito na versão final da monografia.
+    Isso será escrito na versão final da monografia.s
