@@ -234,26 +234,167 @@
   \section{As bibliotecas de \lang{Lua} e \lang{Python}}
   \label{cap:conceitos:apis}
 
-    Aqui terá uma explicação feliz sobre o que são APIs.
+    Como vimos na seção \ref{cap:conceitos:maquina:compilacao}, uma das coisas
+    que um programa precisa para usar uma biblioteca são os cabeçalhos delas,
+    pois eles fornecem os símbolos para as diferentes funcionalidades dela.
+    Costumamos dizer que o conjunto desses símbolos declarados em cabeçalhos
+    compõem uma interface, pois eles especificam como um programa pode interagir
+    com aquela parte do código. No caso de uma biblioteca em \C ou \CXX{},
+    chamamos isso de uma \textbf{Interface para Programação de Aplicações} ou
+    simplesmente \textbf{API} (do inglês, \textit{Application Programming
+    Interface})\footnotemark{}.
+
+    \footnotetext{
+      Geralmente a ideia de API também vem atrelada a algum tipo de documentação
+      que explica como usar a interface. Por exemplo, costuma-se disponibilizar
+      uma referência do que cada rotina na bilbioteca faz. Além disso, cada
+      linguagem de programação tem sua própria maneira de expor uma API, o que
+      vemos nessa seção é apenas a que \C{} e \CXX{} usam.
+    }
+
+    Essa seção é dedicada a um estudo breve das APIs que as máquina virtuais de
+    \lang{Lua} e \lang{Python} oferecem. Ainda com o foco em encontrar meios
+    para formar a integração que queremos, explicaremos algumas funcionalidades
+    chave dessas APIs.
 
     \subsection{\lang{Lua}}
 
-      Lua funciona com uma pilha AA...
-      Não precisa gerenciar memória...
+      Sempre que uma aplicação deseja usar uma máquina virtual de \lang{Lua},
+      ela precisa usar uma estrutura declarada pela API chamada
+      \lang{lua\_State}. Ela representa o estado da máquina e é usada por
+      praticamente todas as rotinas da API. O comportamento geral da biblioteca
+      abstrai uma pilha: as operações disponíveis alteram o estado da máquina
+      inserindo, removendo e manipulando valores em uma estrutura de dados
+      contendo uma sequência de valores, dos quais os últimos costumam ser os
+      relevantes\footnotemark{}.
 
-      Por exemplo, para chamar um função, fazemos isso: ...
+      \footnotetext{
+        Uma implementação clássica de pilha teria operações que acessam apenas o
+        último elemento inserido. Na API \lang{Lua}, existem algumas funções que
+        conseguem inserir e remover valores em posições arbitrárias da pilha.
+      }
 
-      O esquema de módulos é o seguinte...
+      Esse método tem várias vantagens, dentre elas o fato que o tipo dos
+      elementos na pilha não é explícito, permitindo que a linguagem tenha
+      tipagem dinâmica \cite{pl:00}. Além disso, o processo para executar
+      rotinas fica bastante generalizado: os valores na pilha no começo da
+      execução delas são os parâmetros, em ordem, e os valores que ela deixar ao
+      final são os resultados devolvidos, também em ordem. Do lado de quem evoca
+      a rotina, basta colocar ela mesma na pilha seguida dos parâmetros
+      desejados e usar a função \lang{lua\_call()} da API. Por exemplo, suponha
+      a seguinte função de potência em \lang{Lua}:
+
+    \begin{lstlisting}[language=lua]
+    -- Devolve x elevado a y
+    function pow (x,y)
+      return x^y
+    end
+    \end{lstlisting}
+
+      Usando a API para executar essa função, fazemos o seguinte:
+
+    \begin{lstlisting}
+    lua_State *L;
+    double x, y;
+    // ... inicializa o estado e as variaveis ...
+    // Vamos supor que a funcao pow eh uma variavel global...
+    // A chamada abaixo coloca ela no topo da pilha
+    lua_getglobal(L, "pow");
+    // Empilha os parametros
+    lua_pushnumber(L, x);
+    lua_pushnumber(L, y);
+    // Evoca a funcao. Ela recebe dois parametros e devolve apenas um valor
+    lua_call(L, 2, 1);
+    // Agora o resultado estah no topo da pilha
+    // O indice passado na chamada abaixo eh a posicao da pilha da qual
+    // queremos extrair o valor. Numeros positivos indexam a partir da
+    // base da pilha, e negativos do topo para baixo.
+    double result = lua_tonumber(L, -1);
+    \end{lstlisting}
+
+      Esse exemplo também serve para dar uma ideia de como funciona a conversão
+      de valores entre a máquina virtual \lang{Lua} e a linguagem
+      \C{}\footnotemark{}. As funções com prefixo \lang{lua\_push} da API
+      são usadas para converter para a máquina virtual colocando o valor no topo
+      da pilha, enquanto que as com \lang{lua\_to} convertem da pilha para
+      \C{}. Note que elas \emph{não} removem os elementos da pilha, para isso
+      tem a \lang{lua\_pop()}.
+
+      \footnotetext{
+        Como a API \lang{Lua} está escrita em \C{}, ela não oferece um meio
+        direto de conversão para \CXX{}. No nosso sistema, usamos alguns
+        artifícios para contornar isso.
+      }
+
+      Um \script{} \lang{Lua} pode ser usado de duas formas pela máquina
+      virtual. A maneira mais simples é tratá-lo como uma rotina e simplesmente
+      executá-lo, processando as instruções escritas nele em sequência. A outra
+      é tratá-lo como um "módulo", seguindo a nomenclatura da API. Nesse caso,
+      as variáveis e funções definidas nele são agrupadas em um mesma estrutura.
+      Por exemplo, um módulo seria assim:
+
+    \begin{lstlisting}[language=lua]
+    module "funstuff"
+
+    function guesswhat ()
+      while true do
+        -- nothing
+      end
+    end
+
+    \end{lstlisting}
+
+      E ele seria usado da seguinte maneira:
+
+    \begin{lstlisting}[language=lua]
+    require "funstuff"
+
+    print "Using a module"
+    funstuff.guesswhat()
+    \end{lstlisting}
+
+      A linguagem \lang{Lua} em si oferece um tipo básico que representa uma
+      tabela de símbolos\footnotemark{}, chamado de \lang{table}. Elas são a
+      base de todas as estruturas mais complexas da linguagem. A API fornece
+      algumas funções para manipular essas tabelas, além de usar elas para
+      alguns mecanismos internos como a armazenagem de variáveis globais e o
+      controle de módulos. Também há um mecanismo para atrelar tabelas
+      especiais aos valores dentro da máquina virtual para modificar o
+      comportamento deles na linguagem (o que permite, por exemplo, construir
+      tipos como números complexos compatíveis com as operações aritméticas
+      usuais). Essas tabelas especiais são chamadas de \emph{metatabelas}.
+      Por outro lado, estruturas em \C{} só podem ser inseridas e extraídas da
+      pilha da máquina usando \lang{void*}, o que significa que é preciso tomar
+      cuidado, pois o compilador acreditará que o programador sabe o que está
+      fazendo. A linguagem chama essas estruturas fornecidas pela linguagem
+      nativa de \lang{userdata}.
+
+      \footnotetext{
+        \emph{Tabelas de símbolos} são estruturas de dados que costumam abstrair
+        duas operações básicas em sua interface: busca e inserção de elementos
+        através de \emph{chaves}. Às vezes uma operação de remoção também está
+        disponível, mas nem sempre ela é necessária. Em \lang{Lua}, por exemplo,
+        basta inserir o elemento nulo em uma chave para remover o que valor
+        estava associado a ela.
+      }
+
+      Um último fato interessante é que a máquina virtual tem coleta automática
+      de memória inutilizada. Diferentemente de implementações tradicionais,
+      \lang{Lua} não usa contagem de referências, mas sim verificação periódica
+      de quais valores ainda são acessíveis. Basicamente, isso significa que não
+      há problemas com referências cíclicas.
 
     \subsection{\lang{Python}}
-    Ao contrário de Lua, Python trabalha internamente com um \emph{heap} para guardar seus objetos.
-    Porém raramente o usuário precisa mexer com o heap diretamente. De fato, ao longo do desenvolvimento
-    desse projeto nunca precisamos mexer nele.
-    
-    A API \C{} do Python é bem compreensiva e documentada, com muitas funções e macros para ajudar 
-    o usuário, nos diversos aspectos da interação com a máquina virtual, como conversão de valores,
-    tratamento de objetos e de diversos protocolos que os objetos podem usar, como o
-    protocolo de sequência (uma lista ou uma tupla em Python, por exemplo, usam esse protocolo) -
+    Ao contrário de \lang{Lua}, \lang{Python} trabalha internamente com um
+    \emph{heap} para guardar seus objetos. Porém raramente o usuário precisa
+    mexer com o heap diretamente. De fato, ao longo do desenvolvimento desse
+    projeto nunca precisamos mexer nele.
+
+    A API \C{} do Python é bem compreensiva e documentada, com muitas funções e
+    macros para ajudar o usuário, nos diversos aspectos da interação com a
+    máquina virtual, como conversão de valores, tratamento de objetos e de
+    diversos protocolos que os objetos podem usar, como o protocolo de sequência
+    (uma lista ou uma tupla em Python, por exemplo, usam esse protocolo) -
     facilitando o uso de sequências pelo código \C{}.
     
     Por exemplo, suponha o seguinte script Python:
