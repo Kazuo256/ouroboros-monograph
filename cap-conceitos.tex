@@ -239,7 +239,7 @@
     pois eles fornecem os símbolos para as diferentes funcionalidades dela.
     Costumamos dizer que o conjunto desses símbolos declarados em cabeçalhos
     compõem uma interface, pois eles especificam como um programa pode interagir
-    com aquela parte do código. No caso de uma biblioteca em \C ou \CXX{},
+    com aquela parte do código. No caso de uma biblioteca em \C{} ou \CXX{},
     chamamos isso de uma \textbf{Interface para Programação de Aplicações} ou
     simplesmente \textbf{API} (do inglês, \textit{Application Programming
     Interface})\footnotemark{}.
@@ -386,9 +386,9 @@
 
     \subsection{\lang{Python}}
     Ao contrário de \lang{Lua}, \lang{Python} trabalha internamente com um
-    \emph{heap} para guardar seus objetos. Porém raramente o usuário precisa
-    mexer com o heap diretamente. De fato, ao longo do desenvolvimento desse
-    projeto nunca precisamos mexer nele.
+    \emph{heap} para guardar seus objetos, porém raramente o usuário precisa
+    mexer com o \textit{heap} diretamente. De fato, ao longo do desenvolvimento 
+    desse projeto nunca precisamos mexer nele.
 
     A API \C{} do Python é bem compreensiva e documentada, com muitas funções e
     macros para ajudar o usuário, nos diversos aspectos da interação com a
@@ -451,8 +451,23 @@
     referência do objeto. Quando a contagem de referências de um objeto se torna zero, a 
     máquina virtual deleta aquele objeto. E ai está um dos piores pontos da API Python: 
     enquanto a máquina virtual gerencia automaticamente as contagens de referência
-    quando ela processa código em Python, o usuário que usar a API \C{} tem incrementar e 
+    quando ela processa código em Python, o usuário que usar a API \C{} tem que incrementar e 
     decrementar manualmente as contagens dos objetos que ele está usando, o que é trabalhoso e 
     propenso a erros.
     
+    Assim como no Lua, um \script{} pode ser usado de duas formas pela máquina virtual:
+    como uma sequência de operações a serem executadas ou como um módulo, contendo definições
+    e operações que podem ser usadas por outros módulos. No entanto, no Python não há diferença
+    entre ambos. Ao importar um \script{} Python, ele será executado e quaisquer operações
+    declaradas nele serão realizadas, assim como quaisquer definições se tornaram acessíveis
+    a quem importou o módulo. Por exemplo, o seguinte script:
+    \begin{lstlisting}[language=python]
+    from teste import pow
+    
+    print "2 elevado a 3 eh igual a", pow(2,3)
+    \end{lstlisting}
+    Irá importar o \script{} teste mostrado acima, que por si só não realiza nenhuma operação -
+    ele simplesmente define a função \texttt{pow}. Após a importação, esse \script{} não
+    define nada, mas realiza uma operação: imprime texto no console, contendo a frase
+    ``2 elevado a 3 é igual a'' e o valor devolvido pela execução de \texttt{pow(2,3)}.
     
