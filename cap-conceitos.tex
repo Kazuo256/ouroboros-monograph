@@ -390,14 +390,14 @@
     mexer com o \textit{heap} diretamente. De fato, ao longo do desenvolvimento 
     desse projeto nunca precisamos mexer nele.
 
-    A API \C{} do Python é bem compreensiva e documentada, com muitas funções e
+    A API \C{} do \lang{Python} é bem compreensiva e documentada, com muitas funções e
     macros para ajudar o usuário, nos diversos aspectos da interação com a
     máquina virtual, como conversão de valores, tratamento de objetos e de
     diversos protocolos que os objetos podem usar, como o protocolo de sequência
-    (uma lista ou uma tupla em Python, por exemplo, usam esse protocolo) -
+    (uma lista ou uma tupla em \lang{Python}, por exemplo, usam esse protocolo) -
     facilitando o uso de sequências pelo código \C{}.
     
-    Por exemplo, suponha o seguinte script Python:
+    Por exemplo, suponha o seguinte script \lang{Python}:
     \begin{lstlisting}[language=python]
     # teste.py
     def pow(x,y):
@@ -445,21 +445,21 @@
     \end{lstlisting}
     
     Como é possível notar no exemplo acima, outra facilidade da API é ela usa um sistema 
-    primitivo de orientação a objetos em \C{}, e quase tudo em Python (um módulo, uma 
-    classe, uma função, etc) é representado em \C{} por um ponteiro para \emph{PyObject}, 
+    primitivo de orientação a objetos em \C{}, e quase tudo em \lang{Python} (um módulo, uma 
+    classe, uma função, etc) é representado em \C{} por um ponteiro para \lang{PyObject}, 
     que além de informações sobre o tipo do objeto e outros valores, contém a contagem de 
     referência do objeto. Quando a contagem de referências de um objeto se torna zero, a 
-    máquina virtual deleta aquele objeto. E ai está um dos piores pontos da API Python: 
+    máquina virtual deleta aquele objeto. E ai está um dos piores pontos da API \lang{Python}: 
     enquanto a máquina virtual gerencia automaticamente as contagens de referência
-    quando ela processa código em Python, o usuário que usar a API \C{} tem que incrementar e 
+    quando ela processa código em \lang{Python}, o usuário que usar a API \C{} tem que incrementar e 
     decrementar manualmente as contagens dos objetos que ele está usando, o que é trabalhoso e 
     propenso a erros.
     
     Assim como no Lua, um \script{} pode ser usado de duas formas pela máquina virtual:
     como uma sequência de operações a serem executadas ou como um módulo, contendo definições
-    e operações que podem ser usadas por outros módulos. No entanto, no Python não há diferença
-    entre ambos. Ao importar um \script{} Python, ele será executado e quaisquer operações
-    declaradas nele serão realizadas, assim como quaisquer definições se tornaram acessíveis
+    e operações que podem ser usadas por outros módulos. No entanto, no \lang{Python} não há diferença
+    entre ambos. Ao importar um \script{} \lang{Python}, ele será executado e quaisquer operações
+    declaradas nele serão realizadas, assim como quaisquer definições se tornarão acessíveis
     a quem importou o módulo. Por exemplo, o seguinte script:
     \begin{lstlisting}[language=python]
     from teste import pow
