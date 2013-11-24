@@ -34,7 +34,7 @@
   \C{} ou \CXX{}.
 
   \section{Visão Geral}
-  \label{sec:estrutura:geral}
+  \label{cap:estrutura:geral}
 
     Para auxiliar a modelagem da estrutura, vamos dizer que tanto a aplicação
     quantos os \script{s} estão divididos em \textbf{módulos}. Eles serão os
@@ -44,14 +44,16 @@
     virtuais, o desenvolvedor poderia usar \script{s} para implementar a
     inteligência artifical desse inimigos, para que fosse fácil ajustá-las sem
     ter que recompilar o jogo. Desse modo, cada um desses \script{s} seria um
-    módulo que a aplicação precisaria carregar e usar durante sua execução.
-    Eles, por sua vez, precisariam interagir com módulos da aplicação para que
-    as inteligências artificiais conseguissem manipular seus personagens dentro
-    do mundo virtual do jogo. Se elas quisessem saber o quão próximo o herói
-    está, elas precisariam usar as funções do módulo de controle de
-    posicionamento dos avatares. Se elas quisessem criar um projétil para atacar
-    o jogador, elas precisariam acessar o módulo que contenha a
-    classe\footnotemark{} que representa o projétil desejado.
+    módulo que a aplicação precisaria carregar e usar durante sua
+    execução\footnote{ Note como isso coincide com o conceito de ``módulo''
+    usado pelas APIs das linguagens de \script{}.}. Eles, por sua vez,
+    precisariam interagir com módulos da aplicação para que as inteligências
+    artificiais conseguissem manipular seus personagens dentro do mundo virtual
+    do jogo. Se elas quisessem saber o quão próximo o herói está, elas
+    precisariam usar as funções do módulo de controle de posicionamento dos
+    avatares. Se elas quisessem criar um projétil para atacar o jogador, elas
+    precisariam acessar o módulo que contenha a classe\footnotemark{} que
+    representa o projétil desejado.
 
     \footnotetext{
       Classes são estruturas presentes em linguagens de programação
@@ -158,13 +160,14 @@
         \begin{center}
           \includegraphics[width=.5\textwidth]{api-unificada.png}
           \vspace{1em}
+
+          \textit{
+            Nesse exemplo, a aplicação do usuário pede para carregar um certo
+            módulo \script{}. A API unificada deve discernir qual máquina virtual
+            é a apropriada para tal (no caso, a máquina C) e delegar a tarefa, sem
+            que o usuário precise saber.
+          }
         \end{center}
-        \textit{
-          Nesse exemplo, a aplicação do usuário pede para carregar um certo
-          módulo \script{}. A API unificada deve discernir qual máquina virtual
-          é a apropriada para tal (no caso, a máquina C) e delegar a tarefa, sem
-          que o usuário precise saber.
-        }
       \end{subfigure}
       \label{fig:api-unificada}
     \end{figure}
@@ -212,12 +215,13 @@
         \begin{center}
           \includegraphics[width=.7\textwidth]{api-vobjs.png}
           \vspace{1em}
+
+          \textit{
+            Cada instância da classe que representará objetos virtuais encapsula
+            um valor dentro de alguma máquina virtual. Note que mais de uma
+            instância pode interagir com um mesmo valor.
+          }
         \end{center}
-        \textit{
-          Cada instância da classe que representará objetos virtuais encapsula
-          um valor dentro de alguma máquina virtual. Note que mais de uma
-          instância pode interagir com um mesmo valor.
-        }
       \end{subfigure}
       \label{fig:api-vobjs}
     \end{figure}
@@ -244,13 +248,14 @@
         \begin{center}
           \includegraphics[width=\textwidth]{api-classes.png}
           \vspace{1em}
+
+          \textit{
+            Isso não chega a ser uma diagrama UML, apenas uma representação
+            simbólica das classes. A especificação mais detalhada delas será
+            exposta no capítulo \ref{sec:atividades}. Mas emprestamos a notação
+            de herança.
+          }
         \end{center}
-        \textit{
-          Isso não chega a ser uma diagrama UML, apenas uma representação
-          simbólica das classes. A especificação mais detalhada delas será
-          exposta no capítulo \ref{sec:atividades}. Mas emprestamos a notação
-          de herança.
-        }
       \end{subfigure}
       \label{fig:api-classes}
     \end{figure}
@@ -258,7 +263,56 @@
   \section{Gerador de \textit{wrappers} para exportação de interfaces nativas}
   \label{sec:estrutura:opwig}
 
-  %TODO: Explicar mais sobre a ideia geral da relação do tipo (B)
+    %TODO: Explicar mais sobre a ideia geral da relação do tipo (B)
+
+    Para entender melhor como fazer a exportação, precisamos saber o que
+    exportar. No caso, como as aplicações dos usuários estarão escritas em \C{}
+    ou \CXX{}, os elementos que gostaríamos de exportar serão:
+
+    \begin{enumerate}
+      \item Variáveis globais.
+      \item Funções globais.
+      \item Tipos novos definidos na aplicação (usando \lang{typedef}, classes
+            ou equivalentes)
+    \end{enumerate}
+
+    Nesse último item, o ideal é que todas as operações inerentes ao tipo
+    também sejam exportadas. Isso englobaria tanto operações aritméticas básicas
+    quanto os métodos de classes, por exemplo. O usuário deverá ser capaz de
+    criar objetos desses tipos em seus \script{s} e usá-los da maneira mais fiel
+    possível ao modo como eles seriam usados no código nativo da aplicação.
+
+    O que explicamos nas sessões \ref{cap:conceitos:apis:lua} e
+    \ref{cap:conceitos:apis:python}, principalmente no que diz respeito à
+    criação de módulos nativos nas máquinas virtuais, fornecem-nos algumas
+    ferramentas úteis, apesar de trabalhosas, para exportar esses elementos
+    que listamos. Basicamente, podemos usar os mecanismos de registro de módulos
+    nas máquinas virtuais para expor os módulos reais da aplicação\footnotemark{}. Aproveitando
+    o exemplo que demos na seção \ref{cap:estrutura:geral}, poderia haver um
+    módulo na aplicação (no caso, um jogo) que cuidasse do posicionamento de
+    avatares, e nós gostaríamos que \script{s} incorporados pudessem acessar
+    suas funcionalidades. Todas as variáveis, funções e tipos relacionados
+    teriam que ser colocados no módulo virtual através daquelas funções
+    especiais que precisam ser feitas usando o protocolo esperado pelas APIs.
+
+    \footnotetext{
+      Para não confundir a qual tipo de módulo estaremos nos referindo,
+      chamaremos os módulos que registramos nas máquinas virtuais de
+      \emph{módulos virtuais}, enquanto que os da aplicação serão simplesmente
+      \emph{módulos}.
+    }
+
+    Isso compõe um método que funciona, mas vem com suas dificuldades. A maior
+    delas é que \C{} e \CXX{} não oferecem um meio de definir funções novas em
+    tempo de execução, impedindo nossa biblioteca de registrar módulos virtuais
+    em suas rotinas, pois as funções de registro já precisam estar criadas
+    quando a aplicação do usuário for ser compilada. A outra grande dificuldade
+    é que é igualmente impossível de analisar o código da aplicação durante a
+    execução dela mesma dadas as linguagens compiladas que adotamos. Então não
+    temos como saber quais variáveis, funções e tipos pertencem a um módulo. Na
+    verdade, sequer temos como reconhecer os módulos em si!
+    
+    E agora, quem poderá nos salvar?\footnote{ Eu, o Chapolim Colorado!}
 
     Linguagens de \script{} possuem um mecanismo próprio para incluir módulos
     externos, eventualmente necessários à sua execução. Esses módulos podem ser
