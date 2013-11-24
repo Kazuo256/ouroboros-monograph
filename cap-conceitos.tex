@@ -283,6 +283,8 @@
       a rotina, basta colocar ela mesma na pilha seguida dos parâmetros
       desejados e usar a função \lang{lua\_call()} da API. Por exemplo, suponha
       a seguinte função de potência em \lang{Lua}:
+      
+      \vspace{1em}
 
     \begin{lstlisting}[language=lua]
     -- Devolve x elevado a y
@@ -290,27 +292,37 @@
       return x^y
     end
     \end{lstlisting}
+      
+      \vspace{1em}
 
       Usando a API para executar essa função, fazemos o seguinte:
+      
+      \vspace{1em}
 
     \begin{lstlisting}
+    // Indices passado nas chamadas abaixo sao a posicao da pilha na
+    // qual queremos aplicar a operacao. Numeros positivos indexam a
+    // partir da base da pilha, e negativos do topo para baixo.
     lua_State *L;
     double x, y;
     // ... inicializa o estado e as variaveis ...
     // Vamos supor que a funcao pow eh uma variavel global...
     // A chamada abaixo coloca ela no topo da pilha
     lua_getglobal(L, "pow");
+    // Verifica se a funcao realmente existe e eh do tipo certo
+    if (lua_isnil(L, -1) || !lua_isfunction(L, -1)
+      throw runtime_error("Could not find function <pow>.");
     // Empilha os parametros
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
-    // Evoca a funcao. Ela recebe dois parametros e devolve apenas um valor
+    // Evoca a funcao. Ela recebe dois parametros e devolve apenas um valor,
+    // como indicado pelos argumentos passados
     lua_call(L, 2, 1);
-    // Agora o resultado estah no topo da pilha
-    // O indice passado na chamada abaixo eh a posicao da pilha da qual
-    // queremos extrair o valor. Numeros positivos indexam a partir da
-    // base da pilha, e negativos do topo para baixo.
+    // Agora o resultado estah no topo da pilha e o resto foi removido
     double result = lua_tonumber(L, -1);
     \end{lstlisting}
+      
+      \vspace{1em}
 
       Esse exemplo também serve para dar uma ideia de como funciona a conversão
       de valores entre a máquina virtual \lang{Lua} e a linguagem
@@ -329,9 +341,11 @@
       Um \script{} \lang{Lua} pode ser usado de duas formas pela máquina
       virtual. A maneira mais simples é tratá-lo como uma rotina e simplesmente
       executá-lo, processando as instruções escritas nele em sequência. A outra
-      é tratá-lo como um "módulo", seguindo a nomenclatura da API. Nesse caso,
+      é tratá-lo como um ``módulo'', seguindo a nomenclatura da API. Nesse caso,
       as variáveis e funções definidas nele são agrupadas em um mesma estrutura.
       Por exemplo, um módulo seria assim:
+      
+      \vspace{1em}
 
     \begin{lstlisting}[language=lua]
     module "funstuff"
@@ -343,8 +357,12 @@
     end
 
     \end{lstlisting}
+      
+      \vspace{1em}
 
       E ele seria usado da seguinte maneira:
+      
+      \vspace{1em}
 
     \begin{lstlisting}[language=lua]
     require "funstuff"
@@ -352,6 +370,8 @@
     print "Using a module"
     funstuff.guesswhat()
     \end{lstlisting}
+      
+      \vspace{1em}
 
       A linguagem \lang{Lua} em si oferece um tipo básico que representa uma
       tabela de símbolos\footnotemark{}, chamado de \lang{table}. Elas são a
@@ -398,13 +418,21 @@
     facilitando o uso de sequências pelo código \C{}.
     
     Por exemplo, suponha o seguinte script \lang{Python}:
+      
+    \vspace{1em}
+
     \begin{lstlisting}[language=python]
     # teste.py
     def pow(x,y):
         return x**y
     \end{lstlisting}
+      
+    \vspace{1em}
     
     Para executar a função \emph{pow} em \CXX{} fazemos o seguinte:
+      
+    \vspace{1em}
+
     \begin{lstlisting}
     #include <Python.h>
     
@@ -443,6 +471,8 @@
         return resultado;
     }
     \end{lstlisting}
+      
+    \vspace{1em}
     
     Como é possível notar no exemplo acima, outra facilidade da API é ela usa um sistema 
     primitivo de orientação a objetos em \C{}, e quase tudo em \lang{Python} (um módulo, uma 
