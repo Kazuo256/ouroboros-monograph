@@ -252,7 +252,7 @@
           \textit{
             Isso não chega a ser uma diagrama UML, apenas uma representação
             simbólica das classes. A especificação mais detalhada delas será
-            exposta no capítulo \ref{sec:atividades}. Mas emprestamos a notação
+            exposta no capítulo \ref{cap:atividades}. Mas emprestamos a notação
             de herança.
           }
         \end{center}
@@ -303,46 +303,87 @@
       \emph{módulos}.
     }
 
-    Isso compõe um método que funciona, mas traz dificuldades. A maior
-    delas é que \C{} e \CXX{} não oferecem um meio de definir funções novas em
-    tempo de execução, impedindo nossa biblioteca de registrar módulos virtuais
-    durante suas rotinas, pois as funções de inicialização já precisam estar criadas
-    quando a aplicação do usuário for ser compilada. A outra grande dificuldade
-    é que é igualmente impossível de analisar o código da aplicação durante a
-    execução dela mesma dadas as linguagens compiladas que adotamos. Então não
-    temos como saber quais variáveis, funções e tipos pertencem a um módulo. Na
-    verdade, sequer temos como reconhecer os módulos em si!
+    Isso compõe um método de exportação que funciona, mas traz dificuldades. A
+    maior delas é que \C{} e \CXX{} não oferecem um meio de definir funções
+    novas em tempo de execução, impedindo nossa biblioteca de registrar módulos
+    virtuais durante suas rotinas, pois as funções de inicialização já precisam
+    estar criadas quando a aplicação do usuário for ser compilada. A outra
+    grande dificuldade é que é igualmente impossível de analisar o código da
+    aplicação durante a execução dela mesma dadas as linguagens compiladas que
+    adotamos. Normalmente, se um desenvolvedor quisesse exportar seu código
+    nativo para uma linguagem de \script{}, ele simplesmente escreveria as
+    funções de inicialização e manualmente colocaria cada elemento do código
+    dele nos módulos exportados. Mas o que estamos tentando projetar aqui visa
+    justamente \emph{automatizar} a integração aplicação-\script{s}, então
+    simplesmente pedir para o usuário fazer esse trabalho sujo para nós está
+    fora de questão. Assim sendo, não temos como saber quais variáveis, funções
+    e tipos pertencem a um módulo e, mesmo que soubéssemos, não temos como
+    fornecer as funções de inicialização necessárias quando a aplicação do
+    usuário for executada e esse serviço for requerido da nossa biblioteca.
     
     Um jeito de contornar esses problemas é \emph{não} tentar fazer a exportação
-    durante a execução da aplicação, mas sim antes de ela ser compilada de
+    durante a execução da aplicação, mas sim antes de ela ser compilada, de
     maneira que tenhamos acesso ao código fonte dela. A partir dele somos
     capazes de reconhecer as declarações que queremos importar, e podemos
-    escrever o código adicional para as funções de inicialização a tempo de elas
-    serem compiladas junto com o resto da aplicação. Isso seria feito por um
-    outro programa, que obviamente precisa estar compilado antes da aplicação,
-    uma vez que ele \emph{interfere} com o código dela. Dizemos que esse
-    programa auxiliar é uma \emph{gerador de código}.
+    escrever o código adicional das funções de inicialização a tempo
+    de elas serem compiladas junto com o resto da aplicação. Isso seria feito
+    por um outro programa - que obviamente precisa estar compilado antes da
+    aplicação, uma vez que ele \emph{interfere} com o código dela - que chamamos
+    de \emph{gerador de código}. Na prática, as únicas partes do código da
+    aplicação que ele precisa analisar são os cabeçalhos, que é onde estarão as
+    declarações. Uma visão geral desse procedimento está ilustrada na figura
+    \ref{fig:gerador-funcionamento}.
 
-    Linguagens de \script{} possuem um mecanismo próprio para incluir módulos
-    externos, eventualmente necessários à sua execução. Esses módulos podem ser
-    definidos tanto em outros arquivos na mesma linguagem, quanto na linguagem
-    nativa da máquina virtual. Nesse último caso, temos a relação do tipo (B). Ela
-    exige que a linguagem nativa disponibilize certos dados seguindo um protocolo
-    adequado. Infelizmente tal protocolo não só difere para cada linguagem de
-    \script{} como também involve um trabalho repetitivo e maçante para ser utilizado. 
+    No entanto, ainda sobram algumas outras complicações porque, em geral,
+    elementos nativos não podem ser exportados diretamente. Isso fica bastante
+    claro quando olhamos para o modo como funções nativas são passadas para as
+    máquinas virtuais: elas precisam ter uma assinatura específica, que ainda
+    por cima varia de máquina para máquina. E fica ainda mais complicado quando
+    pensamos em classes, pois em \lang{Lua}, por exemplo, não há orientação a
+    objetos implementada por padrão - embora seja possível construir mecanismos
+    na linguagem que funcionem como classes, que é o que precisamos fazer.
 
-    %TODO: Detalhar esse processo repetitivo e maçante.
-    
-    Por isso, parte do nosso sistema é composto por um gerador automatizado de código fonte.
-    Ele é responsável por criar o código necessário à devida exportação dos módulos 
-    feitos na linguagem nativa. Além disso, ele processa código que o usuário fornecer na
-    linguagem nativa para saber o conteúdo que deve aparecer no módulo exportado.
-    Esse conteúdo é inserido no módulo através de \emph{wrappers}. Chamamos esse componente
-    do sistema de \emph{Ouroboros Project Wrapper and Interface Generator} (OPWIG).
-  
-    %TODO: subsection: parser
-    %TODO: subsection: code generator
-    %TODO: subsection: wrapper explanation 
+    \begin{figure}[ht]
+      \centering
+      \caption{}
+      \begin{subfigure}{.8\textwidth}
+        \begin{center}
+          \includegraphics[width=\textwidth]{gerador-funcionamento.png}
+          \vspace{1em}
+
+          \textit{
+            Representação de como o gerador conribui na exportação.
+            Em \CXX{}, arquivos de cabeçalho usam a extensão \lang{.h} enquanto
+            que arquivos de implementação usam \lang{.cxx}, embora haja outras
+            conveções.
+          }
+        \end{center}
+      \end{subfigure}
+      \label{fig:gerador-funcionamento}
+    \end{figure}
+
+    Então, para cada tipo de elemento nativo que estamos interessados
+    (variáveis, funções, tipos, etc), precisamos de uma maneira de adaptá-los
+    para o formato que as máquinas virtuais esperam. Isso é possível através do
+    uso de \textit{wrappers} (do inglês, ``embrulhos''), que nesse contexto são
+    porções de código que encapsulam as atividades nativas da aplicação para
+    expô-los adequadamente aos protocolos que as APIs das máquinas virtuais
+    exigem para exportação. Assim, o que realmente estaremos inserindo nos
+    módulos virtuais serão esses \textit{wrappers}, e não os elementos
+    originais. Entraremos em mais detalhes sobre como fazer esses wrappers no
+    capítulo \ref{cap:atividades}. Por enquanto, o importante é entender que
+    essa parte do nosso sistema envolverá um gerador de código que produzirá
+    os \textit{wrappers} que ele julgar necessário dado o código fonte da
+    aplicação do usuário, e os inserirá em módulos virtuais de maneira a
+    efetivamente exportar as funcionalidades nativas para as máquinas virtuais.
+
+    Isso tudo significa que no final das contas nossos sistema não será apenas
+    uma biblioteca, pois ele também terá executáveis fazendo o papel de
+    geradores, um para cada linguagem de \script{}. O que fizemos para evitar
+    espalhar muito nosso código é que esses programas auxiliares simplesmente
+    evocam algumas rotinas da nossa biblioteca que de fato farão a análise e
+    a geração de código. Chamamos essa parte do nosso sistema de \emph{Ouroboros
+    Project Wrapper and Interface Generator} (OPWIG).
   
   \section{Integrando e entregando tudo para o usuário.}
   \label{sec:estrutura:integration}
