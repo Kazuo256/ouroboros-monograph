@@ -274,6 +274,7 @@
       \item Funções globais.
       \item Tipos novos definidos na aplicação (usando \lang{typedef}, classes
             ou equivalentes)
+      \item Outras informações, como \textit{namespaces}.
     \end{enumerate}
 
     Nesse último item, o ideal é que todas as operações inerentes ao tipo
@@ -283,17 +284,17 @@
     possível ao modo como eles seriam usados no código nativo da aplicação.
 
     O que explicamos nas sessões \ref{cap:conceitos:apis:lua} e
-    \ref{cap:conceitos:apis:python}, principalmente no que diz respeito à
-    criação de módulos nativos nas máquinas virtuais, fornecem-nos algumas
-    ferramentas úteis, apesar de trabalhosas, para exportar esses elementos
-    que listamos. Basicamente, podemos usar os mecanismos de registro de módulos
-    nas máquinas virtuais para expor os módulos reais da aplicação\footnotemark{}. Aproveitando
+    \ref{cap:conceitos:apis:python} nos fornece algumas ferramentas úteis,
+    apesar de trabalhosas, para exportar esses elementos que listamos.
+    Basicamente, podemos usar os mecanismos de registro de módulos nas máquinas
+    virtuais para expor os módulos reais da aplicação\footnotemark{}. Aproveitando
     o exemplo que demos na seção \ref{cap:estrutura:geral}, poderia haver um
     módulo na aplicação (no caso, um jogo) que cuidasse do posicionamento de
     avatares, e nós gostaríamos que \script{s} incorporados pudessem acessar
     suas funcionalidades. Todas as variáveis, funções e tipos relacionados
-    teriam que ser colocados no módulo virtual através daquelas funções
-    especiais que precisam ser feitas usando o protocolo esperado pelas APIs.
+    teriam que ser colocados no módulo virtual através das funções de
+    inicialização, que precisam ser feitas usando o protocolo esperado pelas
+    APIs.
 
     \footnotetext{
       Para não confundir a qual tipo de módulo estaremos nos referindo,
@@ -302,17 +303,25 @@
       \emph{módulos}.
     }
 
-    Isso compõe um método que funciona, mas vem com suas dificuldades. A maior
+    Isso compõe um método que funciona, mas traz dificuldades. A maior
     delas é que \C{} e \CXX{} não oferecem um meio de definir funções novas em
     tempo de execução, impedindo nossa biblioteca de registrar módulos virtuais
-    em suas rotinas, pois as funções de registro já precisam estar criadas
+    durante suas rotinas, pois as funções de inicialização já precisam estar criadas
     quando a aplicação do usuário for ser compilada. A outra grande dificuldade
     é que é igualmente impossível de analisar o código da aplicação durante a
     execução dela mesma dadas as linguagens compiladas que adotamos. Então não
     temos como saber quais variáveis, funções e tipos pertencem a um módulo. Na
     verdade, sequer temos como reconhecer os módulos em si!
     
-    E agora, quem poderá nos salvar?\footnote{ Eu, o Chapolim Colorado!}
+    Um jeito de contornar esses problemas é \emph{não} tentar fazer a exportação
+    durante a execução da aplicação, mas sim antes de ela ser compilada de
+    maneira que tenhamos acesso ao código fonte dela. A partir dele somos
+    capazes de reconhecer as declarações que queremos importar, e podemos
+    escrever o código adicional para as funções de inicialização a tempo de elas
+    serem compiladas junto com o resto da aplicação. Isso seria feito por um
+    outro programa, que obviamente precisa estar compilado antes da aplicação,
+    uma vez que ele \emph{interfere} com o código dela. Dizemos que esse
+    programa auxiliar é uma \emph{gerador de código}.
 
     Linguagens de \script{} possuem um mecanismo próprio para incluir módulos
     externos, eventualmente necessários à sua execução. Esses módulos podem ser
