@@ -398,6 +398,90 @@
         estava associado a ela.
       }
 
+      Um tipo mais versátil é o tipo \lang{function}, pois é possível passar
+      funções em \C{} para a pilha usando ele. Tudo que é preciso é que a
+      assinatura usada seja \lang{int <função> (lua\_State *)}, isso é, uma
+      função que receba o estado da máquina e devolva um inteiro. Em sua
+      implementação, ela deve manipular a pilha de maneira a satisfazer o
+      protocolo especificado anteriormente: o que estiver na pilha inicialmente
+      deve ser tratado como os parâmetros, e o que for deixado ao final serão
+      os resultados, exceto que o valor inteiro devolvido indica quantos
+      elementos do topo da pilha de fato devem ser devolvidos. Por exemplo, a
+      mesma função \lang{pow} mostrada acima seria assim:
+
+      \vspace{1em}
+
+    \begin{lstlisting}
+    #include <cmath>
+
+    int native_pow (lua_State* L) {
+      // A funcao luaL_error interrompe a funcao e joga um erro interno na
+      // maquina virtual. Costumamos chamar ela com return para deixar
+      // claro que nada vai acontecer depois dela.
+      if (lua_gettop(L) != 2) // verifica tamanho da pilha
+        return luaL_error(L, "Expected 2 parameters but got %d.", lua_gettop(L));
+      if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) // verifica os tipos
+        return luaL_error(L, "Wrong parameter types");
+      double  x = lua_tonumber(L, 1),
+              y = lua_tonumber(L, 2);
+      lua_pushnumber(L, pow(x, y));
+      // Nao precisa limpar a pilha, bas avisar que soh o ultimo
+      // valor eh para ser devolvido
+      return 1;
+    }
+    \end{lstlisting}
+
+      \vspace{1em}
+
+      Um procedimento similar é usado para fazer módulos nativos, pois eles são
+      construídos usando funções nativas como essa. A principal diferença é que
+      além de usar a assinatura correta, o nome da função que constrói o módulo
+      precisa ter o prefixo \lang{luaopen\_} seguido do nome do próprio módulo.
+      Segue um exemplo de construção de um módulo ``\lang{native}'' que contém
+      apenas a função \lang{native\_pow} que acamos de mostrar:
+
+      \vspace{1em}
+
+    \begin{lstlisting}
+    int luaopen_nativemodule (lua_State* L) {
+      // O argumento recebido eh o proprio nome do modulo, que
+      // no caso vamos ignorar
+      lua_settop(L, 0);
+      // O modulo serah formado por uma tabela com a funcao que queremos
+      lua_newtable(L);
+      lua_pushcfunction(L, native_pow);
+      // A pilha estah [tabela, funcao]. A chamada abaixo coloca a funcao
+      // na tabela usando a chave "pow"
+      lua_setfield(L, 1, "pow");
+      // O que sobra na pilha eh soh o proprio modulo, entao devolvemos ele
+      return 1;
+    }
+    \end{lstlisting}
+
+      \vspace{1em}
+
+      Para \script{s} poderem usar esse módulo, você precisa compilar ele em uma
+      bilbioteca dinâmica\footnotemark{} com o nome ``\lang{native.so}'' em um
+      Linux ou ``\lang{native.dll}'' em um Windows. Depois é só fazer como
+      antes:
+
+      \footnotetext{
+        Bibliotecas dinâmicas são compiladas de maneira que o programa que as
+        usa não precisa ser completamente ligado com elas na sua própria
+        compilação. Em compensação, ele termina de ligar com elas quando é
+        executado.
+      }
+
+      \vspace{1em}
+
+    \begin{lstlisting}[language=lua]
+    require "native"
+
+    print ("2 ^ 10 = " .. native.pow(2,10))
+    \end{lstlisting}
+
+      \vspace{1em}
+
       Um último fato interessante é que a máquina virtual tem coleta automática
       de memória inutilizada. Diferentemente de implementações tradicionais,
       \lang{Lua} não usa contagem de referências, mas sim verificação periódica
