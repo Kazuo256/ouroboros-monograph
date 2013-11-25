@@ -6,7 +6,7 @@ Programas de computador frequentemente lidam com diversos tipos de conteúdo:
 textos, imagens, músicas, vídeos, etc. Eles são armazenados e manipulados na
 forma de dados, segundo codificações específicas. Alguns tipos de conteúdo são
 mais complexos do que outros, como o banco de dados da sua rede social favorita,
-ou em um registro de tomografias médicas. Algumas vezes dados são tão
+ou um registro de tomografias médicas. Algumas vezes dados são tão
 complicados que se tornam programas por sí sós. É um caso bastante comum em
 jogos eletrônicos, onde parte do conteúdo é a inteligência artifical dos
 personagens ou o roteiro de eventos que ocorre para cada interação do jogador.
@@ -20,7 +20,7 @@ raramente de maneira automatizada. Por isso, a triste realidade é que integrar
 \script{s} em sua aplicação, por mais valor que isso agregue ao seu conteúdo,
 exige muito esforço.
 
-Por isso, para nosso trabalho de formatura, apresentamos uma solução em
+Portanto, para nosso trabalho de formatura, apresentamos uma solução em
 \textit{software} que permite ao usuário integrar de maneira automatizada as
 linguagens de \script{} \lang{Lua} e \lang{Python} a um programa escrito em
 \CXX{}. Apesar de a princípio nos restringirmos apenas a essas duas linguagens
@@ -39,65 +39,58 @@ especificamente, foi nosso trabalho no USPGameDev\footnote{
   O USPGameDev é um grupo de pesquisa e desenvolvimento de jogos da
   Universidade de São Paulo. Ver \url{uspgamedev.org} (último acesso: 
   15/09/2013).
-}.
-Lá, nós (e os outros membros da equipe) desenvolvemos uma plataforma para jogos
-bidimensionais (a UGDK\footnotemark), além de um jogo que usava ela, ambos feitos em \CXX{}.
+} que nos levou a ele. Afinal, em uma equipe de desenvolvedores de jogos não
+há apenas programadores, mas também \textit{designers} e artistas, que pouco
+ou nada sabem sobre programação. Nada melhor do que usar linguagens de
+\script{}, conhecidas por sua expressividade e facilidade de uso, para
+simplificar o trabalho deles e aumentar a produtividade geral do grupo.
 
-\footnotetext{
-  A UGDK é um dos principais projetos do USPGameDev, e seu
-  nome é um acrônimo que pode significar tanto \emph{USP Game Development
-  Kit} quanto \emph{USPGameDev Kit}. Ela é desenvolvida em \CXX{}.
-}
+% TODO: por essa nota de rodapé no devido lugar dela
+%\footnotetext{
+%  A UGDK é um dos principais projetos do USPGameDev, e seu
+%  nome é um acrônimo que pode significar tanto \emph{USP Game Development
+%  Kit} quanto \emph{USPGameDev Kit}. Ela é desenvolvida em \CXX{}.
+%}
 
-Mas \CXX{}, mesmo sendo extremamente poderosa, não é exatamente uma linguagem
-fácil de usar, o que começou a causar gargalos no desenvolvimento
-dos nossos programas. Decidimos que precisávamos ter suporte a alguma linguagem
-de \script{}, mas não conseguimos nos decidir qual usar. Por um lado tínhamos
-Python, com suas vastas extensões e facilidades, e por outro Lua, com sua
-simplicidade e versatilidade.
+O problema é que não conseguimos decidir qual linguagem de \script{} usar.
+Por um lado tínhamos \lang{Python}, com suas vastas extensões e facilidades, e
+por outro \lang{Lua}, com sua simplicidade e versatilidade. Depois de discutir
+bastante e considerar as possibilidades, pensamos numa idéia ``melhor de dois
+mundos'': comportar ambas as linguagens, e ocultar os mecanismos internos de
+cada uma de maneira que os outros desenvolvedores do grupo não precisassem se
+preocupar com qual estivesse sendo usada de fato. Além disso, como programadores
+frescos que somos, queríamos que o sistema cuidasse de todo o trabalho sujo
+envolvido e tivesse uma interface limpa e elegante de usar. Como contaremos mais
+adiante, isso tudo ocorreu a dois anos atrás quando nós dois, autores deste
+trabalho, nos tornamos os responsáveis por esse projeto dentro do USPGameDev.
 
-Eventualmente pensamos numa idéia ``melhor de dois mundos'': usar ambas as linguagens.
-E depois de algumas discussões sobre como implementar tal idéia e outras opções,
-vimos que não só essa era uma das melhores opções para nós, como também era
-possível de ser feita. Então nós dois (autores desse trabalho de formatura) começamos
-a desenvolver o então chamado ``sistama de scripts da UGDK''. Após alguns meses
-de desenvolvimento o sistema ficou pronto para uso, porém depois que começamos 
-a usá-lo em grande porte fomos descobrindo alguns problemas nele.
-
-Finalmente, decidimos usar no nosso trabalho de formatura esse sistema que
-desenvolvemos, com o objetivo de melhorar alguns pontos dele e corrigir
-os problemas que havíamos encontrado.
+Conseguimos obter resultados satisfatoriamente funcionais com alguns meses de
+desenvolvimento. No entanto, no começo desse ano ainda havia vários aspectos que
+queríamos melhorar, principalmente devido às limitações impostas por uma das
+ferramentas que usávamos. Por isso, decidimos transformar esse sistema em nosso
+trabalho de formatura, dando continuidade aos aprimoramentos e registrando
+nossos aprendizados e experiências na monografia.
 
 \section{Objetivos}
 \label{sec:intr:objetivos}
 
-Pode-se resumir a proposta do nosso projeto nas seguintes partes:
+  O objetivo desse nosso projeto, contando com o que já desenvolvemos antes de
+  ele se tornar oficalmente nosso trabalho de formatura, consiste no
+  desenvolvimento de um sistema de \textit{software} capaz de integrar
+  aplicações desenvolvidas em \CXX{} com \script{s} escritos em \lang{Lua} e
+  \lang{Python} com as seguintes características:
+  
+  \begin{enumerate}
 
-\begin{enumerate}
-  \item Desenvolvimento de uma biblioteca \CXX{} que abstrai o uso da API de
-        certas linguagens de \script{} de forma clara, prática de usar, e
-        facilmente estendível para aceitar outras linguagens com características
-        similares. Inicialmente ela trabalhará com \lang{Lua} e \lang{Python}. O
-        usuário da biblioteca não terá necessidade de conhecer especificamente a
-        API dessas linguagens para incorporá-las em seu programa, assim como não
-        precisará se importar com qual linguagem de fato está sendo usada, pois
-        o sistema será capaz de reconhecer automaticamente as linguagens que ele
-        aceita.
-  \item Desenvolvimento de uma ferramenta que interpreta parte do código \CXX{}
-        do usuário a fim de gerar \emph{wrappers}\footnotemark{} das classes e
-        funções desse código para cada linguagem de \script{} que o sistema
-        estiver configurado para reconhecer. Assim, o usuário poderá usufruir
-        das funcionalidades que desenvolveu em \CXX{} na liguagem de \script{}
-        de sua preferência.
-  \item Desenvolvimento de módulos de \lang{CMake} que garantam a devida
-        compilação e funcionamento conjunto dos dois resultados acima de maneira
-        a simplificar o máximo possível o uso do sistema como um todo. Também
-        elaborar uma documentação básica sobre como usar o \emph{software}
-        resultante do projeto.
+    \item A aplicação deverá ser capaz de acessar \script{s} de maneira simples
+          o suficiente para que ela não precise se referir diretamente aos
+          mecanismos internos das linguagens envolvidas ou até mesmo qual a
+          linguagem com que os \script{s} foram escritos.
+    \item O sistema cuidará de disponibilizar as funcionalidades relevantes da
+          aplicação para os \script{s} que ela usar.
+    \item O sistema será um \textit{Software Livre}, e portanto deverá ser de
+          fácil distribuição e inclusão nas aplicações que desejarem seus
+          serviços.
 
-\end{enumerate}
+  \end{enumerate}
 
-\footnotetext{
-  Código fonte, nesse caso em \CXX{}, que serve de intermediário para um
-  ambiente externo, como as linguagens de \script{}.
-}
