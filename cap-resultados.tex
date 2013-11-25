@@ -255,13 +255,14 @@ int main (int argc, char** argv) {
 }
 \end{lstlisting}
 Tais executáveis são as ferramentas de fato, e cada um deverá ser ligado junto com a
-libouroboros e a implementação da libouroboros para a linguagem de \script{} em questão. 
+\lang{libouroboros} e a implementação da \lang{libouroboros} para a linguagem de \script{} em questão. 
 Damos o nome de ``opwig-linguagem'' para esses executáveis do OPWIG, como por exemplo
 \textbf{opwig-lua} e \textbf{opwig-python}.
 
-A interface do OPWIG disponibilizada pela libouroboros e os módulos de CMake
+A interface do OPWIG disponibilizada pela \lang{libouroboros} e os módulos de CMake
 que criamos fazem essa terefa de criar executáveis do OPWIG para cada linguagem ser trivial,
-e o CMake do Ouroboros já usa desse dispositivo para definir o opwig-lua e opwig-python.
+e o CMake do Ouroboros já usa desse dispositivo para definir o \lang{opwig-lua} e 
+\lang{opwig-python}.
 
 \subsubsection{Compilação}
 Como ainda não disponibilizamos um pacote com as ferramentas prontas, será necessário
@@ -272,9 +273,10 @@ compilar os OPWIGs. Para tal, basta usar o CMake tal como já explicamos anterio
   $ make opwig-python
 \end{verbatim}
 E lembrando que o comando \lang{make} (sem parâmetros) compila ambos OPWIG juntamente com
-as libouroboros.
+as \lang{libouroboros}.
 
-O opwig-lua depende da libouroboros-lua, e analogamente o opwig-python depende da libouroboros-python.
+O \lang{opwig-lua} depende da \lang{libouroboros-lua}, e analogamente o \lang{opwig-python}
+depende da \lang{libouroboros-python}.
 
 É possível também compilar o extenso conjunto de testes unitários do OPWIG, que
 criamos para testar suas funcionalidades usando o seguinte comando:
@@ -294,7 +296,7 @@ Após compilado, executar o programa é simples:
 Onde:
 \begin{itemize}
   \item \textbf{opwig-python} é o OPWIG em questão, troque para qual OPWIG você quer executar 
-    (outro exemplo seria o opwig-lua).
+    (outro exemplo seria o \lang{opwig-lua}).
   \item \textbf{NOME}: é o nome do módulo que será gerado.
   \item \textbf{ARQUIVO-i}: são os arquivos de cabeçalho em \CXX{} que contêm a interface
     que você deseja que seja exportada no módulo.
@@ -310,7 +312,7 @@ sendo executado, seguindo o seguinte padrão de nomenclatura:
 
 \subsubsection{Usando os módulos gerados}
 Para usar os módulos gerados, basta compilar eles junto com seu programa, ligado com
-a libouroboros e com suas implementações específicas que forem desejadas e
+a \lang{libouroboros} e com suas implementações específicas que forem desejadas e
 necessárias.
 
 Qualquer \script{} em uma linguagem compatível que seja carregado pelo seu programa
