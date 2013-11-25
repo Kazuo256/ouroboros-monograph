@@ -152,9 +152,8 @@
   \subsection{\VObj{}}
   \label{sec:atividades:opa:vobj}
   % TODO: Relacionar com as classes descritas no capítulo de estrutura
-  Essa classe encapsula um objeto qualquer de uma máquina virtual, podendo
-  representar um módulo de \script{} carregado, uma instância de uma classe, um
-  valor na máquina virtual, entre outros. É praticamente a única classe que o
+  Essa classe representa um objeto virtual qualquer, como explicado na seção
+  \ref{cap:estrutura:opa}. É praticamente a única classe que o
   usuário precisa usar. Ela implementa alguns métodos que possibilitam ao
   usuário realizar sobre o tal objeto operações comuns a qualquer linguagem de
   \script{}. Também sobreescreve alguns operadores de \CXX{} para facilitar o
@@ -230,17 +229,11 @@
   
   \subsection{\SMgr{}}
   \label{sec:atividades:opa:smgr}
-  Mas como que o usuário cria um \VObj{}? Pela dependência de ser relacionado a uma máquina virtual,
-  não é fácil manter a abstração das linguagens se o usuário tiver quer criar um \VObj{} para uma outra
-  máquina. Fora que um \VObj{} sem nada é inútil, então de algum lugar tem que vir os primeiros \VObj{s},
-  relativos aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface 
-  comum entre linguagens, e praticamente a única outra classe que o usuário precisa usar além dos \VObj{s}:
-  o \SMgr{}.
-  
-  O \SMgr{} é uma classe que segue o padrão de projeto
-  \textbf{\textit{singleton}}\footnotemark{} e gerencia as máquinas virtuais que
-  estão disponíveis no sistema, permitindo ao usuário executar algumas operações
-  simples porém importantes nelas como um conjunto:
+  O \SMgr{} é a segunda principal classe da interface comum entre linguagens, e praticamente a
+  única outra classe que o usuário precisa usar além dos \VObj{s}. Ela segue o padrão de projeto
+  \textbf{\textit{singleton}}\footnotemark{} e como explicado na seção \ref{cap:estrutura:opa}
+  gerencia as máquinas virtuais que estão disponíveis no sistema, permitindo ao usuário 
+  executar algumas operações simples porém importantes nelas como um conjunto:
 
   \footnotetext{
     \textit{Singleton} é um padrão de projeto que permite ter apenas uma instância de uma classe
@@ -296,9 +289,10 @@
   \subsection{\VMac{}}
   \label{sec:atividades:opa:vmac}
   A \VMac{} é uma das duas classes abstratas do sistema que devem ser implementadas para
-  cada linguagem que se deseja ser compatível com a OPA. A \VMac{} representa a máquina
-  virtual da linguagem em si, sendo usada internamente pelo \SMgr{}. Raramente ela será
-  usada diretamente pelo usuário. Alguns métodos importantes de sua interface são:
+  cada linguagem que se deseja ser compatível com a OPA, como falado na seção \ref{cap:estrutura:opa}.
+  A \VMac{} representa a máquina virtual da linguagem em si, sendo usada internamente pelo 
+  \SMgr{}. Raramente ela será usada diretamente pelo usuário. Alguns métodos importantes de 
+  sua interface são:
   
   \begin{itemize}
     \item Inicialização e Finalização da máquina virtual. São chamados pelo \SMgr{} internamente.
@@ -653,7 +647,6 @@
     gerador). Com isso, o desenvolvedor precisa apenas fazer seu trabalho no
     código fonte da \lang{libouroboros} e deixar para o CMake providenciar o
     gerador.
-
 
 
 
