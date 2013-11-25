@@ -7,6 +7,8 @@
   anos anteriores. Explicamos como de fato implementamos a solução apresentada no
   capítulo anterior, as dificuldades técnicas encontradas e todos os outros
   recursos que utilizamos para concretizar nossa ideia.
+
+  %TODO Diferenciar o aspecto cronológico deste capítulo
   
   \section{Origem do projeto}
   \label{sec:atividades:origem}
@@ -16,9 +18,11 @@
     A proposta desse projeto foi elaborada no início deste ano, para o nosso
     trabalho de formatura supervisionado. No entanto, o sistema em si já havia
     sido desenvolvido por nós desde o começo de 2011. Ele era parte da UGDK, uma
+    % TODO a UGDK não tem footnote?
     \emph{engine}\footnote{Mais informações:
+    % TODO arranjar uma referência melhor que a wikipedia
     \url{http://en.wikipedia.org/wiki/Game\_engine} (último acesso: 15/09/2013)}
-    de desenvolvimento de jogos eletrônicos bidimensionais (ou
+    de desenvolvimento de jogos digitais bidimensionais (ou
     simplesmente ``jogos 2D'') programada pela equipe USPGameDev, da qual
     fazemos parte. Nós desenvolvemos o sistema quando acreditamos que seria útil
     que quem estivesse usando a UGDK pudesse facilmente integrar seus jogos com \script{s}.
@@ -38,18 +42,16 @@
     }
 
     Ele fornecia ferramentas que buscavam simplificar o máximo possível a
-    troca de dados do jogo com arquivos de \script{}. Bastava isolar as
-    partes mais críticas para a elaboração de conteúdo novo do jogo de maneira
-    que elas pudessem ser programadas majoritariamente através de \script{s}. E
-    dessa maneira tornamos possível aprimorar o jogo usando linguagens bem mais
-    simples que \CXX{} e sem a necessidade de conhecer todas as minúcias do seu
-    código.
+    troca de dados entre o jogo e os \script{s}. Para que a elaboração de conteúdo
+    novo do jogo pudesse ser programada majoritariamente através destes, bastava
+    isolar as partes mais críticas daquele. E dessa maneira tornamos possível
+    aprimorar o jogo usando linguagens bem mais simples que \CXX{} e sem a
+    necessidade de conhecer todas as minúcias do seu código.
 
     %TODO colocar imagens do horus antes e depois do sistema de scripts
 
   \section{Decisões de projeto}
   \label{sec:actividads:decisoes}
-  % TODO: checar toda essa seção (e sub-seções) por erros.
 
   \subsection{Decisões anteriores ao Trabalho de Formatura}
   Quando começamos a desenvolver o nosso ``sistema de \script{s}'',
@@ -61,27 +63,28 @@
   implementação de sua máquina virtual em \C{}, ou até \CXX{}. Como \CXX{}
   contém em si todas as funcionalidades de \C{}, não temos perda técnica nenhuma
   em usar o primeiro ao invés do segundo.
+  % Será que não já falamos disso antes?
   
   Também decidimos inicialmente que o sistema seria generalizado para poder
   funcionar com possivelmente qualquer linguagem de \script{}, sendo que
-  inicialmente iríamos incluir compatibilidade com Lua (a qual o Wilson conhece
-  bem) e Python (usada regularmente pelo Fernando). Para prover a geração de 
+  inicialmente iríamos incluir compatibilidade com \lang{Lua} (a qual o Wilson conhece
+  bem) e \lang{Python} (usada regularmente pelo Fernando). Para prover a geração de 
   \textit{wrappers}, escolhemos o \emph{Simplified Wrapper and Interface Generator} 
-  (SWIG\cite{swig:00}), que foi a melhor opção para o que 
+  (SWIG \cite{swig:00}), que foi a melhor opção para o que 
   necessitávamos segundo nossa pesquisa (o que essa ferramenta faz e como
   usamos ela será melhor explicado mais adiante, na seção \ref{sec:actividads:integracaoswig}).
   
   Como os projetos do USPGameDev usavam CMake\footnote{Sistema de compilação multi-plataforma
   e \textit{open-source}. Disponível em \url{http://www.cmake.org}. Acesso em: 22/11/2013} 
   para simplificar sua compilação em diversas plataformas e compiladores, nós também usamos essa ferramenta.
-  Usualmente progamávamos em Linux (Debian\footnote{Uma distribuição de Linux. Disponível em 
+  Nosso ambiente de trabalho usual era Linux (Debian\footnote{Uma distribuição de Linux. Disponível em 
   \url{http://www.debian.org}. Acesso em 22/11/2013.} ou Ubuntu\footnote{Outra distribuição de Linux. 
   Disponível em \url{http://www.ubuntu.com}. Acesso em 22/11/2013.}) usando \lang{g++}\footnote{
   Compilador para C++ do projeto GNU. Disponível em \url{http://gnu.gcc.org}. Acesso em 22/11/2013.}
-  como compilador, ou em Windows com o Visual Studio\footnote{Ambiente de desenvolvimento para
+  como compilador, ou Windows com o Visual Studio\footnote{Ambiente de desenvolvimento para
   \CXX{} e algumas outras linguagens feito pela Microsoft para Windows, contendo \textit{IDE}, 
   compilador e outras ferramentas. Mais informações em \url{http://www.visualstudio.com/}. 
-  Acesso em: 22/11/2013.} 2010. Para controle de versão do código fonte usamos o mesmo repositório 
+  Acesso em: 22/11/2013.} 2010. Para controle de versão do código fonte compartilhávamos o repositório 
   da UGDK, que usava Git\footnote{Ferramenta de controle de versão livre e \textit{open-source}.
   Disponível em \url{http://git-scm.com/}. Acesso em: 22/11/2013.}, hospedado no GitHub\footnote{
   Serviço de hospedagem de repositórios Git. Disponível em \url{https://github.com/}. 
@@ -91,19 +94,19 @@
   Quando começamos o trabalho de formatura, fizemos algumas mudanças nas nossas
   decisões de projeto originais. Primeiramente, separamos o sistema para ser um
   projeto separado, totalmente independente de qualquer outro projeto do
-  USPGameDev, e o nomeamos Projeto Ouroboros. Partindo do código de fonte
-  original, criamos outro repositório Git específico para o Ouroboros, ainda
-  hospedado no GitHub.
+  USPGameDev, e o nomeamos Projeto Ouroboros. Partindo do código fonte
+  original, criamos outro repositório Git específico para o Ouroboros, e também
+  o hospedamos no GitHub.
   
-  Também decidimos atualizar a linguagem de programação usada para \CXX{11},
-  uma versão bem mais recente do \CXX{} clássico, com diversas melhorias e
-  novas funcionalidades. Isso introduziu um problema no projeto: qual compilador
-  poderíamos usar. Como o \CXX{11} ainda é razoavelmente recente, nem todos
+  Decidimos atualizar a linguagem de programação usada para \CXX{11},
+  uma versão bem mais recente do que o \CXX{} clássico, com diversas melhorias e
+  novas funcionalidades. Isso introduziu um problema no projeto: compatibilidade
+  de compiladores com essa versão nova. Como o \CXX{11} ainda é razoavelmente recente, nem todos
   compiladores reconhecem todas suas novas funcionalidades. Mais notavelmente,
   não conseguimos mais compilar no Windows com o Visual Studio 2010, e nem com
-  sua versão mais recente, Visual Studio 2012. No Linux, tivemos que usar uma
+  sua versão mais recente, Visual Studio 2013. No Linux, tivemos que usar uma
   versão mais recente do \lang{g++}, a 4.7. Apesar de existirem versões ainda mais 
-  recentes, essa era a mínima necessária. Como ela não é fornecido por padrão
+  recentes, essa era a mínima necessária. Como ela não é fornecida por padrão
   nos pacotes do Ubuntu LTS\footnotemark{} atual, tivemos que adaptar nossos
   ambientes de desenvolvimento para conseguir usar um \lang{g++} mais recente.
 
@@ -112,11 +115,12 @@
   }
 
   Como parte do trabalho de formatura, tiramos o SWIG do projeto para substituí-lo
-  pelo nosso gerador de \textit{wrappers}, o OPWIG (mais sobre ele na seção 
+  pelo nosso gerador de \textit{wrappers}, o OPWIG (que explicamos na sessão 
+  \ref{cap:estrutura:opwig} e cuja implementação será descrita na seção 
   \ref{sec:actividads:opwig}). Também passamos a criar e usar bem mais testes
   unitários para testar o nosso código, além de registrar nosso repositório Git
   no Travis\footnotemark, que automaticamente tenta compilar nosso projeto e
-  rodar todos os testes.
+  executar as baterias de testes.
   
   \footnotetext{
     O Travis (\url{https://travis-ci.org/Rewasvat/ouroboros/}, último acesso:
@@ -132,12 +136,14 @@
   
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
+  %TODO Colocar uma transição melhor para essa sessão
   Desenvolver uma interface comum entre as duas linguagens de \script{} foi uma das 
   primeiras coisas que fizemos, e hoje o trabalho realizado nesse quesito foi o que
-  formou a \emph{Ouroboros Project API} (OPA). Desde o começo vimos desenvolvemos uma
-  interface generalizada capaz de usar uma ou outra linguagem de \script{} sem
-  diferenças na interface para o usuário. A seguir explicamos as principais
-  classes da OPA.
+  formou a OPA vista na sessão \ref{cap:estrutura:opa}. Desde o começo vimos
+  desenvolvemos uma interface generalizada capaz de usar uma ou outra máquina
+  virtual sem diferenças na interface para o usuário. A seguir
+  explicamos as principais classes da OPA.
+  % TODO: Relacionar com as classes descritas no capítulo de estrutura
   
   % TODO: Aqui começa se referindo à (classe) VirtualOBj no femenino. Mais
   %       adiante, refere-se ao (objeto) VirtualObj no masculino. Precisamos
@@ -145,6 +151,7 @@
   %       (discordância de gênero é um erro de português)
   \subsection{\VObj{}}
   \label{sec:atividades:opa:vobj}
+  % TODO: Relacionar com as classes descritas no capítulo de estrutura
   Essa classe encapsula um objeto qualquer de uma máquina virtual, podendo
   representar um módulo de \script{} carregado, uma instância de uma classe, um
   valor na máquina virtual, entre outros. É praticamente a única classe que o
@@ -224,7 +231,7 @@
   \subsection{\SMgr{}}
   \label{sec:atividades:opa:smgr}
   Mas como que o usuário cria um \VObj{}? Pela dependência de ser relacionado a uma máquina virtual,
-  não é fácil manter a abstração das linguagens se o usuário tiver quer criar um \VObj{} para um outra
+  não é fácil manter a abstração das linguagens se o usuário tiver quer criar um \VObj{} para uma outra
   máquina. Fora que um \VObj{} sem nada é inútil, então de algum lugar tem que vir os primeiros \VObj{s},
   relativos aos módulos de \script{} carregados. É ai que entra a segunda principal classe dessa interface 
   comum entre linguagens, e praticamente a única outra classe que o usuário precisa usar além dos \VObj{s}:
