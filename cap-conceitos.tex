@@ -632,9 +632,10 @@
     }  
     \end{lstlisting}
     
-    Para usar o módulo, caso você esteja incorporando \lang{Python} em sua aplicação
-    basta compilar ele junto com seu programa, e chamar a função de inicialização 
-    \lang{initteste} após inicializar a máquina virtual \lang{Python}. Caso contrário,
-    basta compilar o módulo numa biblioteca dinâmica - mas não vamos entrar em detalhes
-    neste caso pois para o escopo deste projeto, somente usamos módulos nativos em 
-    programas que estão incorporando as máquinas virtuais.
+    Para usar o módulo, caso você esteja incluindo a máquina virtual de \lang{Python}
+    em sua aplicação executável, basta compilar esse arquivo junto com seu programa, 
+    e chamar a função de inicialização \lang{initteste} após inicializar a máquina 
+    virtual. Caso contrário, basta compilar o módulo numa biblioteca 
+    dinâmica - mas não vamos entrar em detalhes neste caso pois para o escopo deste 
+    projeto, somente usamos módulos nativos em programas que estão incorporando as 
+    máquinas virtuais.
