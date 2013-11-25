@@ -5,28 +5,30 @@
 Programas de computador frequentemente lidam com diversos tipos de conteúdo:
 textos, imagens, músicas, vídeos, etc. Eles são armazenados e manipulados na
 forma de dados, segundo codificações específicas. Alguns tipos de conteúdo são
-mais complexos do que outros, como acontece no banco de dados da sua rede social
-favorita, ou no registro de tomografias médicas. Algumas vezes eles são tão
+mais complexos do que outros, como o banco de dados da sua rede social favorita,
+ou em um registro de tomografias médicas. Algumas vezes dados são tão
 complicados que se tornam programas por sí sós. É um caso bastante comum em
 jogos eletrônicos, onde parte do conteúdo é a inteligência artifical dos
-personagens ou o roteiro de eventos que ocorre para cada ação do jogador.
+personagens ou o roteiro de eventos que ocorre para cada interação do jogador.
 \textbf{Linguagens de \script{}} são ferramentas bastante populares para tratar
 conteúdo desse gênero.
 
-% TODO: ampliar com "Isso pode ocorrer de duas maneiras diferentes..."
-Elas podem ter seu código fonte tanto compilado e processado
-dinamicamente quanto incorporado na aplicação desejada. A aplicação, por sua
-vez, torna-se capaz de acessar essas conveniências. No entanto, tal incorporação
-pode trazer vários desafios, especialmente o de ter que aprender a usar uma API
-(\textit{Application Programming Interface}) diferente para cada linguagem de
-\script{} usada.
+Para tanto, existem diversas ferramentas disponíveis no mercado e na comunidade
+Web. Mas cada uma delas tem suas especifidades e restrições, dificilmente
+trabalhando com a noção de \script{s} de forma mais geral, e ainda mais
+raramente de maneira automatizada. Por isso, a triste realidade é que integrar
+\script{s} em sua aplicação, por mais valor que isso agregue ao seu conteúdo,
+exige muito esforço.
 
-Esta monografia apresentará um sistema de software que permite ao usuário
-integrar de maneira automatizada - em primeira instância - as linguagens de
-\script{} \lang{Lua} e \lang{Python} a um programa escrito em \CXX{} usando uma
-API unificada para incorporação e um exportador automatizado de interfaces. São
-explicados todos os principais mecanismos desse sistema, assim como a teoria e a
-tecnologia por trás deles.
+Por isso, para nosso trabalho de formatura, apresentamos uma solução em
+\textit{software} que permite ao usuário integrar de maneira automatizada as
+linguagens de \script{} \lang{Lua} e \lang{Python} a um programa escrito em
+\CXX{}. Apesar de a princípio nos restringirmos apenas a essas duas linguagens
+de \script{}, elaboramos a arquitetura do nosso sistema de modo a facilitar
+a contemplação de novas linguagens. A compatibilidade inicial com duas
+linguagens diferentes simultaneamente visa demonstrar esse fato. Nesta
+monografia, são explicados todos os principais mecanismos desse sistema, assim
+como a teoria e a tecnologia por trás deles.
 
 \section{Motivação}
 \label{sec:intr:motivacao}
