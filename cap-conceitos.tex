@@ -464,7 +464,7 @@
       \vspace{1em}
 
       Para \script{s} poderem usar esse módulo, você precisa compilar ele em uma
-      bilbioteca dinâmica\footnotemark{} com o nome ``\lang{native.so}'' em um
+      biblioteca dinâmica\footnotemark{} com o nome ``\lang{native.so}'' em um
       Linux ou ``\lang{native.dll}'' em um Windows. Depois é só fazer como
       antes:
 
@@ -517,7 +517,7 @@
       
     \vspace{1em}
     
-    Para executar a função \emph{pow} em \CXX{} fazemos o seguinte:
+    Para executar a função \lang{pow} em \CXX{} fazemos o seguinte:
       
     \vspace{1em}
 
@@ -541,7 +541,7 @@
         // 3. executar a tal funcao, passando os parametros.
         //e tambem possivel realizar essas operacoes separadamente,
         //cada uma e uma outra chamada de funcao da API.
-        PyObject* result = PyObject_CallMethod(teste, "pow", "(dd)", x, y); //new ref
+        PyObject* result = PyObject_CallMethod(teste, "pow", "dd", x, y); //new ref
         if (result == nullptr) {
             // deu erro na chamada de funcao, o mesmo do caso teste==nullptr
             // acima se aplica aqui.
@@ -585,7 +585,56 @@
     print "2 elevado a 3 eh igual a", pow(2,3)
     \end{lstlisting}
     Irá importar o \script{} teste mostrado acima, que por si só não realiza nenhuma operação -
-    ele simplesmente define a função \texttt{pow}. Após a importação, esse \script{} não
+    ele simplesmente define a função \lang{pow}. Após a importação, esse \script{} não
     define nada, mas realiza uma operação: imprime texto no console, contendo a frase
-    ``2 elevado a 3 é igual a'' e o valor devolvido pela execução de \texttt{pow(2,3)}.
+    ``2 elevado a 3 é igual a'' e o valor devolvido pela execução de \lang{pow(2,3)}.
     
+    Também é possível definir variáveis, funções e classes para serem usadas pelos \script{s}
+    na linguagem nativa da máquina virtual. Usando a função \lang{pow} como exemplo novamente,
+    para implementá-la em \C{} faríamos o seguinte:
+    
+    \begin{lstlisting}
+    #include <Python.h>
+    #include <cmath>
+    
+    PyObject* native_pow (PyObject* self, PyObject* args) {
+        double x, y;
+        if (!PyArg_ParseTuple(args, "dd", &x, &y)) {
+            // - Ocorreu algum erro na conversao dos parametros.
+            // Retornar NULL indica para a maquina virtual que ocorreu
+            // um erro nesta funcao, e nesse caso nao setamos uma excecao pois
+            // a propria funcao PyArg_ParseTuple ja o faz quando ocorre um erro.
+            return NULL;
+        }
+        // Objeto python retornado deve ser sempre uma nova referencia
+        return Py_BuildValue("d", pow(x, y) );
+    }
+    \end{lstlisting}
+    
+    A assinatura de \lang{native\_pow} é a assinatura de funções nativas de \lang{Python} em \C{},
+    também chamadas de \lang{Python C Functions} ou \lang{PyCFunction}. As formas mais comuns
+    de habilitar que essa função nativa seja chamada pelos \script{s} são definir algum 
+    objeto que contenha ou execute essa função ou definir um módulo nativo. De forma análoga 
+    ao \lang{Lua}, para criar um módulo nativo também é necessário inicializá-lo pelo \C{},
+    o que usualmente é feito com uma função de inicialização, e também deve seguir uma assinatura
+    e ter o prefixo \lang{init}, seguido pelo nome do módulo. Então para implementar o módulo
+    \lang{teste} que mostramos anteriormente de forma nativa, extenderíamos o código do
+    \lang{native\_pow} com o seguinte:
+    
+    \begin{lstlisting}
+    static PyMethodDef TesteMethods[] = {
+        {"pow", native_pow, METH_VARARGS, "pow(x,y) -> retorna x elevado a y."},
+        {NULL, NULL, 0, NULL}        /* sentinela */
+    };
+
+    PyMODINIT_FUNC initteste(void) {
+        Py_InitModule("teste", TesteMethods);
+    }  
+    \end{lstlisting}
+    
+    Para usar o módulo, caso você esteja incorporando \lang{Python} em sua aplicação
+    basta compilar ele junto com seu programa, e chamar a função de inicialização 
+    \lang{initteste} após inicializar a máquina virtual \lang{Python}. Caso contrário,
+    basta compilar o módulo numa biblioteca dinâmica - mas não vamos entrar em detalhes
+    neste caso pois para o escopo deste projeto, somente usamos módulos nativos em 
+    programas que estão incorporando as máquinas virtuais.
