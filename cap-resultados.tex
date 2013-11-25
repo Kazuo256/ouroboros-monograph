@@ -239,6 +239,20 @@ OPA para cada linguagem na libouroboros-lua, por exemplo.
 
 Então para de fato usar o OPWIG é necessário um outro arquivo de código, compilado
 num executável separado, que execute o OPWIG para uma linguagem de \script{} especifica.
+Como mencionamos na seção \ref{cap:atividades:cmake}, esses arquivos de código podem
+ser gerados automaticamente pelo CMake, e seguem o seguinte padrão:
+\begin{lstlisting}
+#include <opwig/opwig.h>
+
+// Inclui o header para a especificacao da linguagem de script em questao
+#include <...header da especificacao da linguagem...>
+
+int main (int argc, char** argv) {
+    // O parametro do template LanguageSpecification nesta chamada de funcao
+    // devera ser a classe da especificacao da linguagem de script.
+    return opwig::gen::Execute< LanguagenSpecification >(argc, argv);
+}
+\end{lstlisting}
 Tais executáveis são as ferramentas de fato, e cada um deverá ser ligado junto com a
 libouroboros e a implementação da libouroboros para a linguagem de \script{} em questão. 
 Damos o nome de ``opwig-linguagem'' para esses executáveis do OPWIG, como por exemplo
