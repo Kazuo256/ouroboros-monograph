@@ -8,10 +8,9 @@ durante o processo de desenvolvimento do trabalho.
 
 Juntos, os resultados formam o que chamamos de sistema do Projeto Ouroboros.
 Separadamente, cada resultado corresponde a uma forma generalizada de implementar
-as interações entre linguagens especificadas na seção \ref{sec:estrutura:geral}.
-A interação do tipo (A) foi implementada pela libouroboros (seção 
-\ref{sec:resultados:libouroboros}), e a interação do tipo (B) pelo 
-OPWIG (seção \ref{sec:resultados:opwig})
+as interações entre linguagens especificadas na seção \ref{cap:estrutura:geral}.
+A incorporação foi implementada pelo OPA (seção \ref{sec:resultados:libouroboros}),
+e a exportação pelo OPWIG (seção \ref{sec:resultados:opwig})
 
 
 \section{Biblioteca \textbf{libouroboros}}
@@ -31,29 +30,29 @@ E ela também contém o código do OPWIG (mais sobre ele na próxima seção
 É provável que ainda alteremos algumas coisas no sistema, arrumando alguma
 coisa ou implementando novas funcionalidades.
 
-A libouroboros também é facilmente compilada em várias plataformas usando
+A \lang{libouroboros} também é facilmente compilada em várias plataformas usando
 o CMake para gerar arquivos relativos à compilação, como \textit{Makefile}s
 no Linux. As implementações que fizemos das interfaces abstratas da OPA e do 
-OPWIG para as linguagens de \script{} Python e Lua também estão totalmente funcionais,
-sendo distríbuidas juntamente com a libouroboros e sendo compiladas em
-bibliotecas diferentes: \emph{libouroboros-python} e \emph{libouroboros-lua},
-para Python e Lua, respectivamente. Assim é fácil incorporá-las em um
-mesmo programa, basta ligar o programa com a libouroboros e com elas. 
+OPWIG para as linguagens de \script{} \lang{Python} e \lang{Lua} também estão totalmente funcionais,
+sendo distríbuidas juntamente com a \lang{libouroboros} e sendo compiladas em
+bibliotecas diferentes: \lang{libouroboros-python} e \lang{libouroboros-lua},
+para \lang{Python} e \lang{Lua}, respectivamente. Assim é fácil incorporá-las em um
+mesmo programa, basta ligar o programa com a \lang{libouroboros} e com elas. 
 Caso o usuário não queira usar uma das linguagens, é só não ligar com 
 as bibliotecas correspondentes. Caso ele queira usar outra linguagem, é
-só ele obter a implementação da libouroboros específica dela e ligá-la junto.
+só ele obter a implementação da \lang{libouroboros} específica dela e ligá-la junto.
 Para fins desse texto, vamos nos referir apenas às implementações para
-Lua e Python.
+\lang{Lua} e \lang{Python}.
 
 \subsection{Instruções de Uso}
-Aqui iremos explicar brevemente o uso da libouroboros e do OPA, desde compilar
+Aqui iremos explicar brevemente o uso da \lang{libouroboros} e do OPA, desde compilar
 (usando \textit{Makefile}) até pegar valores de um \script{}, seguindo um 
 simples exemplo de um programa que carrega um \script{}, pega o valor de uma
 variável dele e do retorno da execução de uma função.
 
 \subsubsection{Compilação} 
 Como ainda não disponibilizamos nenhum pacote
-com os binários da libouroboros, você terá que pegar o código fonte dela
+com os binários da \lang{libouroboros}, você terá que pegar o código fonte dela
 e compilá-la manualmente. Para compilar, basta rodar o CMake na pasta 
 raiz do projeto para gerar seus arquivos de compilação. Então basta 
 executar os comandos de make para compilação:
@@ -64,7 +63,7 @@ executar os comandos de make para compilação:
   $ make libouroboros-lua
 \end{verbatim}
 Os dois ultimos comandos são para compilar as implementações para cada linguagem,
-e você deve usá-los somente se necessário. Note que apesar de a libouroboros não
+e você deve usá-los somente se necessário. Note que apesar de a \lang{libouroboros} não
 ter nenhuma dependência externa, as implementações das linguagens dependem dos
 pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
 
@@ -73,17 +72,19 @@ pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
   $ cmake .
   $ make
 \end{verbatim}
-Isso irá compilar a libouroboros, libouroboros-python, libouroboros-lua e os OPWIGs
-correspondentes (mais sobre como usar ele na próxima seção). Caso queira, as
+Isso irá compilar a \lang{libouroboros}, \lang{libouroboros-python}, \lang{libouroboros-lua} e 
+os OPWIGs correspondentes (mais sobre como usar ele na próxima seção). Caso queira, as
 seguintes opções podem ser passadas para o CMake para alterar seu comportamento:
 \begin{itemize}
-  \item OUROBOROS\_CREATE\_BINDINGS: se verdade, o CMake irá tentar criar as 
+  \item \lang{OUROBOROS\_CREATE\_BINDINGS}: se verdade, o CMake irá tentar criar as 
     implementações de linguagens (padrão é sim).
-  \item OUROBOROS\_LUA\_BINDINGS: se verdade, a implementação de Lua será habilitada (padrão é sim).
-  \item OUROBOROS\_PYTHON\_BINDINGS: se verdade, a implementação de Python será habilitada (padrão é sim).
+  \item \lang{OUROBOROS\_LUA\_BINDINGS}: se verdade, a implementação de \lang{Lua} será 
+    habilitada (padrão é sim).
+  \item \lang{OUROBOROS\_PYTHON\_BINDINGS}: se verdade, a implementação de \lang{Python}
+    será habilitada (padrão é sim).
 \end{itemize}
 
-É possível também compilar os testes unitários da libouroboros, que
+É possível também compilar os testes unitários da \lang{libouroboros}, que
 criamos para testar suas funcionalidades usando o seguinte comando:
 \begin{verbatim}
   $ make ouroboros_test
@@ -94,8 +95,8 @@ E para executá-los:
 \end{verbatim}
     
 \subsubsection{Ligação} 
-Após compilar a libouroboros, compile o seu código fonte e ligue-o estaticamente
-com a libouroboros, e com a libouroboros-lua e/ou a libouroboros-python.
+Após compilar a \lang{libouroboros}, compile o seu código fonte e ligue-o estaticamente
+com a \lang{libouroboros}, e com a \lang{libouroboros-lua} e/ou a \lang{libouroboros-python}.
     
 \subsubsection{Exemplo de Código} 
 Em ordem, esse exemplo inicializa o \SMgr{}, passando em qual pasta
@@ -173,7 +174,7 @@ int main () {
 
 Para esse exemplo funcionar, basta ter um \script{} chamado ``\textit{exemplo}''
 na pasta \textit{/scripts/}, na raiz da onde o programa será executado. A extensão
-do arquivo deverá ser \textit{.lua} ou \textit{.py} para Lua ou Python respectivamente
+do arquivo deverá ser \textit{.lua} ou \textit{.py} para \lang{Lua} ou \lang{Python} respectivamente
 (exemplo.: \textit{./scripts/exemplo.py}). Tal \script{} deverá ter uma váriavel
 com um valor numérico de ponto flutuante chamada ``VariavelNumerica'', e uma função
 chamada ``Funcao'' que não recebe nenhum argumento (no exemplo, o valor de retorno da
@@ -219,7 +220,7 @@ arquivo gerado define.
 
 É importante notar também que o código gerado pelo OPWIG depende do OPA, 
 portanto qualquer programa compilado com código gerado pelo OPWIG deve ser
-ligado com a libouroboros. Isso é um contraste em relação ao SWIG, o qual gera
+ligado com a \lang{libouroboros}. Isso é um contraste em relação ao SWIG, o qual gera
 código sem nenhuma dependência externa. Esse comportamento foi uma decisão de
 projeto que fizemos para simplificar o código gerado pelo OPWIG e sua integração
 com a OPA. Supomos que se um usuário está usando o OPWIG ele provavelmente
@@ -233,9 +234,9 @@ e integração do código gerado com seu programa.
 
 Note que enquanto nos referimos ao OPWIG como ``uma'' ferramenta, ele na verdade
 é uma biblioteca. Por simplicidade de código e organização do sistema, 
-todo o código do OPWIG é compilado junto com o OPA na libouroboros, enquanto que 
+todo o código do OPWIG é compilado junto com o OPA na \lang{libouroboros}, enquanto que 
 a implementação do OPWIG para cada linguagem é compilada com a implementação do
-OPA para cada linguagem na libouroboros-lua, por exemplo.
+OPA para cada linguagem. Como por exemplo, na \lang{libouroboros-lua}.
 
 Então para de fato usar o OPWIG é necessário um outro arquivo de código, compilado
 num executável separado, que execute o OPWIG para uma linguagem de \script{} especifica.
