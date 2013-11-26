@@ -21,12 +21,12 @@ raramente de maneira automatizada. Por isso, a triste realidade é que integrar
 exige muito esforço.
 
 Portanto, para nosso trabalho de formatura, apresentamos uma solução em
-\textit{software} que permite ao usuário integrar de maneira automatizada as
+\textit{software} que permite ao usuário integrar de forma automatizada as
 linguagens de \script{} \lang{Lua} e \lang{Python} a um programa escrito em
 \CXX{}. Apesar de a princípio nos restringirmos apenas a essas duas linguagens
 de \script{}, elaboramos a arquitetura do nosso sistema de modo a facilitar
 a contemplação de novas linguagens. A compatibilidade inicial com duas
-linguagens diferentes simultaneamente visa demonstrar esse fato. Nesta
+linguagens diferentes de maneira simultânea visa demonstrar esse fato. Nesta
 monografia, são explicados todos os principais mecanismos desse sistema, assim
 como a teoria e a tecnologia por trás deles.
 
@@ -45,24 +45,17 @@ ou nada sabem sobre programação. Nada melhor do que usar linguagens de
 \script{}, conhecidas por sua expressividade e facilidade de uso, para
 simplificar o trabalho deles e aumentar a produtividade geral do grupo.
 
-% TODO: por essa nota de rodapé no devido lugar dela
-%\footnotetext{
-%  A UGDK é um dos principais projetos do USPGameDev, e seu
-%  nome é um acrônimo que pode significar tanto \emph{USP Game Development
-%  Kit} quanto \emph{USPGameDev Kit}. Ela é desenvolvida em \CXX{}.
-%}
-
 O problema é que não conseguimos decidir qual linguagem de \script{} usar.
 Por um lado tínhamos \lang{Python}, com suas vastas extensões e facilidades, e
 por outro \lang{Lua}, com sua simplicidade e versatilidade. Depois de discutir
-bastante e considerar as possibilidades, pensamos numa idéia ``melhor de dois
+bastante e considerar as possibilidades, pensamos em uma idéia ``melhor de dois
 mundos'': comportar ambas as linguagens, e ocultar os mecanismos internos de
 cada uma de maneira que os outros desenvolvedores do grupo não precisassem se
 preocupar com qual estivesse sendo usada de fato. Além disso, como programadores
 frescos que somos, queríamos que o sistema cuidasse de todo o trabalho sujo
 envolvido e tivesse uma interface limpa e elegante de usar. Como contaremos mais
 adiante, isso tudo ocorreu a dois anos atrás quando nós dois, autores deste
-trabalho, nos tornamos os responsáveis por esse projeto dentro do USPGameDev.
+trabalho, tornamo-nos os responsáveis por esse projeto dentro do USPGameDev.
 
 Conseguimos obter resultados satisfatoriamente funcionais com alguns meses de
 desenvolvimento. No entanto, no começo desse ano ainda havia vários aspectos que
@@ -78,16 +71,16 @@ nossos aprendizados e experiências na monografia.
   ele se tornar oficalmente nosso trabalho de formatura, consiste no
   desenvolvimento de um sistema de \textit{software} capaz de integrar
   aplicações desenvolvidas em \CXX{} com \script{s} escritos em \lang{Lua} e
-  \lang{Python} com as seguintes características:
+  \lang{Python} mantendo as seguintes características:
   
   \begin{enumerate}
 
     \item A aplicação deverá ser capaz de acessar \script{s} de maneira simples
           o suficiente para que ela não precise se referir diretamente aos
-          mecanismos internos das linguagens envolvidas ou até mesmo qual a
+          mecanismos internos das linguagens envolvidas ou até mesmo saber qual a
           linguagem com que os \script{s} foram escritos.
     \item O sistema cuidará de disponibilizar as funcionalidades relevantes da
-          aplicação para os \script{s} que ela usar.
+          aplicação para os \script{s} que forem usados por ela.
     \item O sistema será um \textit{Software Livre}, e portanto deverá ser de
           fácil distribuição e inclusão nas aplicações que desejarem seus
           serviços.

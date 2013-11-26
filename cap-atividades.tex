@@ -1,57 +1,93 @@
 \chapter{Atividades Realizadas}
 \label{cap:atividades}
+  
+  %TODO uniformizar espaçamento em volta dos trechos de código conforme
+  %     fizemos na parte de conceitos
 
   O objetivo desse capítulo é relatar as diversas atividades realizadas no 
-  planejamento e desenvolvimento do Projeto Ouroboros. Como ele é
-  anterior ao nosso trabalho de formatura, descrevemos também as atividades dos
-  anos anteriores. Explicamos como de fato implementamos a solução apresentada no
-  capítulo anterior, as dificuldades técnicas encontradas e todos os outros
-  recursos que utilizamos para concretizar nossa ideia.
+  planejamento e desenvolvimento do Projeto Ouroboros. Explicaremos como de
+  fato implementamos a solução apresentada no capítulo anterior, as
+  dificuldades técnicas encontradas e todos os outros recursos que utilizamos
+  para concretizar nossa ideia.
 
-  %TODO Diferenciar o aspecto cronológico deste capítulo
+  Porém, a modelagem que fizemos até agora reflete o modo como nós enxergamos
+  \emph{atualmente} nosso projeto. Como ressaltamos na introdução, já havíamos
+  desenvolvido boa parte do nosso sistema bem antes do trabalho de formatura,
+  e ele passou por algumas modificações desde então. Logo, como este capítulo
+  descreverá as atividades que fizemos, ele adotará um fluxo mais cronológico
+  dos assuntos, descrevendo o que fizemos desde o começo do sistema. Por isso,
+  haverá momentos em que o que fizemos ainda não condizirá com a estrutura
+  apresentada no capítulo \ref{cap:estrutura}, mas ilustrará o processo pelo
+  qual passamos antes de alcançar o nosso entendimento atual do projeto e do
+  domínio onde ele exerce seu papel.
   
   \section{Origem do projeto}
   \label{sec:atividades:origem}
   
-    %TODO "estes que vos escrevem"
     %TODO Essa seção precisa ser beeeeeem mais detalhada.
-    A proposta desse projeto foi elaborada no início deste ano, para o nosso
-    trabalho de formatura supervisionado. No entanto, o sistema em si já havia
-    sido desenvolvido por nós desde o começo de 2011. Ele era parte da UGDK, uma
-    % TODO a UGDK não tem footnote?
-    \emph{engine}\footnote{Mais informações:
-    % TODO arranjar uma referência melhor que a wikipedia
-    \url{http://en.wikipedia.org/wiki/Game\_engine} (último acesso: 15/09/2013)}
-    de desenvolvimento de jogos digitais bidimensionais (ou
-    simplesmente ``jogos 2D'') programada pela equipe USPGameDev, da qual
-    fazemos parte. Nós desenvolvemos o sistema quando acreditamos que seria útil
-    que quem estivesse usando a UGDK pudesse facilmente integrar seus jogos com \script{s}.
-
-    Mais especificamente, queríamos que essa integração fosse possível em um
-    outro projeto, também do USPGameDev: o jogo eletrônico chamado \emph{Horus
-    Eye}\footnotemark. Trata-se de uma aplicação feita em \CXX{} que usava os
-    recursos da UGDK para construir os alicerces do jogo. A equipe estava tendo
-    muitas dificuldades em expandir o conteúdo dele desde o seu lançamento em
-    outubro de 2010, pois não só apenas os membros mais antigos sabiam programar
-    em \CXX{}, como também só eles sabiam \emph{o quê} precisava ser mudado para
-    obter os resultados desejados. O então chamado ``sistema de \script{s} da
-    UGDK'' foi a solução que propomos.
+    No início deste ano, elegemos para o nosso trabalho de formatura supervisionado
+    o aprimoramento de um sistema que já estávamos desenvolvendo desde o começo de
+    2011, como parte das nossas atividades no USPGameDev. Originalmente, ele fazia
+    parte de um outro projeto do grupo chamado UGDK\footnote{
+      A UGDK é um dos principais projetos do USPGameDev, e seu
+      nome é um acrônimo que pode significar tanto \emph{USP Game Development
+      Kit} quanto \emph{USPGameDev Kit}. Ela é desenvolvida em \CXX{}, disponível em:
+      \url{http://uspgamedev.org/projetos/ugdk/} (último acesso: 26/11/2013)
+    }, uma \emph{engine}\footnote{
+      Mais informações:
+      \url{http://www.gamecareerguide.com/features/529/what\_is\_a\_game\_.php}
+      (último acesso: 26/11/2013)
+    } de desenvolvimento de jogos digitais bidimensionais (ou
+    simplesmente ``jogos 2D''). A ideia surgiu devido a uma situação com
+    outro projeto, também do USPGameDev: o jogo digital chamado
+    \emph{Horus Eye}\footnotemark. Ele era programado em \CXX{} e usava os
+    recursos da UGDK para ter acesso às funcionalidade essenciais de mídia e
+    interatividade que um jogo precisa. A equipe estava tendo muitas dificuldades
+    em expandir o conteúdo dele desde o seu lançamento em outubro de 2010, pois
+    não só apenas os membros mais antigos sabiam programar em \CXX{}, como também
+    só eles sabiam \emph{o que} precisava ser mudado para obter os resultados
+    desejados. A solução que propusemos foi integrar o jogo com \script{s}, pois
+    assim até mesmo não programadores poderiam contribuir com o desenvolvimento
+    de mais conteúdo para ele. Foi então que elaboramos o chamado ``sistema de
+    \script{s} da UGDK'', que depois viria a se tornar o projeto deste trabalho.
 
     \footnotetext{
-      Ver \url{uspgamedev.org/horus-eye} (último acesso: 25/07/2013)
+      Disponível em: \url{uspgamedev.org/horus-eye} (último acesso: 25/07/2013)
     }
 
     Ele fornecia ferramentas que buscavam simplificar o máximo possível a
     troca de dados entre o jogo e os \script{s}. Para que a elaboração de conteúdo
     novo do jogo pudesse ser programada majoritariamente através destes, bastava
-    isolar as partes mais críticas daquele. E dessa maneira tornamos possível
-    aprimorar o jogo usando linguagens bem mais simples que \CXX{} e sem a
-    necessidade de conhecer todas as minúcias do seu código.
+    isolar as partes mais críticas daquele. Por exemplo, para um desenvolvedor de
+    conteúdo não interessa saber quais rotinas devem ser evocadas para criar uma
+    nova fase, mas sim como descrever as fases; então, deixávamos os \script{s}
+    responsáveis por especificar a forma e os eventos de cada fase, e depois o
+    código nativo do jogo cuidava de analisar esses dados e executar os
+    procedimentos necessários para que a fase passasse a existir. E dessa maneira
+    tornamos possível aprimorar o jogo usando linguagens bem mais simples que \CXX{}
+    e sem a necessidade de conhecer todas as minúcias do seu código.
 
     %TODO colocar imagens do horus antes e depois do sistema de scripts
 
+    Comparando com a estrutura apresentada no capítulo anterior, o que tínhamos
+    desenvolvido é o que hoje corresponde à OPA. A parte pela qual o OPWIG seria
+    responsável era tratada por uma ferramenta à parte, sobre a qual falaremos ao
+    longo das sessões que seguem. Ela é um dos principais motivos pelo qual, apesar
+    de termos sido bem sucedidos em desenvolver esse sistema, ele ainda era
+    razoavelmente delicado de manipular e continha várias limitações.
+
   \section{Decisões de projeto}
   \label{sec:actividads:decisoes}
+
+  Antes de adentrarmos as atividades de implementação, gostaríamos de apresentar
+  as decisões que adotamos para o trabalho em nosso projeto. Principalmente
+  porque elas também sofreram alterações ao longo do tempo, refletindo bastante
+  no que tivemos que fazer ao longo do desenvolvimento. Trataremos tanto das
+  ferramentas que optamos por usar, quanto das metodologias e convenções que
+  escolhemos.
+
+  % TODO: Talvez seja legal estruturar as seções abaixo em itens...
+  % TODO: Also, tentar deixar as notas de rodapé menos caóticas
 
   \subsection{Decisões anteriores ao Trabalho de Formatura}
   Quando começamos a desenvolver o nosso ``sistema de \script{s}'',
@@ -60,7 +96,7 @@
   no grupo. Escolhemos \CXX{} como a linguagem de programação a ser usada
   para desenvolver o sistema pois essa era a linguagem que a UGDK e os nossos
   jogos usavam, e além disso é comum linguagens de \script{} terem uma
-  implementação de sua máquina virtual em \C{}, ou até \CXX{}. Como \CXX{}
+  implementação de sua máquina virtual em \C{}, ou até \CXX{}. Além disso, como \CXX{}
   contém em si todas as funcionalidades de \C{}, não temos perda técnica nenhuma
   em usar o primeiro ao invés do segundo.
   % Será que não já falamos disso antes?
@@ -75,20 +111,28 @@
   usamos ela será melhor explicado mais adiante, na seção \ref{sec:actividads:integracaoswig}).
   
   Como os projetos do USPGameDev usavam CMake\footnote{Sistema de compilação multi-plataforma
-  e \textit{open-source}. Disponível em \url{http://www.cmake.org}. Acesso em: 22/11/2013} 
+  e \textit{open-source}. Disponível em: \url{http://www.cmake.org} (último acesso: 22/11/2013)}
   para simplificar sua compilação em diversas plataformas e compiladores, nós também usamos essa ferramenta.
-  Nosso ambiente de trabalho usual era Linux (Debian\footnote{Uma distribuição de Linux. Disponível em 
-  \url{http://www.debian.org}. Acesso em 22/11/2013.} ou Ubuntu\footnote{Outra distribuição de Linux. 
-  Disponível em \url{http://www.ubuntu.com}. Acesso em 22/11/2013.}) usando \lang{g++}\footnote{
-  Compilador para C++ do projeto GNU. Disponível em \url{http://gnu.gcc.org}. Acesso em 22/11/2013.}
+  Nosso ambiente de trabalho usual era Linux (Debian\footnote{Uma distribuição de Linux. Disponível em:
+  \url{http://www.debian.org} (último acesso: 22/11/2013)} ou Ubuntu\footnote{Outra distribuição de Linux. 
+  Disponível em: \url{http://www.ubuntu.com} (último acesso: 22/11/2013)}) usando \lang{g++}\footnote{
+  Compilador para C++ do projeto GNU. Disponível em: \url{http://gnu.gcc.org} (último acesso: 22/11/2013)}
   como compilador, ou Windows com o Visual Studio\footnote{Ambiente de desenvolvimento para
   \CXX{} e algumas outras linguagens feito pela Microsoft para Windows, contendo \textit{IDE}, 
-  compilador e outras ferramentas. Mais informações em \url{http://www.visualstudio.com/}. 
-  Acesso em: 22/11/2013.} 2010. Para controle de versão do código fonte compartilhávamos o repositório 
+  compilador e outras ferramentas. Mais informações: \url{http://www.visualstudio.com/}. 
+  (último acesso: 22/11/2013)} 2010. Para controle de versão do código fonte compartilhávamos o repositório 
   da UGDK, que usava Git\footnote{Ferramenta de controle de versão livre e \textit{open-source}.
-  Disponível em \url{http://git-scm.com/}. Acesso em: 22/11/2013.}, hospedado no GitHub\footnote{
-  Serviço de hospedagem de repositórios Git. Disponível em \url{https://github.com/}. 
-  Acesso em: 22/11/2013.}.
+  Disponível em: \url{http://git-scm.com/} (último acesso em: 22/11/2013)}, hospedado no GitHub\footnote{
+  Serviço de hospedagem de repositórios Git. Acessível em: \url{https://github.com/} 
+  (último acesso: 22/11/2013)}.
+
+  A metodologia adotada pelo USPGameDev é uma variação própria de métodos
+  ágeis. O trabalho de formatura de Vinicius K. Daros \cite{scrum:00} trata com bastante
+  detalhes desse assunto. No que diz respeito a nosso projeto, o importante é
+  notar que as metas que seguíamos nas iterações de trabalho estavam mescladas
+  com as metas do jogo \textit{Horus Eye} e da \textit{engine} UGDK, de forma
+  que a maior parte do que desenvolvíamos era voltado para ser usados nesses
+  outros programas.
 
   \subsection{Mudanças no Projeto para o Trabalho de Formatura}
   Quando começamos o trabalho de formatura, fizemos algumas mudanças nas nossas
@@ -105,7 +149,7 @@
   compiladores reconhecem todas suas novas funcionalidades. Mais notavelmente,
   não conseguimos mais compilar no Windows com o Visual Studio 2010, e nem com
   sua versão mais recente, Visual Studio 2013. No Linux, tivemos que usar uma
-  versão mais recente do \lang{g++}, a 4.7. Apesar de existirem versões ainda mais 
+  versão mais nova do \lang{g++}, a 4.7. Apesar de existirem versões ainda mais 
   recentes, essa era a mínima necessária. Como ela não é fornecida por padrão
   nos pacotes do Ubuntu LTS\footnotemark{} atual, tivemos que adaptar nossos
   ambientes de desenvolvimento para conseguir usar um \lang{g++} mais recente.
@@ -115,12 +159,12 @@
   }
 
   Como parte do trabalho de formatura, tiramos o SWIG do projeto para substituí-lo
-  pelo nosso gerador de \textit{wrappers}, o OPWIG (que explicamos na seção 
+  pelo nosso próprio gerador de \textit{wrappers}, o OPWIG (que explicamos na seção 
   \ref{cap:estrutura:opwig} e cuja implementação será descrita na seção 
   \ref{sec:actividads:opwig}). Também passamos a criar e usar bem mais testes
   unitários para testar o nosso código, além de registrar nosso repositório Git
   no Travis\footnotemark, que automaticamente tenta compilar nosso projeto e
-  executar as baterias de testes.
+  executar as baterias de testes, avisando com \textit{e-mails} sempre que algo falha.
   
   \footnotetext{
     O Travis (\url{https://travis-ci.org/Rewasvat/ouroboros/}, último acesso:
@@ -132,18 +176,25 @@
   
   Nossa metodologia de trabalho também foi alterada. Passamos a desenvolver o
   sistema separadamente do USPGameDev, manter listas de tarefas pendentes e a
-  ter objetivos fixados periodicamente para serem completados o quanto antes.
+  ter objetivos fixados periodicamente para serem completados o quanto antes,
+  durante o primeiro semestre de trabalho. No segundo, adotamos o uso de
+  \textit{milestones} (ou ``marcos'', em português): elaborávamos uma pequena
+  aplicação de um usuário fictício do nosso sistema, e desenvolvíamos apenas o
+  necessário para que a aplicação dele funcionasse devidamente. Após completar
+  uma \textit{milestone}, montávamos uma outra mais complicada e que exigisse
+  mais do nosso projeto, e repetíamos o processo. Esse último método revelou
+  ser o mais produtivo para nós.
   
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
-  %TODO Colocar uma transição melhor para essa seção
-  Desenvolver uma interface comum entre as duas linguagens de \script{} foi uma das 
-  primeiras coisas que fizemos, e hoje o trabalho realizado nesse quesito foi o que
-  formou a OPA vista na seção \ref{cap:estrutura:opa}. Desde o começo vimos
-  desenvolvendo uma interface generalizada capaz de usar uma ou outra máquina
-  virtual sem diferenças na interface para o usuário. A seguir
-  explicamos as principais classes da OPA.
-  % TODO: Relacionar com as classes descritas no capítulo de estrutura
+  Desenvolver uma interface comum entre as duas linguagens de \script{} escolhidas
+  foi uma das primeiras coisas que fizemos, e hoje o trabalho realizado nesse
+  quesito foi o que formou a OPA vista na seção \ref{cap:estrutura:opa}. Desde o
+  começo vimos desenvolvendo uma interface generalizada capaz de usar uma ou outra
+  máquina virtual sem diferenças na interface para o usuário. A seguir explicamos
+  o que implementamos de fato nas principais classes da OPA. As duas primeiras são
+  as que são realmente usadas diretamente pelo usuário, e elas encapsulam de um ou
+  de outra maneira os mecanismos das duas últimas.
   
   % TODO: Aqui começa se referindo à (classe) VirtualOBj no femenino. Mais
   %       adiante, refere-se ao (objeto) VirtualObj no masculino. Precisamos
@@ -151,47 +202,50 @@
   %       (discordância de gênero é um erro de português)
   \subsection{\VObj{}}
   \label{sec:atividades:opa:vobj}
-  % TODO: Relacionar com as classes descritas no capítulo de estrutura
   Essa classe representa um objeto virtual qualquer, como explicado na seção
   \ref{cap:estrutura:opa}. É praticamente a única classe que o
   usuário precisa usar. Ela implementa alguns métodos que possibilitam ao
-  usuário realizar sobre o tal objeto operações comuns a qualquer linguagem de
-  \script{}. Também sobreescreve alguns operadores de \CXX{} para facilitar o
-  uso de algumas dessas operações, como por exemplo:
+  usuário realizar sobre o tal objeto operações comuns entre linguagens de
+  \script{}. Também sobreescrevemos alguns operadores de \CXX{} para facilitar o
+  uso de algumas dessas operações:
   \begin{itemize}
-    \item Executar o objeto como uma função: simplificado pelo operador \lang{()}
-      do \CXX{}, permitindo ao usuário usar o próprio \VObj{} como uma função. Exemplo:
+    \item \textbf{Executar o objeto como uma função}: simplificado pelo operador \lang{()}
+      do \CXX{}, permitindo ao usuário usar as próprias instâncias de \VObj{} como
+      funções. Exemplo:
       \begin{lstlisting}
-        VirtualObj vObj, vReturnObj, vObjArg1, ... vObjArgN; 
-        VirtualObj::List vObjList; // <=> std::list<VirtualObj> vObjList
-                                   // lista de VirtualObj.
+        VirtualObj vObj, vReturnObj, vObjArg1, ..., vObjArgN; 
+        VirtualObj::List vObjList; // o mesmo que std::list<VirtualObj> vObjList;
+                                   // uma lista de instancias de VirtualObj.
                                    
         vReturnObj = vObj();
         vReturnObj = vObj( vObjArg1, vObjArg2, ... , vObjArgN );
         vReturnObj = vObj( vObjList );
       \end{lstlisting}
-    \item Acessar e alterar atributos do objeto: simplificado pelo operador
-      \lang{[]} do \CXX{}, permitindo ao usuário usar o próprio \VObj{} como uma
-      tabela de símbolos. Exemplo:
+    \item \textbf{Acessar e alterar atributos do objeto}: simplificado pelo operador
+      \lang{[]} do \CXX{}, permitindo ao usuário usar as instâncias de \VObj{} como
+      tabelas de símbolos. Exemplo:
       \begin{lstlisting}
         VirtualObj vObj, vAttrObj, vObj_AttrName;
         vAttrObj = vObj["nome_do_atributo"];
         vAttrObj = vObj[ vObj_AttrName ];
       \end{lstlisting}
-    \item Executar um método do objeto (instância de uma classe): simplificado pelo
+    \item \textbf{Executar um método do objeto (instância de uma classe)}: simplificado pelo
       operador \lang{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
       passam a instância da classe (o próprio objeto) como o primeiro argumento da
       função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
       \begin{lstlisting}
         // Recebe argumentos como nas chamadas de funcao
         (vObj | "nome_do_metodo")( ... );
+        // Eh equivalente a
+        vObj["nome_do_metodo"](vObj, ...);
       \end{lstlisting}
-    \item Conversão de valores: como a maioria dos métodos (e operadores) do
-      \VObj{} recebe e retorna outros \VObj{}s, a conversão de valores é o que forma a
-      principal ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, o \VObj{}
-      possui 2 métodos \textit{templates} que possibilitam a conversão de valores entre
-      os dois ambientes. Exemplo:
+    \item \textbf{Conversão de valores}: como a maioria dos métodos (e operadores) da classe
+      \VObj{} recebe e retorna instâncias de dela mesma, a conversão de valores é o que forma a
+      principal ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, a classe
+      possui dois métodos \textit{template}\footnotemark{} que possibilitam a conversão de
+      valores entre os dois ambientes. Exemplo:
       \begin{lstlisting}
+        // Com ponteiros para tipos definidos pelo usuario:
         T* valor = vObj.value<T*>();
         vObj.set_value<T*>(valor);
         
@@ -201,66 +255,66 @@
       \end{lstlisting}
   \end{itemize}
 
-  \begin{framed}
-    \textit{Templates} são uma funcionalidade de \CXX{} que permite
-    criar funções e classes genéricas, recebendo 1 ou mais tipos\footnotemark{} em uma notação especial,
-    que a função ou classe usa de forma genérica em seu corpo. Exemplo de chamada de uma
-    função \textit{template}:
-  \begin{verbatim}
-    função_genérica<tipo1, tipo2, ...>(argumentos);\end{verbatim}
-  \end{framed}
-  
   \footnotetext{
+    \textit{Templates} são uma funcionalidade de \CXX{} que permite
+    criar funções e classes genéricas, recebendo um ou mais tipos em uma notação especial,
+    que a função ou classe usa de forma genérica em seu corpo.
     \textit{Templates} também podem receber valores aritméticos e \str{s},
     mas na interface do \VObj{}, e na maioria do nosso trabalho, somente usamos com tipos.
+    Mais informações em:
+    \url{http://www.cplusplus.com/doc/tutorial/templates/} (último acesso: 26/11/2013)
+
   }
   
-  Na prática, o \VObj{} é uma classe que encapsula um \VData{}. Todas essas operações do
-  \VObj{} são repassadas para seu \VData{} usando um padrão de projeto chamado
-  \textbf{ponteiro para implementação}\footnotemark{}. Essa classe, que representa um objeto numa máquina
+  Na prática, \VObj{} é uma classe que encapsula instâncias da classe \VData{}. Todas essas
+  operações do \VObj{} são repassadas para a instância \VData{} usando um padrão de projeto chamado
+  \textbf{ponteiro para implementação}\footnotemark{}. A classe \VData{}, que representa um objeto numa máquina
   virtual específica, não deve ser usada diretamente pelo usuário. Para isso existe o
   \VObj{}. Mais sobre o \VData{} pode ser visto na subseção \ref{sec:atividades:opa:vdata}
   
   \footnotetext{
-    \url{
+    Vide \url{
+      % Wikibooks é uma boa referência?
       http://en.wikibooks.org/wiki/C++\_Programming/Idioms\#Pointer\_To\_Implementation\_.28pImpl.29
     } (último acesso: 15/09/2013)
   }
   
   \subsection{\SMgr{}}
   \label{sec:atividades:opa:smgr}
-  O \SMgr{} é a segunda principal classe da interface comum entre linguagens, e praticamente a
-  única outra classe que o usuário precisa usar além dos \VObj{s}. Ela segue o padrão de projeto
-  \textbf{\textit{singleton}}\footnotemark{} e como explicado na seção \ref{cap:estrutura:opa}
-  gerencia as máquinas virtuais que estão disponíveis no sistema, permitindo ao usuário 
-  executar algumas operações simples porém importantes nelas como um conjunto:
+  Essa é a segunda principal classe da interface comum entre linguagens, e praticamente a
+  única outra classe que o usuário precisa usar além da \VObj{}. Ela segue o padrão de projeto
+  \textbf{\textit{singleton}}\footnotemark{} e corresponde ao gerenciador visto na seção
+  \ref{cap:estrutura:opa}. Sua responsabilidade é, portanto, gerenciar as máquinas virtuais
+  que estão disponíveis no sistema, permitindo ao usuário executar algumas operações simples
+  porém importantes nelas como um conjunto:
 
   \footnotetext{
     \textit{Singleton} é um padrão de projeto que permite ter apenas uma instância de uma classe
-    num dado momento. Mais informações:
-    \url{http://en.wikipedia.org/wiki/Singleton\_pattern} (último acesso: 15/09/2013)
-    }
+    num dado momento. Mais informações em \cite{patterns:00}.
+  }
   
   \begin{itemize}
-    \item Inicialização e Finalização: o \SMgr{} tem métodos para inicializar e finalizar o conjunto
+
+    \item \textbf{Inicialização e Finalização}: o gerenciador tem métodos para inicializar e finalizar o conjunto
       de máquinas virtuais. A inicialização é necessária para poder usá-las e também serve para
-      especificar o diretório na qual \script{s} serão carregados pelo \SMgr{}. A finalização 
+      especificar o diretório na qual \script{s} serão carregados por ele. A finalização 
       encerra a atividade das máquinas, liberando quaisquer recursos do computador que elas
       estejam usando. Exemplo:
       \begin{lstlisting}
-        //SCRIPT_MANAGER() eh uma macro que retorna um ponteiro para a instancia do ScriptManager.
+        //SCRIPT_MANAGER() eh uma macro que fornece um ponteiro para a instancia de ScriptManager.
         bool ok = SCRIPT_MANAGER()->Initialize("./caminho/para/os/scripts/");
         
         SCRIPT_MANAGER()->Finalize();
       \end{lstlisting}
-      Se o valor booleano que o \lang{Initialize} retorna for verdadeiro, o \SMgr{} foi inicializado
-      sem problemas. Caso contrário ocorreu algum problema na inicialização dele.
-    \item Registro e busca de máquinas virtuais: o \SMgr{} inicialmente não sabe quais são as máquinas
-      virtuais disponíveis. O usuário pode tanto registrá-las manualmente com um simples método, quanto
-      delegar essa responsabilidade para o código gerado pelo OPWIG, como veremos mais adiante.
-      Caso seja necessário, ele pode buscar uma máquina virtual registrada. As máquinas virtuais
-      são representadas no nosso sistema pela classe \VMac{}, que é uma classe abstrata,
-      devendo ser implementada para cada máquina virtual. Exemplo:
+      Se o valor booleano que a chamada a \lang{Initialize()} devolve for verdadeiro, significa que o gerenciador
+      foi inicializado sem problemas. Caso contrário, deve ter ocorrido algum problema na inicialização dele.
+
+    \item \textbf{Registro e busca de máquinas virtuais}: o gerenciador inicialmente não sabe
+      quais são as máquinas virtuais disponíveis. O usuário pode tanto registrá-las manualmente com
+      um simples método, quanto delegar essa responsabilidade para o código gerado pelo OPWIG, como
+      veremos mais adiante. Caso ele queira necessário, o usuário também pode buscar uma máquina
+      virtual registrada. Elas são representadas no nosso sistema pela classe \VMac{},
+      como veremos na próxima seção. Exemplo:
       \begin{lstlisting}
         //Registrando uma maquina virtual.
         VirtualMachine* vm = new python::PythonMachine();
@@ -270,79 +324,89 @@
         VirtualMachine* pyvm = SCRIPT_MANAGER()->GetMachine("Python");
         //pyvm corresponde ao mesmo vm declarado antes.
       \end{lstlisting}
-    \item Executar código: o \SMgr{} permite ao usuário executar um código qualquer, dado como uma
-      cadeia de caracteres, na máquina virtual de sua escolha. Exemplo:
+
+    \item \textbf{Executar código de \script{}}: o gerenciador permite ao usuário tentar executar um código
+      qualquer, dado como uma cadeia de caracteres, na máquina virtual de sua escolha. Exemplo:
       \begin{lstlisting}
         SCRIPT_MANAGER()->ExecuteCode("Lua", "print(42)");
       \end{lstlisting}
-    \item Carregar módulos: possivelmente o método mais importante do \SMgr{}, este método recebe
-      um caminho para um \script{} (sem a extensão de arquivo). Ele então determina se o \script{}
-      existe, e de acordo com a extensão do arquivo, qual máquina virtual deve rodá-lo. A tal máquina
-      virtual então carrega o \script{} e a função retorna um \VObj{} representando o módulo em
-      sua linguagem de \script{}. Exemplo:
+
+    \item \textbf{Carregar módulos}: possivelmente o método mais importante da classe \SMgr{}, este
+      método recebe um caminho para um arquivo de \script{} (sem a extensão dele). Ele então determina
+      se o \script{} existe, e de acordo com a extensão do arquivo, qual máquina virtual deve processá-lo.
+      A tal máquina virtual então carrega o \script{} e a função devolve uma instância de \VObj{}
+      representando o módulo carregado de acordo com a linguagem de \script{} usada. Exemplo:
       \begin{lstlisting}
         VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("modulo");
-        VirtualObj modul2 = SCRIPT_MANAGER()->LoadModule("pacote.subpacote.modulo");
+        VirtualObj modulo2 = SCRIPT_MANAGER()->LoadModule("pacote.subpacote.modulo");
       \end{lstlisting}
+
   \end{itemize}
-  
+
   \subsection{\VMac{}}
   \label{sec:atividades:opa:vmac}
   A \VMac{} é uma das duas classes abstratas do sistema que devem ser implementadas para
-  cada linguagem que se deseja ser compatível com a OPA, como falado na seção \ref{cap:estrutura:opa}.
+  cada linguagem que se deseja ser compatível com a OPA, como explicado na seção
+  \ref{cap:estrutura:opa} e ilustrado pela figura \ref{fig:api-classes}.
   A \VMac{} representa a máquina virtual da linguagem em si, sendo usada internamente pelo 
-  \SMgr{}. Raramente ela será usada diretamente pelo usuário. Alguns métodos importantes de 
+  gerenciador. Raramente ela será usada diretamente pelo usuário. Alguns métodos importantes de 
   sua interface são:
   
   \begin{itemize}
-    \item Inicialização e Finalização da máquina virtual. São chamados pelo \SMgr{} internamente.
+    \item Inicialização e Finalização da máquina virtual. São usadas pelo gerenciador internamente.
     \item Método para retornar a cadeia de caracteres correspondente à extensão de um 
       arquivo de \script{} dessa linguagem.
-    \item Carregar módulos, chamado pelo \SMgr{} internamente.
-    \item Executar código arbitrário, também chamado pelo \SMgr{}.
-    \item Retornar um novo \VData{} (ver próxima seção) vazio correspondente a essa linguagem
-      (uma instância vazia da classe que implementa a abstração \VData{} para esta linguagem).
+    \item Carregar módulos, usado pelo gerenciador internamente.
+    \item Executar código \script{}, também usado pelo gerenciador.
+    \item Fornecer uma nova instância vazia de \VData{} (ver próxima seção) correspondente à
+      linguagem da máquina.
   \end{itemize}
+
+  % TODO: diagrama UML
   
   \subsection{\VData{}}
   \label{sec:atividades:opa:vdata}
   \VData{} é a segunda classe abstrata do sistema que deve ser implementada para uma linguagem
-  de \script{} poder ser usada pelo OPA. Ela representa um objeto contido na máquina virtual
-  de uma linguagem específica.
+  de \script{} poder ser usada pela OPA. Ela provê os mecanismos essenciais dos objetos virtuais
+  de uma linguagem específica, fornecendo todas aquelas
+  operações da classe \VObj{} (descritas anteriormente), de forma que as instâncias desta
+  encapsulem chamadas às funções daquela. Assim, uma instância
+  de \VObj{} pode ter uma instância de \VData{} implementada para uma linguagem 
+  ou outra sem precisar saber qual, graças ao polimorfismo através de herança.
+
+  % TODO: diagrama UML
   
-  Essa classe é uma interface para métodos que devem implementar todas aquelas operações do 
-  \VObj{} (descritas anteriormente), de forma que o \VObj{} chama essas funções na implementação
-  de seus métodos e operadores. Assim, um \VObj{} pode ter um \VData{} de uma linguagem 
-  ou de outra sem precisar saber qual, graças ao polimorfismo através de herança.
-  
-  Fora métodos para as operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto
-  importante da interface do \VData{} é um método para retornar a instância (contida no \SMgr{}) 
-  da implementação da \VMac{} que representa a máquina virtual responsável pelo
+  Fora os métodos para as operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto
+  importante da interface de \VData{} é um método para retornar a instância (contida no gerenciador) 
+  da implementação da classe \VMac{} que representa a máquina virtual responsável pela instância de
   \VData{} em questão.
-  
   
   \section{Integração com SWIG}
   \label{sec:actividads:integracaoswig}
   O SWIG é uma ferramenta para exportar uma interface \C{}/\CXX{} para diversas 
-  linguagens de \script{} de alto nível. Um dos usos padrão dessa ferramenta (e 
+  linguagens de \script{}. Um dos usos padrão dessa ferramenta (e 
   a forma como usamos) é gerar o código de \textit{wrapper} necessário para criar 
-  módulos em linguagem nativa para uma determinada linguagem de \script{}.
-  E é isso que possibilita tal linguagem ter acesso a uma interface implementada em \CXX{}.
+  módulos virtuais para uma máquina virtual.
+  E é isso que possibilita a linguagem virtual correspondente ter acesso a uma
+  interface desenvolvida em \CXX{}.
   
-  Usamos o SWIG pois enquanto nossa interface comum, o OPA - definido na seção anterior -, 
-  possibilita que o \CXX{} use linguagens de \script{}, também precisávamos de algo para que linguagens 
-  de \script{} tenham acesso a interfaces \CXX{}. Após pesquisar possíveis soluções encontramos
-  o SWIG, uma ferramenta já um tanto quanto antiga e usada na indústria que fazia basicamente o
-  que queríamos.
+  A princípio, o SWIG servia para complementar nosso sistema, visto que tínhamos
+  as versões antigas da OPA (definido na seção anterior) para permitir que a aplicação
+  do usuário incorpore \script{s} mas não havíamos feito nada a respeito da exportação
+  de funcionalidades da aplicação para os \script{s}. Após pesquisar possíveis soluções
+  o que encontramos foi o SWIG, uma ferramenta já um tanto quanto antiga mas ainda usada
+  na indústria e que fazia basicamente o que queríamos (o processo ilustrado na figura
+  \ref{fig:gerador-funcionamento}).
   
   Como o SWIG é uma ferramenta já pronta, e que é executada para gerar código que será compilado
-  com o código do usuário, a integração entre ele e o nosso sistema é bem simples. A principal
-  integração está no fato que o OPA usa uma interface padrão (para cada linguagem de \script{})
-  gerada pelo SWIG para conseguir converter instâncias de tipos do usuário entre \CXX{} e as
-  máquinas virtuais.
+  com o código do usuário, a interação entre ele e o nosso sistema é bem simples. A principal
+  parte está no fato que a OPA usa umas rotinas geradas pelo SWIG (para cada linguagem de
+  \script{}) para conseguir converter instâncias de tipos nativos definidos usuário entre
+  \CXX{} e as máquinas virtuais.
   
-  O SWIG usa arquivos separados de extensão \emph{.i}, chamados de ``arquivos de interface do 
-  SWIG'', como o seguinte:
+  O SWIG usa arquivos separados de extensão \lang{.i}, chamados de ``arquivos de interface do 
+  SWIG'', para determinar quais arquivos de \CXX{} ele irá processar, e como irá gerar o 
+  \textit{wrapper} para tal código, como o seguinte:
   \begin{lstlisting}
   %module NOME_DO_MODULO
 
@@ -355,126 +419,132 @@
 
   %include <src/coisas/coisa.h>
   \end{lstlisting}
-  Para determinar quais arquivos de \CXX{} ele irá processar, e como irá gerar o 
-  \textit{wrapper} para tal código. Nesses arquivos de interface do SWIG é também 
-  possível incluir código que será posto no código gerado, ou usado
-  internamente no código gerado em algumas etapas, como por exemplo nas conversões de valores
-  que existem nos \textit{wrappers}. O segundo tipo de integrações com o SWIG que fizemos está
-  nesses arquivos.
-  
-  Fizemos algumas coisas com diversos objetivos nesses arquivos de interface, mas podemos
-  classificá-las de dois jeitos:
+
+  Nesses arquivos de interface do SWIG é também possível escrever código que será incluído
+  explicitamente no código gerado, ou usado internamente em algumas etapas, como por exemplo
+  nas conversões de valores que passam pelos \textit{wrappers}. O segundo tipo de interação
+  com o SWIG que fizemos está nesses arquivos. Usando o mecanismo de extensões do SWIG,
+  desenvolvemos algumas funcionalidades com diversos objetivos nesses arquivos de interface,
+  mas podemos classificá-las de dois jeitos:
+
   \begin{enumerate}
-    \item Código usado para dizer para o OPA quais são os tipos de usuário exportados para
-      as máquinas virtuais, e as estruturas de dados do SWIG que representam eles. O OPA
-      por sua vez necessita disso para poder converter tais tipos entre a máquina virtual
-      e o \CXX{}.
-    \item Código usado para mudar ou adicionar alguma funcionalidade ao \textit{wrapper}
-      gerado. Tais códigos essencialmente tentam resolver algum problema do SWIG, como
+    \item Operações para fornecer à OPA informações sobre os tipos nativos definidos pelo
+      usuário que serão exportados para as máquinas virtuais, através das estruturas de dados
+      do que o SWIG usa para representá-los. A OPA necessita desses dados para poder converter
+      tais tipos entre a máquina virtual e o \CXX{}.
+    \item Operações para mudar ou adicionar alguma funcionalidade ao \textit{wrapper}
+      gerado. Elas essencialmente tentam resolver algum problema do SWIG, como
       a incapacidade de herdar tipos de \CXX{} nas linguagens de \script{}. Veremos mais
       sobre esses problemas na próxima seção.
   \end{enumerate}
   
   Aqui está um exemplo mais detalhado de um arquivo de interface do SWIG, com nossas 
-  adições:
+  adições nossas:
   \begin{lstlisting}
   %module NOME_DO_MODULO
 
-  // inclui algumas definicoes nossas e do SWIG para simplificar este arquivo.
+  // Inclui algumas definicoes nossas e do SWIG para simplificar este arquivo.
   %include <module/export.swig>
   %include <module/proxy.swig>
   %include <module/widetypes.swig>
   %include "std_string.i"
   %include "std_vector.i"
   
-  // nessa secao e incluso, seguindo sintaxe C++, as coisas
-  // que serao usadas por esse modulo.
+  // O codigo abaixo eh transcrito diretamente para o wrapper gerado.
+  // Normalmente aproveitamos ele para incluir os cabecalhos apropriados.
   %{
   #include <src/coisas/coisa.h>
   #include <src/coisas/mais_coisa.h>
   %}
 
-  // se necessario, com essa(s) linha(s) voce pode fazer esse modulo referenciar 
-  // outro modulo caso ele use coisas do outro.
+  // Se necessario, com essa(s) linha(s) voce pode fazer esse modulo referenciar 
+  // outro modulo caso ele use alguma definicao nesse outro.
   %import(module="outro_modulo") <src/outras_coisas/outro.h>
 
-  // se necessario, com essa(s) linha(s) voce pode ignorar coisas do C++ para 
-  // que elas nas sejam exportadas.
+  // Se necessario, com essa(s) linha(s) voce pode ignorar declaracoes em C++ para 
+  // que elas nao sejam exportadas.
   %ignore coisas::CoisaEstranha;
   
-  // se necessario, com essa linha voce pode definir quais metodos e funcoes
-  // que devolvem objetos novos - isso e necessario para o controle correto 
-  // da memoria
+  // Se necessario, com essa linha voce pode definir quais metodos e funcoes
+  // que devolvem novas instancias de objetos - isso e necessario para o controle 
+  // correto da memoria, pois indica que a maquina virtual pode tomar posse do objeto
   %newobject coisas::CoisaBase::Foo;
   
-  // Nao e possivel exportar templates de C++, mas voce pode exportar uma 
+  // Nao eh possivel exportar templates de C++, mas voce pode exportar uma 
   // especializacao, se necessario:
   %template(IntCoisa) coisas::CoisaVariavel<int>;
 
-  // se necessario, com essa linha voce pode habilitar o proxies para tal 
+  // Se necessario, com essa linha voce pode habilitar proxies para tal 
   // classe de C++, para que ela possa ser herdada pelos scripts. Note que
-  // isso nao eh tudo que deve ser feito.
+  // soh isso nao eh suficiente para habilitar heranca.
   proxy_class(coisas::CoisaBase)
 
-  // finalmente isso diz pro SWIG quais coisas exportar, no caso, tudo em
-  // tal arquivo, exceto se algo foi ignorado.
+  // Finalmente isso informa ao SWIG o que exportar. No caso, diz para tudo no
+  // arquivo indicado ser exportado, exceto se algo foi ignorado usando %ignore.
   %include <src/coisas/coisa.h>
   
-  // esse par enable/disable_disown e essencialmente o contrario do %newobject
-  // acima, ele define que parametros de funcoes com o tipo/nome definidos
+  // Esse par enable/disable_disown eh essencialmente o contrario do %newobject
+  // acima: eles definem que parametros de funcoes com o tipo/nome especificados
   // aqui terao sua posse roubada pelo C++. 
-  // Disown sera explicado em detalhes mais adiante.
+  // Isso serah explicado em detalhes mais adiante.
   enable_disown(coisas::CoisaBase* c)
   %include <src/coisas/mais_coisa.h>
   disable_disown(coisas::CoisaBase* c)
 
-  // aqui definimos quais classes que estamos exportando
+  // Aqui definimos quais classes que estamos exportando
   namespace coisas {
       export_class(CoisaBase)
   }
 
-  // e confirmamos as classes exportadas, para o OPA poder converte-las
-  confirm_exports(ugdk_drawable)
+  // E confirmamos as classes exportadas, para o OPA saber converte-las
+  // quando usar VirtualObj::value() e VirtualObj::set_value()
+  confirm_exports(NOME_DO_MODULO)
   \end{lstlisting}
   
   
   \section{Problemas com SWIG}
   Ao longo do tempo em que fomos usando o SWIG notamos alguns problemas com ele, que eram
   refletidos no nosso sistema, impondo certas restrições. Alguns desses problemas conseguimos
-  apaziguar com código posto nos arquivos de interface do SWIG, como mencionado na seção
+  apaziguar com código inserido nos arquivos de interface do SWIG, como mencionado na seção
   anterior. Os problemas eram:
   
   \begin{itemize}
-    \item A determinação de \textit{disown} depende da API do usuário e o design do SWIG é
-      imprático para reconhecer essas especificações.
+    \item \textbf{A determinação de posse de objetos depende da API do usuário e o design do SWIG é
+      imprático para reconhecer essas especificações}.
       
-      \textit{Disown} é o ato de fazer com que algum método da interface \CXX{} retire a posse
-      de uma instância de uma classe \CXX{} que ele recebe como argumento da máquina virtual. 
-      Quando a máquina virtual cria algum objeto \CXX{}, ou seja, um objeto da linguagem de 
+      \textit{Ceder a posse} (\textit{disown}) é o ato de fazer que algum método da interface \CXX{}
+      retire a posse de uma instância de uma classe \CXX{} que ele recebe como argumento vindo da
+      máquina virtual. Quando ela cria algum objeto \CXX{}, ou seja, um objeto na linguagem de 
       \script{} que encapsula uma instância de alguma classe \CXX{} que foi exportada, ela
       retém a posse de tal objeto. Quando ela for remover tal objeto de \script{}, seja 
-      lá por qual razão, se ela deter a posse do objeto, ela também irá remover a instância 
-      \CXX{} encapsulada. Isso pode causar problemas se alguma parte do código \CXX{} tem 
-      algum ponteiro para tal instância, e tenta remover ou simplesmente usar ela em algum
-      momento após a máquina virtual tê-la removido da memória. Portanto fizemos que métodos
+      lá por qual razão, se ela detiver a posse dele, ela também irá remover a instância 
+      \CXX{} encapsulada da memória. Isso pode causar problemas se alguma parte do código nativo
+      tem alguma referência para tal instância, e tenta remover ou simplesmente usar ela em algum
+      momento após a máquina virtual já tê-la removido. Portanto fizemos que métodos
       da interface \CXX{} que recebem instâncias de classes e cuidam da remoção delas 
       internamente tiram a posse de tal instância da máquina virtual.
       
-      A questão da posse de um objeto entre \CXX{} e uma máquina virtual é inerente ao
-      problema e ao nosso ver não tem como ser evitada.
-    \item O SWIG não aceita o aninhamento de classes, \textit{structs} e \textit{unions}, e 
-      aparentemente não pretende aceitar tão cedo. Aninhar tais estruturas de \CXX{} é o ato
-      de definir algumas delas dentro de outra.
-    \item SWIG não tem suporte a herança de classes \CXX{} nos \script{s}. A nossa ``solução''
-      para isso foi criar um sistema de \textit{proxies}\footnotemark: classes intermediárias em
-      \CXX{} que derivam de uma classe base \lang{BaseProxy} e da classe ``alvo'' \CXX{} que foi
-      exportada para \script{}. Essas classes \textit{proxy} contêm um \VObj{} com um objeto de
-      script que deve ser uma instância da classe de \script{} que derive da classe \CXX{}. Elas
-      também implementam os métodos virtuais da classe base, usando o \VObj{} para repassar a
-      chamada do método para o objeto virtual. Fora a definição da classe \lang{BaseProxy}, e
-      das classes \textit{proxy} para cada classe \CXX{} passível de ser herdada, para esse
-      sistema funcionar foi também necessário uma grande parte de código adicionado nos arquivos de
-      interface do SWIG.
+      A questão da posse de um objeto entre \CXX{} e uma máquina virtual é essencial ao
+      problema que nosso sistema se propõe a tratar e ao nosso ver não tem como ser evitada.
+      Por isso, essa complicação no SWIG é um grande obstáculo ao nosso trabalho.
+
+    \item \textbf{O SWIG não exporta o aninhamento\footnotemark{} de classes, \textit{structs} e \textit{unions}, e 
+      aparentemente não pretende resolver isso tão cedo}.
+      
+      \footnotetext{
+        Aninhar tais estruturas de \CXX{} é o ato de definir algumas delas dentro de outra.
+      }
+    \item \textbf{O SWIG não tem trata a herança de classes \CXX{} nos \script{s}}.
+      
+      A nossa ``solução'' para isso foi criar um sistema de \textit{proxies}\footnotemark{}: classes
+      intermediárias em \CXX{} que derivam de uma classe base \lang{BaseProxy} e da classe
+      \CXX{} que foi exportada e da qual queremos herdar. Essas classes \textit{proxy} contêm uma
+      instância de \VObj{} contendo um objeto virtual que deve ser uma instância da classe em
+      \script{} que herda a classe nativa em questão. Elas também implementam os métodos abstratos
+      da classe base, usando o objeto virtual para repassar as chamadas dos métodos para a classe
+      virtual. Fora a definição da classe \lang{BaseProxy}, e das classes \textit{proxy} para cada
+      classe \CXX{} passível de ser herdada, para esse sistema funcionar foi também necessário uma
+      grande parte de código adicionado nos arquivos de interface do SWIG.
       
       \footnotetext{
         Uma alternativa para simplificar esse processo está no nosso blog: 
@@ -482,17 +552,20 @@
         (último acesso: 15/09/2013)
       }
       
-    \item O SWIG não exporta em seus \textit{wrappers} variáveis e métodos de classes com 
+    \item \textbf{O SWIG não exporta em seus \textit{wrappers} variáveis e métodos de classes com 
       modificador de acesso \textit{protected} (acessíveis somente pela classe em si e por 
-      classes derivadas). Isso decorre do fato que ele não tem suporte a herança, como mencionado
+      classes derivadas).} Isso decorre do fato que ele não tem suporte a herança, como mencionado
       anteriormente, mas ainda assim é um problema ao nosso ver.
-    \item Problemas com \textit{wrappers} de Lua:
-      %TODO: WIL! Acho que essa parte vc deve ver direito...
+    \item \textbf{Problemas com \textit{wrappers} de Lua}:
       \begin{itemize}
         \item Uma das informações necessárias (metatabelas das classes) só pode ser obtida
           fazendo suposições sobre a implementação interna dos \textit{wrappers} de Lua do SWIG.
+          Ou seja, é precisa usar más práticas de programação para conseguir o acesso a esses
+          dados.
         \item Duas funções internas dos \textit{wrappers} de Lua do SWIG precisam ter uma linha
-          de código alterada para que \textit{proxies} funcionem.
+          de código alterada para que a solução de \textit{proxies} acima funcione. Tivemos que
+          manipular o funcionamento interno do SWIG para que ele passasse a usar versões nossas
+          dessas funções ao invés das originais, que continham limitações denecessárias.
       \end{itemize}
   \end{itemize}
   
@@ -501,112 +574,121 @@
   Boa parte do que explicamos nas seções anteriores neste capítulo foi o trabalho que realizamos
   antes do trabalho de formatura. E o principal ponto do trabalho é exatamente o de substituir 
   o SWIG por uma ferramenta própria que criamos, a fim de simplificar o uso e corrigir os
-  erros listados na seção anterior. Mantemos o OPA, fazendo algumas alterações para resolver
+  erros listados na seção anterior. Mantivemos a OPA, fazendo algumas alterações para resolver
   erros, melhorar o sistema ou substituir as partes relativas ao SWIG para a nossa nova ferramenta:
-  o nosso gerador de \textit{wrappers}, o \emph{Ouroboros Project Wrapper and Interface Generator} (OPWIG).
+  o nosso gerador de \textit{wrappers}, OPWIG, cujo papel foi descrito na seção \ref{cap:estrutura:opwig}.
   
-  Enquanto o OPWIG ainda não é capaz de substituir completamente o SWIG, ele já realiza algumas
+  Atualmente, ele ainda não é capaz de substituir completamente o SWIG, mas ele já realiza algumas
   tarefas básicas importantes, como exportar funções, variáveis e classes. E continuamos
-  o seu desenvolvimento num passo constante razoável. Infelizmente não podemos ainda falar que
-  já conseguimos resolver os problemas do SWIG pois como nossa ferramenta ainda está no começo
-  do desenvolvimento, ainda não chegamos no ponto de ocorrer tais erros. 
+  o seu desenvolvimento em um passo constante razoável. Infelizmente não podemos ainda falar que
+  já conseguimos resolver os problemas do SWIG pois como nossa ferramenta ainda está no meio
+  do desenvolvimento, ainda não chegamos no ponto de ocorrer ter que lidar com eles. Mais
+  especificamente, ainda não chegamos em \textit{milestones} que exijam essas funcionalidades
+  mais avançadas. No entanto, já conseguimos notar que pelo menos será relativamente fácil corrigir
+  o problema de classes, \lang{structs} e \lang{unions} aninhadas. De fato, nosso gerador, ao analisar
+  código \CXX{}, já reconhece essas declarações, só falta adaptarmos os \textit{wrappers} para tratá-las
+  e testar em uma \textit{milestone} se de fato funciona.
   
-  Mas pelo menos já conseguimos notar que será relativamente fácil corrigir o problema de classes, 
-  \lang{structs} e \lang{unions} aninhadas. De fato, nosso \textit{parser} de \CXX{} já reconhece
-  tal funcionalidade, só falta adaptarmos o gerador de código para tratar esse caso e testá-lo.
-  
-  Outra funcionalidade presente no OPWIG que não conseguimos fazer com o SWIG foi o registro automático
-  de máquinas virtuais no \SMgr{}, simplificando o código do usuário para usar o sistema com suas máquinas
-  virtuais e seus módulos gerados. Esse registro automático funciona da seguinte maneira: cada módulo gerado
-  pelo OPWIG contém um bloco de código de \textit{bootstrap} (inicialização), que é executado automaticamente
-  quando o programa é carregado, dado que ele tenha sido compilado juntamente com o código de \textit{wrapper}
-  gerado. O \textit{bootstrap} então registra a máquina virtual da linguagem de \script{} relativa ao módulo
-  em que ele está definido no \SMgr{}, caso ela ainda não tenha sido registrada, e registra o módulo de
+  Uma vantagem presente no OPWIG que não existia no SWIG é o registro automático
+  de máquinas virtuais no gerenciador, simplificando o código do usuário para usar o sistema. Esse
+  registro automático funciona da seguinte maneira: cada módulo gerado pelo OPWIG contém um bloco
+  de código de \textit{bootstrap} (inicialização), que é executado automaticamente
+  quando o programa é carregado, dado que ele tenha sido compilado junto com o código de \textit{wrapper}
+  gerado. O \textit{bootstrap} então registra a máquina virtual da linguagem de \script{} para a qual
+  ele está exportando, caso ela ainda não tenha sido registrada, e registra o módulo de
   \script{} e seus sub-módulos nela.
   
   Internamente, o OPWIG contém:
   \begin{itemize}
-    \item Um \textit{parser} de \CXX{}.
+    \item Um analisador de código \CXX{}.
     \item Classes representando metadados de \CXX{}.
-    \item Um gerador de código, que gera código de acordo com uma ``especificação''
-      de uma linguagem de \script{}.
-    \item A definição abstrata da especificação de uma linguagem de \script{}, que recebe
-      os metadados para retornar o código que deverá ser escrito no arquivo gerado. Essa
+    \item Um gerador de código, que segue uma ``especificação'' para cada máquina virtual.
+    \item O molde que uma especificação dessas deve seguir, recebendo
+      os metadados para providenciar o código que deverá ser escrito no arquivo gerado. Essa
       definição abstrata deve ser implementada para uma dada linguagem de \script{} para
-      que o OPWIG seja capaz de gerar código para tal linguagem. Novamente, por padrão, nós
-      criamos a implementação para Lua e Python.
+      que o OPWIG seja capaz de gerar código de \textit{wrappers} para a máquina virtual dela.
+      Novamente, nós criamos a implementação para Lua e Python como padrão.
   \end{itemize}
   
-  \subsection{O \textit{Parser} de \CXX{}}
-  Um dos pontos mais importantes desse projeto, e que ocupou boa parte do nosso primeiro semestre em 2013
-  foi o desenvolvimento do \textit{parser} de \CXX{}. Um \textit{parser} é uma ferramenta que analisa uma
-  sequência de símbolos numa dada linguagem, de acordo com as regras gramaticais de tal linguagem, e gera 
-  uma estrutura de dados que representa o texto analisado, ao mesmo tempo que testa se o texto é 
-  correto sintáticamente.
+  \subsection{O analisador de \CXX{}}
+  Um dos pontos mais importantes desse projeto, e que ocupou boa parte do nosso primeiro semestre em 2013,
+  foi o desenvolvimento desse analisador. Ele é uma ferramenta que processa uma sequência de símbolos
+  em uma dada linguagem, de acordo com a gramática dela, e gera uma estrutura de dados que representa o
+  código analisado, e ao mesmo tempo verifica se ele está sintaticamente correto.
   
-  No nosso caso, queremos analisar código \CXX{} e gerar metadados que representem as declarações feitas no
-  código, como váriaveis, funções e classes declaradas. Esse processo tem três etapas:
+  No nosso caso, queremos analisar código \CXX{} e gerar metadados que representem as declarações feitas
+  nele, como váriaveis, funções e classes. Esse processo passa por três etapas:
   \begin{itemize}
     \item A \textbf{análise léxica}, que consiste em transformar os caracteres do texto lido em símbolos 
-      significativos, chamados de \textit{tokens}, de acordo com uma gramática de expressões regulares. 
-      Para facilitar a implementação dessa etapa no OPWIG, usamos o gerador de analisador léxico
-      \textbf{Flexc++}\cite{flex:00}.
+      significativos de acordo com um conjunto de expressões regulares que eles devem satisfazer.
+      Esses símbolos são chamados de \textit{tokens} ou símbolos terminais, formando a base da
+      análise seguinte.
+      Para facilitar a implementação dessa etapa no OPWIG, usamos o gerador de analisadores léxicos
+      \textbf{Flexc++} \cite{flex:00}.
       
-    \item A \textbf{análise sintática}, que seguindo as regras gramaticais da linguagem sendo lida, 
-      descobre se os \textit{tokens} devolvidos pela análise léxica formam uma expressão válida.
+    \item A \textbf{análise sintática}, que seguindo a gramática da linguagem considerada, 
+      descobre se os símbolos terminais fornecidos pela análise léxica formam uma expressão válida,
+      como uma declaração, uma lista de parâmetros, uma definição de classe, etc.
+      Para implementar essa parte, usamos o gerador de analisadores sintáticos \textbf{Bisonc++}
+      \cite{bison:00}.
       
-      \textit{Parser} significa analisador sintático, mas é comum encontrar estas duas primeiras etapas sendo
-      realizadas juntas por uma ferramenta, e como a análise sintática é o passo mais importante, usualmente
-      tal ferramenta é também chamada de \textit{parser}. Para implementar o analisador sintático,
-      usamos o gerador de \textit{parsers} \textbf{Bisonc++}\cite{bison:00}.
+      O termo \textit{parser} significa analisador sintático, mas é comum encontrar essas duas
+      primeiras etapas sendo realizadas juntas por uma mesma ferramenta. Como a análise sintática
+      é o passo mais importante, usualmente tal ferramenta é simplesmente chamada de \textit{parser}.
       
-    \item A \textbf{análise semântica}, que deve descobrir as implicações da expressão que acabou de ser
-      validada pela análise sintática e tomar uma ação apropriada.
+    \item A \textbf{análise semântica}, que deve descobrir as implicações das expressões
+      validadas pela análise sintática e tomar uma ação apropriada.
   \end{itemize}
   
-  Tanto o Flexc++ quanto o Bisonc++ usam arquivos separados para descrever suas respectivas gramáticas, que
-  nós implementamos seguindo a gramática do \CXX{}. Na gramática do Bisonc++ podemos especificar ações
-  (blocos de código \CXX{}) a serem executadas quando uma expressão é validada. Nós programamos tais ações
-  para criar os metadados que representam as declarações do código \CXX{} analisado, dando ínicio a 
-  análise semântica.
+  Tanto o Flexc++ quanto o Bisonc++ exigem um arquivo separado para descrever as especificações que
+  eles devem seguir. No caso, nós fizemos o arquivo do primeiro seguindo as palavras-chave e outro símbolos
+  terminais da linguagem \CXX{}, e o do segundo seguindo a gramática dela. No arquivo do Bisonc++ podemos
+  especificar ações (blocos de código \CXX{}) a serem executadas quando um tipo expressão da gramática é
+  reconhecida. Nós programamos tais ações para criar metadados que representam as declarações do código
+  \CXX{} analisado, dando ínicio à análise semântica.
   
   \subsection{Metadados de \CXX{}}
-  Os metadados de \CXX{} são um conjunto de classes que representam a estrutura e as declarações de
-  código \CXX{}. No momento, temos:
+  Esses metadados são representados por um conjunto de classes no OPWIG, indicando a estrutura e as
+  declarações de código \CXX{} encontrados na análise anterior. No momento, temos dois principais
+  tipos de metadados:
   \begin{itemize}
     \item Metadados de objetos normais: váriaveis, funções e enumerações.
     \item Metadados de escopos: classes e \textit{namespaces}, que além de seus atributos próprios
-      também contém uma coleção de outros metadados, tantos normais como outros escopos.
+      também contêm outros metadados aninhados, inclusive outros escopos.
   \end{itemize}
   
-  Mas esses metadados por si só não realizam nada, eles simplesmente contém dados. O OPWIG gera 
-  eles usando o \textit{parser}, e consome eles com o gerador de código.
+  Mas esses metadados por si só não realizam nada, eles simplesmente contêm dados. O OPWIG constrói 
+  eles usando o analisador, e consome eles para gerar o código correto dos \textit{wrappers}.
   
-  \subsection{Gerador de código}
-  O gerador de código, junto com a especificação de uma linguagem de \script{} transforma os metadados
-  em um arquivo de código \CXX{} conténdo os \textit{wrappers} para o código que foi analisado. Ele 
-  é razoavelmente simples, criando o arquivo de \textit{wrapper} a partir de um conjunto de blocos
-  ordenados gerados tanto pelo OPWIG em si quanto pela especificação de uma linguagem de \script{}:
+  \subsection{Especificação de \textit{wrappers}}
+  O gerador de código, junto com a especificação de \textit{wrappers} para uma linguagem de \script{},
+  transforma os metadados em um arquivo de código \CXX{} contendo os \textit{wrappers} que possibilitação
+  que o código analisado seja exportado. O que o gerador faz é razoavelmente simples: ele cria o arquivo
+  de \textit{wrappers} seguindo um conjunto de blocos ordenados que são gerados combinando os critérios
+  internos do OPWIG com a especificação para linguagem de \script{} envolvida:
   \begin{enumerate}
-    \item Cabeçalho: definido pela especificação da linguagem de \script{}, esse bloco deve conter
-      definições comuns para o \textit{wrapper}.
-    \item \textit{Includes}: definido pelo gerador de código, esse bloco contém os \textit{includes}
-      dos arquivos de código que foram analisados para criar um módulo.
-    \item Central: definido pela especificação da linguagem de \script{}, esse bloco é similar ao 
-      cabeçalho, mas é posicionado após os \textit{includes}. Assim se necessário o usuário pode
-      escrever código antes ou depois dos \textit{includes}.
-    \item Metadados: definido pela especificação da linguagem de \script{}, esse bloco na verdade é
+    %TODO achar um outro nome para Cabeçalho... acaba ficando confuso com headers...
+    \item \textbf{Cabeçalho}: fornecido pela especificação usada, esse bloco deve conter
+      definições comuns para os \textit{wrappers} no resto do arquivo.
+    \item \textbf{Dependências}: fornecido pelo próprio gerador, esse bloco contém o código
+      que inclui os arquivos de cabeçalho que foram analisados para criar cada módulo.
+    \item \textbf{Central}: fornecido pela especificação usada, esse bloco é similar ao 
+      cabeçalho, mas é posicionado após o código das dpendências. Assim, se necessário,
+      o desenvolvedor pode introduzir código antes ou depois das inclusões de cabeçalhos.
+    %TODO explicar melhor de maneira que não precise de aspas
+    \item \textbf{Metadados}: construído pela especificação usada, esse bloco na verdade é
       um conjunto de outros blocos, relativos aos metadados de \CXX{}. Metadados normais geram um
-      bloco, enquanto metadados de escopo geram vários: um para o ``início'' do escopo, vários
-      para os metadados contidos nele, e outro para o final do escopo. Esses blocos devem definir
-      o código necessário para exportar tal declaração do \CXX{} para a linguagem de \script{}.
-    \item Final: definido pela especificação da linguagem de \script{}, esse bloco deve conter
-      qualquer código necessário para finalizar o \textit{wrapper} para a linguagem de \script{}.
-      Usualmente isso inclui tabelas das funções e classes exportadas e uma função de inicialização
-      do módulo gerado.
-    \item \textit{Bootstrap}: definido pelo gerador de código, esse bloco é responsável por
-      registrar a máquina virtual da linguagem de \script{} ao \SMgr{}, caso ela não tenha sido
-      registrada, e registrar os módulos gerados na máquina virtual.
+      bloco, enquanto que metadados de escopo geram vários: um para o ``início'' do escopo, vários
+      para os metadados contidos nele, e outro para o ``final'' do escopo. Esses blocos devem definir
+      o código necessário para exportar a declaração representada por cada metadado para a máquina
+      virtual.
+    \item \textbf{Final}: construído pela especificação usada, esse bloco deve conter
+      todo o código necessário para finalizar o \textit{wrapper} para a máquina virtual em questão.
+      Normalmente isso inclui tabelas das rotinas e das classes exportadas e a função de inicialização
+      (aquelas vista na seção \ref{cao:conceitos:apis}) do módulo gerado.
+    \item \textbf{\textit{Bootstrap}}: fornecido pelo gerador de código, esse bloco é responsável por
+      registrar a máquina virtual da linguagem de \script{} no gerenciador, caso ela ainda
+      não tenha sido, e exportar para ela os módulos virtuais gerados a partir dos \textit{wrapers}.
   \end{enumerate}
   
 

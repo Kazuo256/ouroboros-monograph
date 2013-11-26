@@ -763,6 +763,21 @@ FUNCTION {mastersthesis}
   fin.entry
 }
 
+FUNCTION {graduationpaper}
+{ output.bibitem
+  format.authors "author" output.check
+  new.block
+  format.title "title" output.check
+  new.block
+  "Trabalho de formatura" format.thesis.type output.nonnull
+  school "school" output.check
+  address output
+  format.date "year" output.check
+  new.block
+  note output
+  fin.entry
+}
+
 FUNCTION {techreport}
 { output.bibitem
   format.authors "author" output.check
