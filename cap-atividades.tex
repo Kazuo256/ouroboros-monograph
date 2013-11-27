@@ -663,13 +663,12 @@
   de \textit{wrappers} seguindo um conjunto de blocos ordenados que são gerados combinando os critérios
   internos do OPWIG com a especificação para linguagem de \script{} envolvida:
   \begin{enumerate}
-    %TODO achar um outro nome para Cabeçalho... acaba ficando confuso com headers...
-    \item \textbf{Cabeçalho}: fornecido pela especificação usada, esse bloco deve conter
+    \item \textbf{Inicial}: fornecido pela especificação usada, esse bloco deve conter
       definições comuns para os \textit{wrappers} no resto do arquivo.
     \item \textbf{Dependências}: fornecido pelo próprio gerador, esse bloco contém o código
       que inclui os arquivos de cabeçalho que foram analisados para criar cada módulo.
-    \item \textbf{Central}: fornecido pela especificação usada, esse bloco é similar ao 
-      cabeçalho, mas é posicionado após o código das dpendências. Assim, se necessário,
+    \item \textbf{Intermediário}: fornecido pela especificação usada, esse bloco é similar ao 
+      inicial, mas é posicionado após o código das dpendências. Assim, se necessário,
       o desenvolvedor pode introduzir código antes ou depois das inclusões de cabeçalhos.
     \item \textbf{Metadados}: construído pela especificação usada, esse bloco na verdade é
       composto por uma sequência de sub-blocos, relativos a cada metadado exportado. Metadados
