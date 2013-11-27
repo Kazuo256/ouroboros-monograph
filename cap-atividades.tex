@@ -703,48 +703,31 @@
     \textit{wrappers} sempre que ocorrer alguma alteração relevante no código
     fonte de sua aplicação. E no lado dos desenvolvedores, sempre que for
     implementada a compatibilidade com uma nova máquina virtual de linguagem de
-    \script{}, eles precisam compilar o executável do gerador também, e o código
-    fonte deste é muito parecido com o das outras máquinas virtuais, pois tudo
-    que ele faz é chamar algumas rotinas da nossa biblioteca. Para facilitar
-    esses dois procedimentos, fizemos algumas funções em CMake que automatizam
-    eles. A única restrição dessa nossa solução é que o usuário teria que usar
-    CMake para gerenciar a compilação da aplicação dele também. Sinceramente, é
-    uma ferramenta muito útil e aceita, além de compatível com diversos ambientes
-    de desenvolvimento, então lhe seria vantajoso usá-la.
+    \script{}, eles precisam compilar o executável do gerador correspondente também,
+    e o código fonte deste é sempre praticamente o mesmo independentemente da máquina
+    virtual usada, pois tudo que ele faz é chamar algumas rotinas da nossa biblioteca
+    principal. Para facilitar esses dois procedimentos, fizemos algumas funções em
+    CMake que automatizam eles. A única restrição dessa nossa solução é que o usuário teria
+    que usar CMake para gerenciar a compilação da aplicação dele também. Sinceramente,
+    é uma ferramenta muito útil e aceita por desenvolvedores, além de compatível com
+    diversos ambientes de desenvolvimento, então lhe seria vantajoso usá-la.
     
     Enfim, para a geração de \textit{wrappers} do usuário, fizemos a função
-    \lang{ouroboros\_wrap\_module()}. Basicamente, ele usa-a para cada módulo
+    \lang{ouroboros\_wrap\_module()}. Basicamente, ele deve usá-la para cada módulo
     da aplicação que ele quiser exportar, especificando o nome do módulo, a
     máquina virtual para qual exportar, o diretório onde os arquivos gerados
-    devem ficar e a lista de cabeçalhos que formam o módulo para o gerador
-    analisar. A função por sua vez fornece ao usuário o nome do arquivo que
+    devem ficar e a lista de cabeçalhos que o gerador precisa analisar para formar
+    o módulo. A função por sua vez fornece ao usuário o nome do arquivo que
     será gerado para que ele o inclua entre os arquivos que farão parte da
-    compilação da aplicação.
+    compilação da sua aplicação.
 
     Para automatizar o processo de fazer o executável do gerador de
     \textit{wrappers} para as máquinas virtuais, fizemos uma função chamada
     \lang{ouroboros\_generate\_opwig()}. Dada a linguagem de \script{} da
     máquina virtual em questão e a classe de especificação de \textit{wrappers}
-    apropriada, essa função gera o código do gerador (sim, nós geramos o
+    apropriada, essa função gera o código do gerador apropriado (sim, nós geramos o
     gerador). Com isso, o desenvolvedor precisa apenas fazer seu trabalho no
-    código fonte da \lang{libouroboros} e deixar para o CMake providenciar o
+    código fonte da \lang{libouroboros} e deixar que o CMake providence o
     gerador.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

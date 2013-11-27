@@ -4,105 +4,121 @@
 Neste capítulo iremos apresentar os resultados obtidos ao longo do
 desenvolvimento do Projeto Ouroboros. Parte desses resultados foram
 obtidos antes do trabalho de formatura, mas ainda assim foram aprimorados
-durante o processo de desenvolvimento do trabalho.
+durante a evolução do trabalho. Esses resultados formam o que
+chamamos de sistema do Projeto Ouroboros, na forma de uma biblioteca \CXX{}
+de nome \lang{libouroboros}. Como vimos no capítulo \ref{cap:estrutura},
+ele é composto por duas grandes partes, uma responsável por incorporar
+\script{s} e outra por exportar funcionalidades nativas para \script{s}.
+São a OPA e o OPWIG, resepectivamente.
 
-Juntos, os resultados formam o que chamamos de sistema do Projeto Ouroboros.
-Separadamente, cada resultado corresponde a uma forma generalizada de implementar
-as interações entre linguagens especificadas na seção \ref{cap:estrutura:geral}.
-A incorporação foi implementada pelo OPA (seção \ref{sec:resultados:libouroboros}),
-e a exportação pelo OPWIG (seção \ref{sec:resultados:opwig})
+Para deixar clara a separação entre eles, os cabeçalho da biblioteca
+dividem a interface dela em dois \textit{namespaces}: \lang{opa} e \lang{opwig}.
+Normalmente, quando o usuário usar nosso sistema, ele limitar-se-á ao uso
+das classes e rotinas do primeiro. Mas o segundo ainda se faz necessário
+para que os geradores de \textit{wrappers} funcionem apropriadamente.
 
+Nossa intenção é que a \lang{libouroboros} seja facilmente compilada em várias plataformas
+usando o CMake para gerar arquivos relativos à compilação, como \textit{Makefile}s
+no Linux. Não chegamos a testar em Mac OS mas por enquando em Windows não é
+possível compilar usando Visual Studio porque ele não reconhece \CXX{11} completamente
+ainda. Em Linux, contanto que os pacotes necessários estejam instalados, a biblioteca
+compila e funciona sem problemas.
 
-\section{Biblioteca \textbf{libouroboros}}
-\label{sec:resultados:libouroboros}
-A libouroboros é uma biblioteca \CXX{} que como o nome já indica, contém
-o sistema ouroboros.
+As implementações que fizemos da OPA e do OPWIG que comportam as linguagens de
+\script{} \lang{Lua} e \lang{Python} também estão funcionais (embora ainda não
+com todas as funcionalidades que gostaríamos), sendo distríbuidas como extensões
+da \lang{libouroboros} na forma outras bibliotecas separaads: \lang{libouroboros-lua}
+e \lang{libouroboros-python}, para \lang{Lua} e \lang{Python}, respectivamente.
+Assim é fácil incluí-las em uma mesma aplicação, basta ligá-la com a
+\lang{libouroboros} e com elas. Caso o usuário não queira usar uma das linguagens,
+é só não ligar com a biblioteca correspondente. Caso ele queira alguma outra
+linguagem, é só ele obter a implementação da \lang{libouroboros} específica dela
+e ligá-la junto.
 
-Ela contém o OPA, com praticamente todas as funcionalidades desejadas 
-implementadas e funcionando normalmente: um sistema para gerenciar as máquinas
-virtuais desejadas, para carregar \script{s} independente de sua
-linguagem, e uma interface simples, genérica e robusta para
-que o usuário de \CXX{} mexa com a máquina virtual e seus \script{s}.
+\section{OPA}
+\label{cap:resultados:opa}
 
-E ela também contém o código do OPWIG (mais sobre ele na próxima seção
-\ref{sec:resultados:opwig}).
-
-É provável que ainda alteremos algumas coisas no sistema, arrumando alguma
-coisa ou implementando novas funcionalidades.
-
-A \lang{libouroboros} também é facilmente compilada em várias plataformas usando
-o CMake para gerar arquivos relativos à compilação, como \textit{Makefile}s
-no Linux. As implementações que fizemos das interfaces abstratas da OPA e do 
-OPWIG para as linguagens de \script{} \lang{Python} e \lang{Lua} também estão totalmente funcionais,
-sendo distríbuidas juntamente com a \lang{libouroboros} e sendo compiladas em
-bibliotecas diferentes: \lang{libouroboros-python} e \lang{libouroboros-lua},
-para \lang{Python} e \lang{Lua}, respectivamente. Assim é fácil incorporá-las em um
-mesmo programa, basta ligar o programa com a \lang{libouroboros} e com elas. 
-Caso o usuário não queira usar uma das linguagens, é só não ligar com 
-as bibliotecas correspondentes. Caso ele queira usar outra linguagem, é
-só ele obter a implementação da \lang{libouroboros} específica dela e ligá-la junto.
-Para fins desse texto, vamos nos referir apenas às implementações para
-\lang{Lua} e \lang{Python}.
+Dentre as duas partes, apenas a OPA está com praticamente todas as
+funcionalidades desejadas implementadas. Como descrito nos capítulos
+anteriores, ela inclui um sistema para gerenciar as máquinas virtuais
+e incorporar \script{s} independente de sua linguagem, tudo com uma
+interface simples, genérica e robusta para que o usuário de \CXX{} possa
+trabalhar sem se preocupar com os pormenores dos serviços fornecidos. É
+provável que ainda alteremos algumas coisas no sistema, arrumando os
+eventuais erros que surgirem ou implementando novas funcionalidades.
 
 \subsection{Instruções de Uso}
-Aqui iremos explicar brevemente o uso da \lang{libouroboros} e do OPA, desde compilar
-(usando \textit{Makefile}) até pegar valores de um \script{}, seguindo um 
-simples exemplo de um programa que carrega um \script{}, pega o valor de uma
-variável dele e do retorno da execução de uma função.
+Aqui iremos explicar brevemente como usar a OPA da \lang{libouroboros}. Como
+essa é a única parte que o usuário irá usar diretamente da biblioteca, também
+explicamos aqui como compilá-la usando CMake e Makefile. Depois mostraremos
+um simples exemplo de um programa que carrega um \script{}, pega o valor de uma
+variável dele e do resultado da execução de uma função.
 
 \subsubsection{Compilação} 
 Como ainda não disponibilizamos nenhum pacote
-com os binários da \lang{libouroboros}, você terá que pegar o código fonte dela
+com os binários da \lang{libouroboros}, você terá que obter o código fonte dela
 e compilá-la manualmente. Para compilar, basta rodar o CMake na pasta 
-raiz do projeto para gerar seus arquivos de compilação. Então basta 
-executar os comandos de make para compilação:
+raiz do projeto que ele gerará os arquivos de compilação necessáios.
+E então, basta executar os comandos de make para compilação:
+
 \begin{verbatim}
   $ cmake .
   $ make libouroboros
   $ make libouroboros-python
   $ make libouroboros-lua
 \end{verbatim}
-Os dois ultimos comandos são para compilar as implementações para cada linguagem,
-e você deve usá-los somente se necessário. Note que apesar de a \lang{libouroboros} não
-ter nenhuma dependência externa, as implementações das linguagens dependem dos
-pacotes de desenvolvimento de suas respectivas linguagens de \script{}.
 
+Os dois ultimos comandos são para compilar as implementações para cada linguagem,
+e você precisa usá-los somente se quiser de fato elas. Note que apesar de a
+\lang{libouroboros} não ter nenhuma dependência externa, as implementações
+das linguagens dependem dos pacotes de desenvolvimento de suas respectivas
+linguagens de \script{}, pois eles contêm a implementação das APIs das máquinas virtuais.
 É também possivel simplesmente executar
+
 \begin{verbatim}
   $ cmake .
   $ make
 \end{verbatim}
+
 Isso irá compilar a \lang{libouroboros}, \lang{libouroboros-python}, \lang{libouroboros-lua} e 
-os OPWIGs correspondentes (mais sobre como usar ele na próxima seção). Caso queira, as
+os geradores correspondentes (mais sobre como usar eles na próxima seção). Caso queira, as
 seguintes opções podem ser passadas para o CMake para alterar seu comportamento:
+
 \begin{itemize}
-  \item \lang{OUROBOROS\_CREATE\_BINDINGS}: se verdade, o CMake irá tentar criar as 
-    implementações de linguagens (padrão é sim).
-  \item \lang{OUROBOROS\_LUA\_BINDINGS}: se verdade, a implementação de \lang{Lua} será 
-    habilitada (padrão é sim).
-  \item \lang{OUROBOROS\_PYTHON\_BINDINGS}: se verdade, a implementação de \lang{Python}
-    será habilitada (padrão é sim).
+  \item \lang{OUROBOROS\_CREATE\_BINDINGS}: quando ativada, o CMake irá tentar criar as 
+    implementações específicas de cada linguagens.
+  \item \lang{OUROBOROS\_LUA\_BINDINGS}: quando ativada, a implementação de \lang{Lua} será 
+    habilitada.
+  \item \lang{OUROBOROS\_PYTHON\_BINDINGS}: quando ativada, a implementação de \lang{Python}
+    será habilitada.
 \end{itemize}
 
-É possível também compilar os testes unitários da \lang{libouroboros}, que
-criamos para testar suas funcionalidades usando o seguinte comando:
+O padrão é todas elas estarem ativadas. É possível também compilar os testes unitários da
+OPA, que criamos para testar suas funcionalidades, usando o seguinte comando:
+
 \begin{verbatim}
-  $ make ouroboros_test
+  $ make opa_test
 \end{verbatim}
+
 E para executá-los:
+
 \begin{verbatim}
-  $ ./test/ouroboros_test
+  $ ./test/opa_test
 \end{verbatim}
-    
-\subsubsection{Ligação} 
-Após compilar a \lang{libouroboros}, compile o seu código fonte e ligue-o estaticamente
-com a \lang{libouroboros}, e com a \lang{libouroboros-lua} e/ou a \lang{libouroboros-python}.
+
+Uma vez compilada a \lang{libouroboros}, lembre-se de incluir os cabeçalhos necessários
+no código de sua aplicação e de ligar as bibliotecas com ela, além de ligar também
+com a \lang{libouroboros-lua} e/ou a \lang{libouroboros-python}.
     
 \subsubsection{Exemplo de Código} 
-Em ordem, esse exemplo inicializa o \SMgr{}, passando em qual pasta
-o \SMgr{} deverá procurar por \script{s}, carrega um \script{},
-pega o valor de uma variável do \script{}, seta o valor de outra variável, 
-executa uma função pegando o valor de retorno, e finaliza o \SMgr{}:
+%TODO seria legal que esse exemplo mostrasse todos os arquivos necessários para ele
+%     funcionar, desde o CMake até os scripts
+
+Nesse exemplo, o programa começa inicializando o gerenciador, especificando a pasta na qual
+ele deverá procurar por \script{s} (linha 9). Depois ele carrega um \script{} (linha 12),
+pega o valor de uma variável de dentro dele (linha 15), muda o valor de outra variável (linha 18),
+e executa uma função que fornece um valor de resultado (linhas 21-22). Por fim, ele finaliza o
+gerenciador (linhas 28-29):
     
 \begin{lstlisting}
 #include <opa/scriptmanager.h>
@@ -121,7 +137,7 @@ int main() {
     //pegando variavel
     double valor_antigo = modulo["VariavelNumerica"].value<double>();
     
-    //setando novo valor de variavel
+    //mudando o valor da variavel
     modulo["VariavelNumerica"].set_value<double>(42.0);
     
     //executando funcao
@@ -139,9 +155,10 @@ int main() {
 }
 \end{lstlisting}
 
-Há uma coisa faltando nesse exemplo. As máquinas virtuais precisam ser registradas antes no \SMgr{}.
-Enquanto os módulos gerados pelo OPWIG fazem isso automaticamente, nesse pequeno exemplo não
-usamos nenhum, então temos que fazer isso manualmente. Basta fazer essas modificações no código acima:
+Esse exemplo omite a inicialização das máquinas virtuais. Elas precisam ser registradas antes
+de o gerenciador ser inicializado. Os \textit{wrappers} gerados pelo OPWIG fazem isso automaticamente,
+mas como nesse pequeno exemplo não usamos nenhum, temos que fazer isso manualmente. Basta fazer essas
+modificações no código acima:
 
 \begin{lstlisting}
 ... [includes anteriores] ...
@@ -172,150 +189,177 @@ int main () {
 }
 \end{lstlisting}
 
-Para esse exemplo funcionar, basta ter um \script{} chamado ``\textit{exemplo}''
-na pasta \textit{/scripts/}, na raiz da onde o programa será executado. A extensão
-do arquivo deverá ser \textit{.lua} ou \textit{.py} para \lang{Lua} ou \lang{Python} respectivamente
-(exemplo.: \textit{./scripts/exemplo.py}). Tal \script{} deverá ter uma váriavel
-com um valor numérico de ponto flutuante chamada ``VariavelNumerica'', e uma função
-chamada ``Funcao'' que não recebe nenhum argumento (no exemplo, o valor de retorno da
-função não importa pois não é usado).
+Os \lang{ifdef}s usarão as configurações que estavam ativadas no CMake para
+determinar quais máquinas virtuais devem ser registradas, e quais cabeçalhos
+precisam ser inclusos para tanto.
 
-Você pode ver a robustez do OPA e de sua generalização das linguagens fazendo o seguinte:
+Para esse exemplo funcionar, basta ter um \script{} chamado \lang{exemplo}
+na pasta \lang{/scripts/}, na raiz da onde o programa será executado. A extensão
+do arquivo deverá ser \lang{.lua} ou \lang{.py} para \lang{Lua} e \lang{Python}
+respectivamente (exemplo: \lang{./scripts/exemplo.py}). Tal \script{} deverá
+ter uma váriavel com um valor numérico de ponto flutuante chamada
+\lang{VariavelNumerica}, e uma função chamada \lang{Funcao} que não recebe
+nenhum argumento (no exemplo, o valor de resultado da função não importa
+pois não é usado).
+
+Você pode ver a robustez da OPA e de sua generalização das linguagens fazendo o seguinte:
 escreva o \script{} em uma linguagem, teste, e então troque o \script{} por um na
-outra linguagem, mantendo as restrições ditas acima (nome exemplo,  com uma variável, etc),
-e teste novamente. O programa irá executar do mesmo modo que antes, mesmo tendo trocado a
-linguagem do \script{} usado, pois a lógica é a mesma e o OPA abstrai as interfaces.
+outra linguagem, mantendo as restrições ditas acima (nome do arquivo, contendo uma
+variável, etc), e teste novamente. O programa irá executar do mesmo modo que antes,
+mesmo tendo trocado a linguagem do \script{} usado, pois a lógica é a mesma e a OPA
+abstrai o uso específico de cada máquina virtual.
 
 
-\section{Gerador de \emph{wrappers} \textbf{OPWIG}}
+\section{OPWIG}
 \label{sec:resultados:opwig}
 
-O OPWIG é uma ferramenta com o propósito de substituir o SWIG.
-Ela ainda não implementa todas funcionalidades que o SWIG tem, e portanto
-ainda não consegue substituir o SWIG completamente, porém já é funcional.
-As suas capacidades atuais de geração de \textit{wrappers} são:
+Essa é a parte com o propósito de substituir o SWIG.
+Ela ainda não implementa todas funcionalidades que ele tem, e portanto
+ainda não consegue substituí-lo, porém já é funcional.
+As estruturas \CXX{} que ela é atualmente capaz de exportar nos \textit{wrappers}
+gerados são:
+
 \begin{itemize}
-  \item \lang{namespaces} são traduzidos em módulos e sub-módulos na máquina
-    virtual, de acordo com a estrutura dos \lang{namespaces}.
-  \item Variáveis globais, possivelmente constantes.
-  \item Funções globais que recebam um número qualquer de argumentos de tipos
-    primitivos ou complexos (classes de usuário) e retorne nada ou um valor desses tipos.
-  \item Classes simples, com:
+  \item \textbf{\textit{Namespaces}}, que são traduzidos em módulos e sub-módulos
+        na máquina virtual, de acordo com a hierarquia que eles apresentam.
+  \item \textbf{Variáveis globais}, possivelmente constantes.
+  \item \textbf{Funções globais}
+  \item \textbf{Classes simples}, com:
     \begin{itemize}
       \item Destrutor.
       \item Construtor trivial (não recebe argumentos).
-      \item Atributos de tipos primitivos, possivelmente constantes.
-      \item Métodos não estáticos que recebam um número qualquer de argumentos
-        de tipos primitivos e retorne nada ou um valor primitivo.
+      \item Atributos, possivelmente constantes.
+      \item Métodos não estáticos.
     \end{itemize}
 \end{itemize}
+
 Os tipos de atributos, váriaveis, paramêtros e valores devolvidos que são reconhecidos
 são tanto os primitivos (naturais da linguagem nativa, como \lang{int} ou \lang{double})
-quanto os complexos (classes do usuário que foram exportadas).
-
-Além disso o código gerado pelo OPWIG também tem um bloco de inicialização
-(\textit{bootstrap}) que registra a máquina virtual correspondente no \SMgr{},
+quanto os complexos (classes do usuário que foram exportadas junto). Além disso o código
+gerado pelo OPWIG também tem, como dissemos no capítulo anterior, um bloco de inicialização
+(\textit{bootstrap}) que registra a máquina virtual correspondente no gerenciador,
 caso ela não tenha sido ainda, e registra nela os módulos e sub-módulos que esse
-arquivo gerado define.
+arquivo gerado visa exportar.
 
-É importante notar também que o código gerado pelo OPWIG depende do OPA, 
-portanto qualquer programa compilado com código gerado pelo OPWIG deve ser
-ligado com a \lang{libouroboros}. Isso é um contraste em relação ao SWIG, o qual gera
+É importante notar também que os código gerado pelo OPWIG depende de algumas funcionalidade
+presentes na OPA, portanto qualquer programa compilado junto com o código gerado por ele deve
+ser ligado com a \lang{libouroboros}. Isso é um contraste em relação ao SWIG, o qual gera
 código sem nenhuma dependência externa. Esse comportamento foi uma decisão de
-projeto que fizemos para simplificar o código gerado pelo OPWIG e sua integração
-com a OPA. Supomos que se um usuário está usando o OPWIG ele provavelmente
-também usará o OPA, já que nosso sistema provê essas duas vias de comunicação
-entre linguagem nativa e linguagens de \script{}, enquanto o SWIG só possibilita
-uma delas (a geração de \textit{wrappers}).
+projeto que fizemos para simplificar o código gerado pelo OPWIG e garantir uma melhor integração
+com a parte de incorporação. Supomos que se um usuário está usando o OPWIG então ele provavelmente
+também usará a OPA, já que o maior diferencial do nosso sistema com relação ao SWIG é que aquele provê
+essas duas vias de comunicação entre linguagem nativa e linguagens de \script{} enquanto que este
+apenas fornece a geração de \textit{wrappers} para exportação.
 
 \subsection{Instruções de Uso}
-Aqui iremos explicar como usar o OPWIG, desde compilação até execução da ferramenta
-e integração do código gerado com seu programa.
+Aqui iremos explicar como usar o OPWIG, desde a compilação dos geradores até a execução
+deles e a inclusão do código gerado em sua aplicação.
 
-Note que enquanto nos referimos ao OPWIG como ``uma'' ferramenta, ele na verdade
-é uma biblioteca. Por simplicidade de código e organização do sistema, 
-todo o código do OPWIG é compilado junto com o OPA na \lang{libouroboros}, enquanto que 
-a implementação do OPWIG para cada linguagem é compilada com a implementação do
-OPA para cada linguagem. Como por exemplo, na \lang{libouroboros-lua}.
+É importante lembrar que o OPWIG na verdade é uma parte da nossa biblioteca. Por
+simplicidade de código e organização do sistema, todo o código do OPWIG é compilado
+junto com a OPA na \lang{libouroboros}. Cada extensão individual para linguagens de \script{}
+(no caso, a \lang{libouroboros-lua} e a \lang{libouroboros-python}) deve
+fornecer a sua especificação de \textit{wrappers} para que o OPWIG saiba como gerá-los.
+Depois, para de fato usá-lo é necessário um outro arquivo de código, compilado
+como um executável separado, que use a especificação desejada quando evocar as rotinas
+do OPWIG. Como mencionamos na seção \ref{cap:atividades:cmake}, esses arquivos de código
+são gerados automaticamente pelo CMake, pois eles seguem o seguinte padrão:
 
-Então para de fato usar o OPWIG é necessário um outro arquivo de código, compilado
-num executável separado, que execute o OPWIG para uma linguagem de \script{} especifica.
-Como mencionamos na seção \ref{cap:atividades:cmake}, esses arquivos de código podem
-ser gerados automaticamente pelo CMake, e seguem o seguinte padrão:
 \begin{lstlisting}
 #include <opwig/opwig.h>
 
-// Inclui o header para a especificacao da linguagem de script em questao
+// Inclui o cabecalho para a especificacao de wrappers da maquina virtual em questao
 #include <...header da especificacao da linguagem...>
 
 int main (int argc, char** argv) {
     // O parametro do template LanguageSpecification nesta chamada de funcao
-    // devera ser a classe da especificacao da linguagem de script.
+    // devera ser a classe que implementa a especificacao wrappers.
     return opwig::gen::Execute< LanguagenSpecification >(argc, argv);
 }
 \end{lstlisting}
-Tais executáveis são as ferramentas de fato, e cada um deverá ser ligado junto com a
-\lang{libouroboros} e a implementação da \lang{libouroboros} para a linguagem de \script{} em questão. 
-Damos o nome de ``opwig-linguagem'' para esses executáveis do OPWIG, como por exemplo
-\textbf{opwig-lua} e \textbf{opwig-python}.
 
-A interface do OPWIG disponibilizada pela \lang{libouroboros} e os módulos de CMake
-que criamos fazem essa terefa de criar executáveis do OPWIG para cada linguagem ser trivial,
-e o CMake do Ouroboros já usa desse dispositivo para definir o \lang{opwig-lua} e 
-\lang{opwig-python}.
+%TODO mostrar o que precisa colocar no cmake para um extensao ter seu gerador gerado
+
+Tais executáveis são os geradors de fato, e cada um deverá ser ligado junto com a
+\lang{libouroboros} e as extensões dela que a linguagem de \script{} em questão exige. 
+Esses geradores são gerados com um nome de prefixo \lang{opwig-} seguido pelo nome da
+linguagem de \script{} para a qual eles exportam. A interface do
+OPWIG disponibilizada pela \lang{libouroboros} e os módulos de CMake que criamos fazem a
+terefa de criar executáveis do OPWIG para cada linguagem ser trivial, e as listas de CMake
+do repositório do projeto já usam essas facilidades para construir o \lang{opwig-lua}
+e o \lang{opwig-python}.
 
 \subsubsection{Compilação}
 Como ainda não disponibilizamos um pacote com as ferramentas prontas, será necessário
-compilar os OPWIGs. Para tal, basta usar o CMake tal como já explicamos anteriormente:
+compilar os geradores. Para tal, basta usar o CMake como acabamos de explicar:
+
 \begin{verbatim}
   $ cmake .
   $ make opwig-lua
   $ make opwig-python
 \end{verbatim}
-E lembrando que o comando \lang{make} (sem parâmetros) compila ambos OPWIG juntamente com
-as \lang{libouroboros}.
+
 
 O \lang{opwig-lua} depende da \lang{libouroboros-lua}, e analogamente o \lang{opwig-python}
-depende da \lang{libouroboros-python}.
+depende da \lang{libouroboros-python}, então eles precisam estar disponíveis no sistema.
+Vale lembrar que também é possível compilar os geradores juntos com a
+\lang{libouroboros} e suas extensões padrões usando:
+
+\begin{verbatim}
+  $ cmake .
+  $ make
+\end{verbatim}
 
 É possível também compilar o extenso conjunto de testes unitários do OPWIG, que
-criamos para testar suas funcionalidades usando o seguinte comando:
+criamos para testar suas funcionalidades, usando o seguinte comando:
+
 \begin{verbatim}
   $ make opwig_test
 \end{verbatim}
+
 E para executá-los:
+
 \begin{verbatim}
   $ ./test/opwig_test
 \end{verbatim}
 
 \subsubsection{Execução}
-Após compilado, executar o programa é simples:
+
+Após compilado, executar um dos geradores é simples:
 \begin{verbatim}
-  $ opwig-python --module-name=NOME ARQUIVO-1 ARQUIVO-2 ... ARQUIVO-N
+  $ opwig-* --module-name=NOME ARQUIVO-1 ARQUIVO-2 ... ARQUIVO-N
 \end{verbatim}
+
 Onde:
 \begin{itemize}
-  \item \textbf{opwig-python} é o OPWIG em questão, troque para qual OPWIG você quer executar 
-    (outro exemplo seria o \lang{opwig-lua}).
+  \item \textbf{opwig-python} é o OPWIG em questão. Você precisa especificar a
+        linguagem para a qual você quer exportar (no caso foi \lang{python}, mas
+        poderia ser \lang{lua} também)
   \item \textbf{NOME}: é o nome do módulo que será gerado.
   \item \textbf{ARQUIVO-i}: são os arquivos de cabeçalho em \CXX{} que contêm a interface
-    que você deseja que seja exportada no módulo.
+        que você deseja que seja exportada no módulo.
 \end{itemize}
 
-Cada ferramenta do OPWIG é especifica para uma linguagem e portanto ao ser executado
+Cada gerador é especificado para uma só linguagem e portanto ao ser executado
 ele obrigatoriamente irá gerar um arquivo de código com o módulo exportado para a
-linguagem de \script{} respectiva. Ele gera o arquivo na mesma pasta de onde ele está 
-sendo executado, seguindo o seguinte padrão de nomenclatura:
+essa linguagem apenas. O arquivo gerado é criado na mesma pasta onde gerador foi
+executado, seguindo o seguinte padrão de nomenclatura:
 \begin{verbatim}
   <nome da linguagem de script>_<nome do módulo>_wrap.cxx
 \end{verbatim}
 
-\subsubsection{Usando os módulos gerados}
-Para usar os módulos gerados, basta compilar eles junto com seu programa, ligado com
-a \lang{libouroboros} e com suas implementações específicas que forem desejadas e
-necessárias.
+Alternativamente, você pode optar por usar CMake para compilar sua aplicação, o que
+lhe permite usar as funcionalidades descritas na seção \ref{cap:atividades:cmake}
+para automatizar todo esse procedimento.
 
-Qualquer \script{} em uma linguagem compatível que seja carregado pelo seu programa
-(usando a OPA) será capaz de incluir o módulo gerado usando o sistema padrão da
-linguagem para inclusão de módulos externos. E o módulo em si deverá ser
-usado como qualquer outro módulo dessa linguagem.
+\subsubsection{Usando os módulos gerados}
+
+Para usar os módulos gerados, basta compilar eles junto com seu programa, ligado com
+a \lang{libouroboros} e com as extensões necessárias. Qualquer \script{} em uma
+linguagem compatível que for incorporado ao seu programa (usando a OPA) será
+capaz de incluir o módulo gerado usando o mecanismo padrão da linguagem para
+inclusão de módulos externos. E o módulo em si deverá ser usado como qualquer
+outro módulo normal dessa linguagem.
+
+% TODO: exemplo, plz?
+
