@@ -675,13 +675,13 @@
     \item \textbf{Central}: fornecido pela especificação usada, esse bloco é similar ao 
       cabeçalho, mas é posicionado após o código das dpendências. Assim, se necessário,
       o desenvolvedor pode introduzir código antes ou depois das inclusões de cabeçalhos.
-    %TODO explicar melhor de maneira que não precise de aspas
     \item \textbf{Metadados}: construído pela especificação usada, esse bloco na verdade é
-      um conjunto de outros blocos, relativos aos metadados de \CXX{}. Metadados normais geram um
-      bloco, enquanto que metadados de escopo geram vários: um para o ``início'' do escopo, vários
-      para os metadados contidos nele, e outro para o ``final'' do escopo. Esses blocos devem definir
-      o código necessário para exportar a declaração representada por cada metadado para a máquina
-      virtual.
+      composto por uma sequência de sub-blocos, relativos a cada metadado exportado. Metadados
+      normais geram um sub-bloco, enquanto que metadados de escopo ainda outra subsequência de
+      blocos: o primeiro para o marcar o começo do escopo, vários para os metadados contidos
+      nele (com possivelmente mais escopos), e um último para o marcar o final do
+      escopo. Esses blocos devem definir o código necessário para exportar a declaração
+      representada por cada metadado.
     \item \textbf{Final}: construído pela especificação usada, esse bloco deve conter
       todo o código necessário para finalizar o \textit{wrapper} para a máquina virtual em questão.
       Normalmente isso inclui tabelas das rotinas e das classes exportadas e a função de inicialização
