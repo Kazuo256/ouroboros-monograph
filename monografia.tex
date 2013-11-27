@@ -179,38 +179,6 @@
 
 \pagenumbering{roman}     % começamos a numerar 
 
-% --------------------------------- %
-% Agradecimentos
-\chapter*{Agradecimentos}
-
-Muitos de nós programadores sofremos de uma curiosidade mórbida em fazer
-programas incrivelmente elaborados e inusitados idenpendentemente da utilidade
-deles só para saber se uma ideia que tivemos realmente funciona. Muitas vezes é
-esse impulso que leva ao desenvolvimento de sistemas importantes, outras ele
-simplesmente leva a boas risadas. Mas uma coisa é certa: essas obsessões são boa
-parte do que nos faz querer aprender mais e mais.
-
-Gostaríamos de agradecer a todos que incentivaram em nós essa curiosidade
-mórbida, tanto professores quanto amigos. Seja por ter-nos mostrado um truque
-de código, ou ensinado alguma técnica secreta de programação, ou ainda
-simplesmente apoiado uma de nossas ideia malucas. Muito do que fizemos nesse
-trabalho vem da nossa vontade de experimentar com combinações divertidas do que
-aprendemos ao longo da nossa vida como estudantes de Ciência da Computação.
-
-% ---------------------------------------------------------------------------- %
-% Resumo
-\chapter*{Resumo}
-
-%TODO: COMPLETAR PARA A VERSAO FINAL
-
-Este trabalho é sobre uma biblioteca \CXX{} que estamos desenvolvendo desde
-2011. O propósito dela é automatizar a integração entre aplicações programadas
-em \CXX{} e \script{s} escritos em \lanG{Lua} ou \lang{Python}. Normalmente,
-o desenvolvedor da aplicação teria que escrever pelo menos algumas dúzias
-de linhas de código para que ela pudesse simplesmente carregar um \script{}
-para incorporar seus dados e rotinas. É justamente esse esforço adicional
-
-
 % ------------------------------------------------------------------ %
 % facilidades                                                        %
 % ------------------------------------------------------------------ %
@@ -242,6 +210,85 @@ para incorporar seus dados e rotinas. É justamente esse esforço adicional
 \newcommand\notacao{
     \textbf{Notação} \hspace{0.2cm}
 }
+
+% --------------------------------- %
+% Agradecimentos
+\chapter*{Agradecimentos}
+
+Muitos de nós programadores sofremos de uma curiosidade mórbida em fazer
+programas incrivelmente elaborados e inusitados idenpendentemente da utilidade
+deles só para saber se uma ideia que tivemos realmente funciona. Muitas vezes é
+esse impulso que leva ao desenvolvimento de sistemas importantes, outras ele
+simplesmente leva a boas risadas. Mas uma coisa é certa: essas obsessões são boa
+parte do que nos faz querer aprender mais e mais.
+
+Gostaríamos de agradecer a todos que incentivaram em nós essa curiosidade
+mórbida, tanto professores quanto amigos. Seja por ter-nos mostrado um truque
+de código, ou ensinado alguma técnica secreta de programação, ou ainda
+simplesmente apoiado uma de nossas ideia malucas. Muito do que fizemos nesse
+trabalho vem da nossa vontade de experimentar com combinações divertidas do que
+aprendemos ao longo da nossa vida como estudantes de Ciência da Computação.
+
+% ---------------------------------------------------------------------------- %
+% Resumo
+\chapter*{Resumo}
+
+%TODO: COMPLETAR PARA A VERSAO FINAL
+
+Este trabalho é sobre uma biblioteca \CXX{} que estamos desenvolvendo desde
+2011. O propósito dela é automatizar a integração entre aplicações programadas
+em \CXX{} e \script{s} escritos em \lang{Lua} ou \lang{Python}. Normalmente,
+o desenvolvedor da aplicação teria que escrever pelo menos algumas dúzias
+de linhas de código para que ela pudesse simplesmente carregar um \script{}
+para incorporar seus dados e rotinas. É justamente esse esforço adicional
+qual queremos poupar ao usuário. Essa monografia fala sobre a pesquisa que
+fizemos por ferramentas que nos ajudassem, sobre o processo de desenvolvimento
+e sobre o produto final do nosso trabalho. Começamos pela parte objetiva,
+composta por quatro capítulos, e depois tratamos a parte subjetiva, dividida
+em três capítulos.
+
+No primeiro capítulo (\ref{cap:intr} - Introdução), introduzimos a noção de
+\script{ing} e a utilidade que ela tem em aplicações de computador. Usamos um
+exemplo para ilustrar um caso de uso, e discutimos brevemente as possibilidades
+atualmente existentes para integrar \script{s}. Depois, contamos sobre a
+motivação que nos levou a elaborar esse projeto, assim como o que diferencia
+ele das outras soluções presentes na comunidade Web. Terminamos listando os
+objetivos principais do trabalho com relação à biblioteca que desenvolvemos.
+
+Em seguida, partimos para uma discussão mais conceitual ao longo do próximo
+capítulo (\ref{cap:conceitos} - Conceitos e tecnologias estudadas).
+Procuramos entender o que caracteriza as linguagens de programação que estamos
+tentando integrar: \CXX{}, \lang{Lua} e \lang{Python}. Para isso, exploramos
+as noções de linguagens compiladas contra linguagens interpretadas, e como
+o conceito de máquinas virtuais ajuda a entender melhor a relação entre elas.
+Ao final, elaboramos com mais profundidade as ferramentas que \lang{Lua} e
+\lang{Python} nos oferecem, para que fique mais fácil de entender o que
+falamos demais capítulos do trabalho.
+
+Tratamos, no terceiro capítulo (\ref{cap:atividades} - Atividades) sobre a
+evolução do nosso sistema, desde sua origem a dois anos atrás até as decisões
+que tomamos ao longo desse último ano tendo em vista o trabalho de formatura.
+Contamos sobre como nossa participação no USPGameDev levou à ideia inicial
+do projeto, assim como o que mudou quando o disvinculamos do grupo. Em seguida,
+entramos em alguns detalhes da implementação do nosso sistema, que mostramos
+estar dividido em duas grandes partes principais. Também desabafamos sobre
+o SWIG, uma ferramente que nos ajudou inicialmente mas tornou-se uma
+enorme dor de cabeça posteriormente. Terminamos falando sobre algumas utilidades
+que fizemos em CMake para facilitar o uso da nossa biblioteca.
+
+No último capítulo da parte objetiva (\ref{cap:resultados} - Resultados)
+apresentamos o estado em que o projeto se encontra atualmente. Mostramos e
+exemplificamos as funcionalidades, com alguns exemplos para facilitar.
+Aproveitamos para deixar algumas instruções de uso, incluindo configuração e
+compilação das partes relevantes do sistema.
+
+A parte subjetiva começa com um capítulo para cada autor (\ref{cap:omar} - Fernando
+Omar Aluani, e \ref{cap:wil} - Wilson Kazuo Mizutani), contando sobre nossas
+dificuldades e frustrações no trabalho. Também apresentamos uma relação de
+disciplinas que cursamos ao longo da nossa graduação que acreditamos ter nos
+ajudado de uma maneira ou de outra. Encerramos a parte subjetiva da monografia
+com um breve capítulo (\ref{cap:proximos_passos} - Próximos passos) listando
+as nossas metas futuras para nosso projeto.
 
 % ---------------------------------------------------------------------------- %
 % Sumário
