@@ -369,4 +369,51 @@ capaz de incluir o módulo gerado usando o mecanismo padrão da linguagem para
 inclusão de módulos externos. E o módulo em si deverá ser usado como qualquer
 outro módulo normal dessa linguagem.
 
-% TODO: exemplo, plz?
+Por exemplo, suponha a seguinte interface em \CXX{}:
+\begin{lstlisting}
+// coisas.h
+
+const char* prefixo = "Supimpa";
+
+namespace funcoes {
+    void FazAlgumaCoisa(int n);
+}
+
+namespace objetos {
+
+    class Coisa {
+      public:
+        Coisa();
+        ~Coisa();
+        
+        Coisa* PegaCoisa( const char* nome );
+        void ColocaCoisa(Coisa* coisa);
+        
+        double fator;
+    };
+}
+\end{lstlisting}
+
+Sendo exportada como um módulo de nome ``coisas'', essa interface pode ser usada em \lang{Python}
+da seguinte forma:
+
+\begin{lstlisting}[language=python]
+import coisas
+
+c = coisas.objetos.Coisa()
+c2 = c.PegaCoisa( coisas.prefixo + "Batuta" )
+c.ColocaCoisa( coisas.objetos.Coisa() )
+
+coisas.funcoes.FazAlgumaCoisa( 42 * c.fator )
+\end{lstlisting}
+
+Ou em \lang{Lua} assim:
+\begin{lstlisting}[language=lua]
+require "coisas"
+
+c = coisas.objetos.Coisa()
+c2 = c:PegaCoisa( coisas.prefixo .. "Batuta" )
+c:ColocaCoisa( coisas.objetos.Coisa() )
+
+coisas.funcoes.FazAlgumaCoisa( 42 * c.fator )
+\end{lstlisting}
