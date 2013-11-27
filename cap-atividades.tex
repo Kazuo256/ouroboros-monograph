@@ -196,10 +196,6 @@
   as que são realmente usadas diretamente pelo usuário, e elas encapsulam de um ou
   de outra maneira os mecanismos das duas últimas.
   
-  % TODO: Aqui começa se referindo à (classe) VirtualOBj no femenino. Mais
-  %       adiante, refere-se ao (objeto) VirtualObj no masculino. Precisamos
-  %       bolar um jeito de deixar isso mais consistente e menos discordante.
-  %       (discordância de gênero é um erro de português)
   \subsection{\VObj{}}
   \label{sec:atividades:opa:vobj}
   Essa classe representa um objeto virtual qualquer, como explicado na seção
@@ -260,16 +256,16 @@
     criar funções e classes genéricas, recebendo um ou mais tipos em uma notação especial,
     que a função ou classe usa de forma genérica em seu corpo.
     \textit{Templates} também podem receber valores aritméticos e \str{s},
-    mas na interface do \VObj{}, e na maioria do nosso trabalho, somente usamos com tipos.
+    mas na interface de \VObj{}, e na maioria do nosso trabalho, somente usamos com tipos.
     Mais informações em:
     \url{http://www.cplusplus.com/doc/tutorial/templates/} (último acesso: 26/11/2013)
 
   }
   
   Na prática, \VObj{} é uma classe que encapsula instâncias da classe \VData{}. Todas essas
-  operações do \VObj{} são repassadas para a instância \VData{} usando um padrão de projeto chamado
+  operações são repassadas para a instância \VData{} usando um padrão de projeto chamado
   \textbf{ponteiro para implementação}\footnotemark{}. A classe \VData{}, que representa um objeto numa máquina
-  virtual específica, não deve ser usada diretamente pelo usuário. Para isso existe o
+  virtual específica, não deve ser usada diretamente pelo usuário. Para isso existe a classe
   \VObj{}. Mais sobre o \VData{} pode ser visto na subseção \ref{sec:atividades:opa:vdata}
   
   \footnotetext{
@@ -685,7 +681,7 @@
     \item \textbf{Final}: construído pela especificação usada, esse bloco deve conter
       todo o código necessário para finalizar o \textit{wrapper} para a máquina virtual em questão.
       Normalmente isso inclui tabelas das rotinas e das classes exportadas e a função de inicialização
-      (aquelas vista na seção \ref{cao:conceitos:apis}) do módulo gerado.
+      (aquelas vista na seção \ref{cap:conceitos:apis}) do módulo gerado.
     \item \textbf{\textit{Bootstrap}}: fornecido pelo gerador de código, esse bloco é responsável por
       registrar a máquina virtual da linguagem de \script{} no gerenciador, caso ela ainda
       não tenha sido, e exportar para ela os módulos virtuais gerados a partir dos \textit{wrapers}.
