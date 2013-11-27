@@ -27,7 +27,7 @@ compila e funciona sem problemas.
 As implementações que fizemos da OPA e do OPWIG que comportam as linguagens de
 \script{} \lang{Lua} e \lang{Python} também estão funcionais (embora ainda não
 com todas as funcionalidades que gostaríamos), sendo distríbuidas como extensões
-da \lang{libouroboros} na forma outras bibliotecas separaads: \lang{libouroboros-lua}
+da \lang{libouroboros} na forma outras bibliotecas separadas: \lang{libouroboros-lua}
 e \lang{libouroboros-python}, para \lang{Lua} e \lang{Python}, respectivamente.
 Assim é fácil incluí-las em uma mesma aplicação, basta ligá-la com a
 \lang{libouroboros} e com elas. Caso o usuário não queira usar uma das linguagens,
@@ -111,12 +111,9 @@ no código de sua aplicação e de ligar as bibliotecas com ela, além de ligar 
 com a \lang{libouroboros-lua} e/ou a \lang{libouroboros-python}.
     
 \subsubsection{Exemplo de Código} 
-%TODO seria legal que esse exemplo mostrasse todos os arquivos necessários para ele
-%     funcionar, desde o CMake até os scripts
-
 Nesse exemplo, o programa começa inicializando o gerenciador, especificando a pasta na qual
 ele deverá procurar por \script{s} (linha 9). Depois ele carrega um \script{} (linha 12),
-pega o valor de uma variável de dentro dele (linha 15), muda o valor de outra variável (linha 18),
+pega o valor de uma variável de dentro dele (linha 15), muda o valor dessa variável (linha 18),
 e executa uma função que fornece um valor de resultado (linhas 21-22). Por fim, ele finaliza o
 gerenciador (linhas 28-29):
     
@@ -135,13 +132,13 @@ int main() {
     VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("exemplo");
     
     //pegando variavel
-    double valor_antigo = modulo["VariavelNumerica"].value<double>();
+    double valor_antigo = modulo["number"].value<double>();
     
     //mudando o valor da variavel
-    modulo["VariavelNumerica"].set_value<double>(42.0);
+    modulo["number"].set_value<double>(42.0);
     
     //executando funcao
-    VirtualObj funcao = modulo["Funcao"];
+    VirtualObj funcao = modulo["DoStuff"];
     VirtualObj retorno = funcao(); 
     // argumentos para a funcao sao passados como VirtualObjs, 
     // e podem ser passados quaisquer quantidade de objetos,
@@ -193,22 +190,33 @@ Os \lang{ifdef}s usarão as configurações que estavam ativadas no CMake para
 determinar quais máquinas virtuais devem ser registradas, e quais cabeçalhos
 precisam ser inclusos para tanto.
 
-Para esse exemplo funcionar, basta ter um \script{} chamado \lang{exemplo}
-na pasta \lang{/scripts/}, na raiz da onde o programa será executado. A extensão
-do arquivo deverá ser \lang{.lua} ou \lang{.py} para \lang{Lua} e \lang{Python}
-respectivamente (exemplo: \lang{./scripts/exemplo.py}). Tal \script{} deverá
-ter uma váriavel com um valor numérico de ponto flutuante chamada
-\lang{VariavelNumerica}, e uma função chamada \lang{Funcao} que não recebe
-nenhum argumento (no exemplo, o valor de resultado da função não importa
-pois não é usado).
+Finalmente, para esse exemplo funcionar é necessário um \script{} como o seguinte,
+em \lang{Python}:
 
-Você pode ver a robustez da OPA e de sua generalização das linguagens fazendo o seguinte:
-escreva o \script{} em uma linguagem, teste, e então troque o \script{} por um na
-outra linguagem, mantendo as restrições ditas acima (nome do arquivo, contendo uma
-variável, etc), e teste novamente. O programa irá executar do mesmo modo que antes,
-mesmo tendo trocado a linguagem do \script{} usado, pois a lógica é a mesma e a OPA
-abstrai o uso específico de cada máquina virtual.
+\begin{lstlisting}[language=python]
+#exemplo.py
 
+number = 1138.0
+
+def DoStuff():
+    return "coisas foram realizadas"
+\end{lstlisting}
+
+ou esse, em \lang{Lua}:
+
+\begin{lstlisting}[language=lua]
+--exemplo.lua
+
+number = 1138.0
+
+function DoStuff()
+    return "coisas foram realizadas"
+end
+\end{lstlisting}
+
+E é ai que você pode ver a robustez da OPA e de sua generalização das linguagens.
+Nesse exemplo você pode usar tanto o \script{} em \lang{Lua} como o \script{} em
+\lang{Python} e o código \CXX{} não será alterado e irá funcionar do mesmo jeito.
 
 \section{OPWIG}
 \label{sec:resultados:opwig}
@@ -332,9 +340,9 @@ Após compilado, executar um dos geradores é simples:
 
 Onde:
 \begin{itemize}
-  \item \textbf{opwig-python} é o OPWIG em questão. Você precisa especificar a
-        linguagem para a qual você quer exportar (no caso foi \lang{python}, mas
-        poderia ser \lang{lua} também)
+  \item \textbf{opwig-*} é o OPWIG em questão. Você precisa especificar a
+        linguagem para a qual você quer exportar (por exemplo, \lang{opwig-python}
+        para o gerador de \textit{wrappers} para \lang{Python}).
   \item \textbf{NOME}: é o nome do módulo que será gerado.
   \item \textbf{ARQUIVO-i}: são os arquivos de cabeçalho em \CXX{} que contêm a interface
         que você deseja que seja exportada no módulo.
@@ -362,4 +370,3 @@ inclusão de módulos externos. E o módulo em si deverá ser usado como qualque
 outro módulo normal dessa linguagem.
 
 % TODO: exemplo, plz?
-
