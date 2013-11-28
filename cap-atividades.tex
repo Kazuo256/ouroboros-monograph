@@ -110,21 +110,29 @@
   necessitávamos segundo nossa pesquisa (o que essa ferramenta faz e como
   usamos ela será melhor explicado mais adiante, na seção \ref{sec:actividads:integracaoswig}).
   
-  Como os projetos do USPGameDev usavam CMake\footnote{Sistema de compilação multi-plataforma
-  e \textit{open-source}. Disponível em: \url{http://www.cmake.org} (último acesso: 22/11/2013)}
-  para simplificar sua compilação em diversas plataformas e compiladores, nós também usamos essa ferramenta.
-  Nosso ambiente de trabalho usual era Linux (Debian\footnote{Uma distribuição de Linux. Disponível em:
-  \url{http://www.debian.org} (último acesso: 22/11/2013)} ou Ubuntu\footnote{Outra distribuição de Linux. 
-  Disponível em: \url{http://www.ubuntu.com} (último acesso: 22/11/2013)}) usando \lang{g++}\footnote{
-  Compilador para C++ do projeto GNU. Disponível em: \url{http://gnu.gcc.org} (último acesso: 22/11/2013)}
-  como compilador, ou Windows com o Visual Studio\footnote{Ambiente de desenvolvimento para
-  \CXX{} e algumas outras linguagens feito pela Microsoft para Windows, contendo \textit{IDE}, 
-  compilador e outras ferramentas. Mais informações: \url{http://www.visualstudio.com/}. 
-  (último acesso: 22/11/2013)} 2010. Para controle de versão do código fonte compartilhávamos o repositório 
-  da UGDK, que usava Git\footnote{Ferramenta de controle de versão livre e \textit{open-source}.
-  Disponível em: \url{http://git-scm.com/} (último acesso em: 22/11/2013)}, hospedado no GitHub\footnote{
-  Serviço de hospedagem de repositórios Git. Acessível em: \url{https://github.com/} 
-  (último acesso: 22/11/2013)}.
+  Como os projetos do USPGameDev usavam CMake\footnote{\textit{Software} livre para compilação
+  multi-plataforma. Disponível em: \url{http://www.cmake.org}
+  (último acesso: 22/11/2013)} para simplificar sua compilação em diversas plataformas e
+  compiladores, nós também usamos essa ferramenta. Apesar do nosso sistema fazer parte
+  da UGDK, o usuário da \textit{engine} podia configurar ela para ser compilada com
+  essa parte dela desativada (caso ele não precise integrar com \script{s}, por exemplo).
+  Isso era feito através da manipulação de variáveis de configuração no projeto em
+  CMake da UGDK.
+  
+  A equipe do USPGameDev contém membros que aderem a diferentes sistemas operacionais e
+  ambientes de desenvolvimento. O mais usual era trabalhar em um Linux (com as distribuições
+  Debian\footnote{Disponível em: \url{http://www.debian.org} (último acesso: 22/11/2013)}
+  ou Ubuntu\footnote{Disponível em: \url{http://www.ubuntu.com} (último acesso: 22/11/2013)}) -
+  nas quais usávamos \lang{g++}\footnote{Compilador para \CXX{} do projeto GNU.
+  Disponível em: \url{http://gcc.gnu.org} (último acesso: 28/11/2013)} como compilador - ou
+  em um Windows - e adotando o Visual Studio\footnote{Ambiente de desenvolvimento para \CXX{} e algumas
+  outras linguagens feito pela Microsoft para Windows, contendo \textit{IDE}, compilador e
+  outras ferramentas. Mais informações: \url{http://www.visualstudio.com/}. (último acesso:
+  22/11/2013)} 2010 para desenvolver em \CXX{}. Para controle de versão do código fonte compartilhávamos
+  o repositório da UGDK, que usava Git\footnote{\textit{Software} Livre para versionamento cooperativo
+  de código fonte. Disponível em: \url{http://git-scm.com/} (último acesso em: 22/11/2013)},
+  hospedado no GitHub\footnote{Serviço de hospedagem de repositórios Git. Acessível em:
+  \url{https://github.com/} (último acesso: 22/11/2013)}.
 
   A metodologia adotada pelo USPGameDev é uma variação própria de métodos
   ágeis. O trabalho de formatura de Vinicius K. Daros \cite{scrum:00} trata com bastante
