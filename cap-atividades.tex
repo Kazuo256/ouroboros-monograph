@@ -93,54 +93,105 @@
   Quando começamos a desenvolver o nosso ``sistema de \script{s}'',
   como ele era integrado à UGDK e fazia parte do USPGameDev, muitas das
   nossas decisões do projeto refletiam os padrões de projeto que seguíamos
-  no grupo. Escolhemos \CXX{} como a linguagem de programação a ser usada
-  para desenvolver o sistema pois essa era a linguagem que a UGDK e os nossos
-  jogos usavam, e além disso é comum linguagens de \script{} terem uma
-  implementação de sua máquina virtual em \C{}, ou até \CXX{}. Além disso, como \CXX{}
-  contém em si todas as funcionalidades de \C{}, não temos perda técnica nenhuma
-  em usar o primeiro ao invés do segundo.
-  % Será que não já falamos disso antes?
-  
-  Também decidimos inicialmente que o sistema seria generalizado para poder
-  funcionar com possivelmente qualquer linguagem de \script{}, sendo que
-  inicialmente iríamos incluir compatibilidade com \lang{Lua} (a qual o Wilson conhece
-  bem) e \lang{Python} (usada regularmente pelo Fernando). Para prover a geração de 
-  \textit{wrappers}, escolhemos o \emph{Simplified Wrapper and Interface Generator} 
-  (SWIG \cite{swig:00}), que foi a melhor opção para o que 
-  necessitávamos segundo nossa pesquisa (o que essa ferramenta faz e como
-  usamos ela será melhor explicado mais adiante, na seção \ref{sec:actividads:integracaoswig}).
-  
-  Como os projetos do USPGameDev usavam CMake\footnote{\textit{Software} livre para compilação
-  multi-plataforma. Disponível em: \url{http://www.cmake.org}
-  (último acesso: 22/11/2013)} para simplificar sua compilação em diversas plataformas e
-  compiladores, nós também usamos essa ferramenta. Apesar do nosso sistema fazer parte
-  da UGDK, o usuário da \textit{engine} podia configurar ela para ser compilada com
-  essa parte dela desativada (caso ele não precise integrar com \script{s}, por exemplo).
-  Isso era feito através da manipulação de variáveis de configuração no projeto em
-  CMake da UGDK.
-  
-  A equipe do USPGameDev contém membros que aderem a diferentes sistemas operacionais e
-  ambientes de desenvolvimento. O mais usual era trabalhar em um Linux (com as distribuições
-  Debian\footnote{Disponível em: \url{http://www.debian.org} (último acesso: 22/11/2013)}
-  ou Ubuntu\footnote{Disponível em: \url{http://www.ubuntu.com} (último acesso: 22/11/2013)}) -
-  nas quais usávamos \lang{g++}\footnote{Compilador para \CXX{} do projeto GNU.
-  Disponível em: \url{http://gcc.gnu.org} (último acesso: 28/11/2013)} como compilador - ou
-  em um Windows - e adotando o Visual Studio\footnote{Ambiente de desenvolvimento para \CXX{} e algumas
-  outras linguagens feito pela Microsoft para Windows, contendo \textit{IDE}, compilador e
-  outras ferramentas. Mais informações: \url{http://www.visualstudio.com/}. (último acesso:
-  22/11/2013)} 2010 para desenvolver em \CXX{}. Para controle de versão do código fonte compartilhávamos
-  o repositório da UGDK, que usava Git\footnote{\textit{Software} Livre para versionamento cooperativo
-  de código fonte. Disponível em: \url{http://git-scm.com/} (último acesso em: 22/11/2013)},
-  hospedado no GitHub\footnote{Serviço de hospedagem de repositórios Git. Acessível em:
-  \url{https://github.com/} (último acesso: 22/11/2013)}.
+  no grupo. Segue uma relação das decisões tomadas sobre ferramentas e
+  metodologias usadas. Quando necessário, daremos um resumo sobre as
+  ferramentas apresentadas.
 
-  A metodologia adotada pelo USPGameDev é uma variação própria de métodos
-  ágeis. O trabalho de formatura de Vinicius K. Daros \cite{scrum:00} trata com bastante
-  detalhes desse assunto. No que diz respeito a nosso projeto, o importante é
-  notar que as metas que seguíamos nas iterações de trabalho estavam mescladas
-  com as metas do jogo \textit{Horus Eye} e da \textit{engine} UGDK, de forma
-  que a maior parte do que desenvolvíamos era voltado para ser usados nesses
-  outros programas.
+  % 1) Linguagens usadas
+  % 2) Compilador
+  % 3) Compatibilidade
+  % 4) Distribuição e versionamento
+  % 5) Geração de wrappers
+
+  \begin{enumerate}
+
+    \item \textbf{Linguagens usadas}: \CXX{} para a biblioteca, \lang{Lua} e
+      \lang{Python} para integração.
+      \begin{itemize}
+        \item[Motivo -]
+          \CXX{} era a linguagem que a UGDK e os nossos
+          jogos usavam. Além disso é comum linguagens de \script{} terem uma
+          implementação de sua máquina virtual em \C{}, ou até \CXX{}. Ainda
+          mais, como \CXX{} contém em si todas as funcionalidades de \C{},
+          não temos perda técnica nenhuma em usar o primeiro ao invés do segundo.
+          % Será que não já falamos disso antes?
+          Também decidimos que o sistema seria generalizado para poder
+          funcionar com possivelmente qualquer linguagem de \script{}, mas
+          inicialmente iríamos incluir apenas compatibilidade com \lang{Lua}
+          (a qual o Wilson conhece bem) e \lang{Python} (usada regularmente
+          pelo Fernando).
+      \end{itemize}
+
+    \item \textbf{Compiladores}: \lang{g++}\footnote{Disponível em:
+      \url{http://gcc.gnu.org} (último acesso: 28/11/2013)} em Linux e Visual
+      Studio\footnote{Mais informações: \url{http://www.visualstudio.com} (último
+      acesso: 22/11/2013)} 2010 em Windows.
+      \begin{itemize}
+        \item[Sobre -]
+          O \lang{g++} é o compilador para \CXX{} do projeto GNU, e o Visual Studio
+          é um ambiente de desenvolvimento para \CXX{} e algumas outras linguagens
+          feito pela Microsoft para Windows, contendo uma IDE\footnote{\textit{Integrated
+          Development Environment}, do inglês ``Ambiente de Desenvolvimento Integrado''},
+          compilador e outras ferramentas.
+        \item[Motivo -]
+          No USPGameDev cada membro é livre para usar o compilador que achar melhor,
+          e os projetos evitam usar funcionalidades específicas que dificultem
+          essa portabilidade.
+      \end{itemize}
+
+    \item \textbf{Compatibilidade}: multi-plataforma com CMake\footnote{Disponível
+      em: \url{http://www.cmake.org} (último acesso: 22/11/2013)}.
+      \begin{itemize}
+        \item[Sobre -] \textit{Software} livre para gerenciar a compilação, os testes
+          e a entrega de aplicações multi-plataforma.
+        \item[Motivo -] Para simplificar a compilação em diversas plataformas e
+          compiladores. Além disso, apesar do nosso sistema fazer parte
+          da UGDK, o usuário da \textit{engine} podia configurar ela para ser
+          compilada com essa parte dela desativada (caso ele não precise integrar
+          com \script{s}, por exemplo). Isso era feito através da manipulação de
+          variáveis de configuração na descrição de projeto em CMake da UGDK.
+      \end{itemize}
+
+    \item \textbf{Distribuição e versionamento}: Usando um repositório
+      Git\footnote{Disponível em: \url{http://git-scm.com/} (último acesso em: 22/11/2013)}
+      hospedado no GitHub\footnote{ Acessível em: \url{https://github.com/} (último
+      acesso: 22/11/2013)}.
+      \begin{itemize}
+        \item[Sobre -] Git é um \textit{Software} Livre para versionamento cooperativo
+          de código fonte. É possível configurar seu próprio servidor ou um pronto. No
+          caso, o GitHub fornece esse serviço de hospedagem de repositórios Git.
+        \item[Motivo -] O grupo gosta de deixar as ferramentas que desenvolve à
+          disposição da comunidade, para quem quiser aprender com elas. Como nosso
+          sistema fazia parte do código da UGDK, ele compartilhava o repositório dela.
+      \end{itemize}
+
+    \item \textbf{Geração de Wrappers}: SWIG \cite{swig:00}.
+      \begin{itemize}
+        \item[Sobre -] Por extenso, seu nome é \emph{Simplified Wrapper and
+          Interface Generator}, e ele essencialmente exporta código nativo
+          para diversas outras linguagens além das que usamos. Iremos explicar
+          bastante sobre como ele é usado algumas seções a frente.
+        \item[Motivo -] Foi a melhor opção para o que necessitávamos segundo
+          nossa pesquisa, era uma ferramenta pronta para proporcionar a
+          geração de \textit{wrappers} que sabíamos que seria difícil de
+          desenvolver nós mesmo a tempo de atender a demanda para o sistema
+          no USPGameDev.
+      \end{itemize}
+
+    \item \textbf{Metodologia}: uma variação própria de métodos ágeis.
+      \begin{itemize}
+        \item[Sobre -] O trabalho de formatura de Vinicius K. Daros
+          \cite{scrum:00} trata com bastante detalhes sobre esse assunto.
+        \item[Motivo -] As metas que seguíamos nas iterações de trabalho
+          estavam mescladas com as metas do jogo \textit{Horus Eye} e da
+          \textit{engine} UGDK, de forma que a maior parte do que
+          desenvolvíamos era voltado para ser usados nesses outros
+          programas. Logo, trabalhávamos em conjunto com o resto do
+          grupo usando a mesma metodologia.
+
+      \end{itemize}
+
+  \end{enumerate}
 
   \subsection{Mudanças no Projeto para o Trabalho de Formatura}
   Quando começamos o trabalho de formatura, fizemos algumas mudanças nas nossas
