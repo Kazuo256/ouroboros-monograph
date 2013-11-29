@@ -116,7 +116,7 @@ ele deverá procurar por \script{s} (linha 9). Depois ele carrega um \script{} (
 pega o valor de uma variável de dentro dele (linha 15), muda o valor dessa variável (linha 18),
 e executa uma função que fornece um valor de resultado (linhas 21-22). Por fim, ele finaliza o
 gerenciador (linhas 28-29):
-    
+\vspace{1em}
 \begin{lstlisting}
 #include <opa/scriptmanager.h>
 #include <opa/virtualobj.h>
@@ -151,12 +151,14 @@ int main() {
     return 0;
 }
 \end{lstlisting}
+\vspace{1em}
 
 Esse exemplo omite a inicialização das máquinas virtuais. Elas precisam ser registradas antes
 de o gerenciador ser inicializado. Os \textit{wrappers} gerados pelo OPWIG fazem isso automaticamente,
 mas como nesse pequeno exemplo não usamos nenhum, temos que fazer isso manualmente. Basta fazer essas
 modificações no código acima:
 
+\vspace{1em}
 \begin{lstlisting}
 ... [includes anteriores] ...
 #include <opa/config.h>
@@ -185,6 +187,7 @@ int main () {
     ...
 }
 \end{lstlisting}
+\vspace{1em}
 
 Os \lang{ifdef}s usarão as configurações que estavam ativadas no CMake para
 determinar quais máquinas virtuais devem ser registradas, e quais cabeçalhos
@@ -193,6 +196,7 @@ precisam ser inclusos para tanto.
 Finalmente, para esse exemplo funcionar é necessário um \script{} como o seguinte,
 em \lang{Python}:
 
+\vspace{1em}
 \begin{lstlisting}[language=python]
 #exemplo.py
 
@@ -201,9 +205,11 @@ number = 1138.0
 def DoStuff():
     return "coisas foram realizadas"
 \end{lstlisting}
+\vspace{1em}
 
 ou esse, em \lang{Lua}:
 
+\vspace{1em}
 \begin{lstlisting}[language=lua]
 --exemplo.lua
 
@@ -213,6 +219,7 @@ function DoStuff()
     return "coisas foram realizadas"
 end
 \end{lstlisting}
+\vspace{1em}
 
 E é ai que você pode ver a robustez da OPA e de sua generalização das linguagens.
 Nesse exemplo você pode usar tanto o \script{} em \lang{Lua} como o \script{} em
@@ -273,6 +280,7 @@ como um executável separado, que use a especificação desejada quando evocar a
 do OPWIG. Como mencionamos na seção \ref{cap:atividades:cmake}, esses arquivos de código
 são gerados automaticamente pelo CMake, pois eles seguem o seguinte padrão:
 
+\vspace{1em}
 \begin{lstlisting}
 #include <opwig/opwig.h>
 
@@ -285,6 +293,7 @@ int main (int argc, char** argv) {
     return opwig::gen::Execute< LanguagenSpecification >(argc, argv);
 }
 \end{lstlisting}
+\vspace{1em}
 
 %TODO mostrar o que precisa colocar no cmake para um extensao ter seu gerador gerado
 
@@ -370,6 +379,8 @@ inclusão de módulos externos. E o módulo em si deverá ser usado como qualque
 outro módulo normal dessa linguagem.
 
 Por exemplo, suponha a seguinte interface em \CXX{}:
+
+\vspace{1em}
 \begin{lstlisting}
 // coisas.h
 
@@ -393,10 +404,12 @@ namespace objetos {
     };
 }
 \end{lstlisting}
+\vspace{1em}
 
 Sendo exportada como um módulo de nome ``coisas'', essa interface pode ser usada em \lang{Python}
 da seguinte forma:
 
+\vspace{1em}
 \begin{lstlisting}[language=python]
 import coisas
 
@@ -406,8 +419,11 @@ c.ColocaCoisa( coisas.objetos.Coisa() )
 
 coisas.funcoes.FazAlgumaCoisa( 42 * c.fator )
 \end{lstlisting}
+\vspace{1em}
 
 Ou em \lang{Lua} assim:
+
+\vspace{1em}
 \begin{lstlisting}[language=lua]
 require "coisas"
 
@@ -417,3 +433,4 @@ c:ColocaCoisa( coisas.objetos.Coisa() )
 
 coisas.funcoes.FazAlgumaCoisa( 42 * c.fator )
 \end{lstlisting}
+\vspace{1em}

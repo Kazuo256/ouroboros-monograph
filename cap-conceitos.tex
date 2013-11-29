@@ -579,11 +579,13 @@
     entre ambos. Ao importar um \script{} \lang{Python}, ele será executado e quaisquer operações
     declaradas nele serão realizadas, assim como quaisquer definições se tornarão acessíveis
     a quem importou o módulo. Por exemplo, o seguinte script:
+    \vspace{1em}
     \begin{lstlisting}[language=python]
     from teste import pow
     
     print "2 elevado a 3 eh igual a", pow(2,3)
     \end{lstlisting}
+    \vspace{1em}
     Irá importar o \script{} teste mostrado acima, que por si só não realiza nenhuma operação -
     ele simplesmente define a função \lang{pow}. Após a importação, esse \script{} não
     define nada, mas realiza uma operação: imprime texto no console, contendo a frase
@@ -593,6 +595,7 @@
     na linguagem nativa da máquina virtual. Usando a função \lang{pow} como exemplo novamente,
     para implementá-la em \C{} faríamos o seguinte:
     
+    \vspace{1em}
     \begin{lstlisting}
     #include <Python.h>
     #include <cmath>
@@ -610,6 +613,7 @@
         return Py_BuildValue("d", pow(x, y) );
     }
     \end{lstlisting}
+    \vspace{1em}
     
     A assinatura de \lang{native\_pow} é a assinatura de funções nativas de \lang{Python} em \C{},
     também chamadas de \lang{Python C Functions} ou \lang{PyCFunction}. As formas mais comuns
@@ -621,6 +625,7 @@
     \lang{teste} que mostramos anteriormente de forma nativa, extenderíamos o código do
     \lang{native\_pow} com o seguinte:
     
+    \vspace{1em}
     \begin{lstlisting}
     static PyMethodDef TesteMethods[] = {
         {"pow", native_pow, METH_VARARGS, "pow(x,y) -> retorna x elevado a y."},
@@ -631,6 +636,7 @@
         Py_InitModule("teste", TesteMethods);
     }  
     \end{lstlisting}
+    \vspace{1em}
     
     Para usar o módulo, caso você esteja incluindo a máquina virtual de \lang{Python}
     em sua aplicação executável, basta compilar esse arquivo junto com seu programa, 

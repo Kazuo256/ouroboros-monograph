@@ -1,8 +1,5 @@
 \chapter{Atividades Realizadas}
 \label{cap:atividades}
-  
-  %TODO uniformizar espaçamento em volta dos trechos de código conforme
-  %     fizemos na parte de conceitos
 
   O objetivo desse capítulo é relatar as diversas atividades realizadas no 
   planejamento e desenvolvimento do Projeto Ouroboros. Explicaremos como de
@@ -308,6 +305,7 @@
     \item \textbf{Executar o objeto como uma função}: simplificado pelo operador \lang{()}
       do \CXX{}, permitindo ao usuário usar as próprias instâncias de \VObj{} como
       funções. Exemplo:
+      \vspace{1em}
       \begin{lstlisting}
         VirtualObj vObj, vReturnObj, vObjArg1, ..., vObjArgN; 
         VirtualObj::List vObjList; // o mesmo que std::list<VirtualObj> vObjList;
@@ -320,6 +318,7 @@
     \item \textbf{Acessar e alterar atributos do objeto}: simplificado pelo operador
       \lang{[]} do \CXX{}, permitindo ao usuário usar as instâncias de \VObj{} como
       tabelas de símbolos. Exemplo:
+      \vspace{1em}
       \begin{lstlisting}
         VirtualObj vObj, vAttrObj, vObj_AttrName;
         vAttrObj = vObj["nome_do_atributo"];
@@ -329,6 +328,7 @@
       operador \lang{|} do \CXX{}. Chamadas de métodos em linguagens de \script{} normalmente
       passam a instância da classe (o próprio objeto) como o primeiro argumento da
       função, e o uso desse operador com o objeto simplifica essa operação. Exemplo: 
+      \vspace{1em}
       \begin{lstlisting}
         // Recebe argumentos como nas chamadas de funcao
         (vObj | "nome_do_metodo")( ... );
@@ -340,6 +340,7 @@
       principal ponte entre objetos de \CXX{} e objetos da máquina virtual. Para tanto, a classe
       possui dois métodos \textit{template}\footnotemark{} que possibilitam a conversão de
       valores entre os dois ambientes. Exemplo:
+      \vspace{0.5em}
       \begin{lstlisting}
         // Com ponteiros para tipos definidos pelo usuario:
         T* valor = vObj.value<T*>();
@@ -396,12 +397,14 @@
       especificar o diretório na qual \script{s} serão carregados por ele. A finalização 
       encerra a atividade das máquinas, liberando quaisquer recursos do computador que elas
       estejam usando. Exemplo:
+      \vspace{0.01em}
       \begin{lstlisting}
         //SCRIPT_MANAGER() eh uma macro que fornece um ponteiro para a instancia de ScriptManager.
         bool ok = SCRIPT_MANAGER()->Initialize("./caminho/para/os/scripts/");
         
         SCRIPT_MANAGER()->Finalize();
       \end{lstlisting}
+      \vspace{0.5em}
       Se o valor booleano que a chamada a \lang{Initialize()} devolve for verdadeiro, significa que o gerenciador
       foi inicializado sem problemas. Caso contrário, deve ter ocorrido algum problema na inicialização dele.
 
@@ -411,6 +414,7 @@
       veremos mais adiante. Caso ele queira necessário, o usuário também pode buscar uma máquina
       virtual registrada. Elas são representadas no nosso sistema pela classe \VMac{},
       como veremos na próxima seção. Exemplo:
+      \vspace{1em}
       \begin{lstlisting}
         //Registrando uma maquina virtual.
         VirtualMachine* vm = new python::PythonMachine();
@@ -423,6 +427,7 @@
 
     \item \textbf{Executar código de \script{}}: o gerenciador permite ao usuário tentar executar um código
       qualquer, dado como uma cadeia de caracteres, na máquina virtual de sua escolha. Exemplo:
+      \vspace{1em}
       \begin{lstlisting}
         SCRIPT_MANAGER()->ExecuteCode("Lua", "print(42)");
       \end{lstlisting}
@@ -432,6 +437,7 @@
       se o \script{} existe, e de acordo com a extensão do arquivo, qual máquina virtual deve processá-lo.
       A tal máquina virtual então carrega o \script{} e a função devolve uma instância de \VObj{}
       representando o módulo carregado de acordo com a linguagem de \script{} usada. Exemplo:
+      \vspace{1em}
       \begin{lstlisting}
         VirtualObj modulo = SCRIPT_MANAGER()->LoadModule("modulo");
         VirtualObj modulo2 = SCRIPT_MANAGER()->LoadModule("pacote.subpacote.modulo");
@@ -538,6 +544,7 @@
   O SWIG usa arquivos separados de extensão \lang{.i}, chamados de ``arquivos de interface do 
   SWIG'', para determinar quais arquivos de \CXX{} ele irá processar, e como irá gerar o 
   \textit{wrapper} para tal código, como o seguinte:
+  \vspace{1em}
   \begin{lstlisting}
   %module NOME_DO_MODULO
 
@@ -550,7 +557,8 @@
 
   %include <src/coisas/coisa.h>
   \end{lstlisting}
-
+  \vspace{1em}
+  
   Nesses arquivos de interface do SWIG é também possível escrever código que será incluído
   explicitamente no código gerado, ou usado internamente em algumas etapas, como por exemplo
   nas conversões de valores que passam pelos \textit{wrappers}. O segundo tipo de interação
@@ -571,6 +579,7 @@
   
   Aqui está um exemplo mais detalhado de um arquivo de interface do SWIG, com nossas 
   adições nossas:
+  \vspace{1em}
   \begin{lstlisting}
   %module NOME_DO_MODULO
 
@@ -860,5 +869,4 @@
     gerador). Com isso, o desenvolvedor precisa apenas fazer seu trabalho no
     código fonte da \lang{libouroboros} e deixar que o CMake providence o
     gerador.
-
 
