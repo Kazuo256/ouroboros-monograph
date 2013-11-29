@@ -859,13 +859,38 @@
     devem ficar e a lista de cabeçalhos que o gerador precisa analisar para formar
     o módulo. A função por sua vez fornece ao usuário o nome do arquivo que
     será gerado para que ele o inclua entre os arquivos que farão parte da
-    compilação da sua aplicação.
+    compilação da sua aplicação. Um exemplo de uso é:
 
+    \vspace{1em}
+    
+  \begin{lstlisting}[language=python]
+    ouroboros_wrap_module (
+      my_module                     # nome do modulo
+      lua                           # linguagem para qual exportar
+      src/                          # diretorio de saida
+      MY_PROJECT_LUA_GENERATED_SRC  # variavel que receberah o resultado
+    )
+  \end{lstlisting}
+
+    \vspace{1em}
+    
     Para automatizar o processo de fazer o executável do gerador de
     \textit{wrappers} para as máquinas virtuais, fizemos uma função chamada
     \lang{ouroboros\_generate\_opwig()}. Dada a linguagem de \script{} da
     máquina virtual em questão e a classe de especificação de \textit{wrappers}
     apropriada, essa função gera o código do gerador apropriado (sim, nós geramos o
     gerador). Com isso, o desenvolvedor precisa apenas fazer seu trabalho no
-    código fonte da \lang{libouroboros} e deixar que o CMake providence o
-    gerador.
+    código fonte da \lang{libouroboros} e deixar que o CMake providencie o
+    gerador. O código que ele precisa colocar nas suas listas de CMake é algo
+    equivalente a:
+
+    \vspace{1em}
+    
+  \begin{lstlisting}[language=python]
+    ouroboros_generate_opwig (
+      lua                                   # nome da linguagem
+      languages/lua/wrapperspecification.h  # cabecalho com a especificacao
+      opa::lua::WrapperSpecification        # classe que implementa especificao
+    )
+  \end{lstlisting}
+

@@ -295,11 +295,9 @@ int main (int argc, char** argv) {
 \end{lstlisting}
 \vspace{1em}
 
-%TODO mostrar o que precisa colocar no cmake para um extensao ter seu gerador gerado
-
-Tais executáveis são os geradors de fato, e cada um deverá ser ligado junto com a
+Tais executáveis são os geradores de fato, e cada um deverá ser ligado junto com a
 \lang{libouroboros} e as extensões dela que a linguagem de \script{} em questão exige. 
-Esses geradores são gerados com um nome de prefixo \lang{opwig-} seguido pelo nome da
+Esses geradores são gerados com um nome de prefixo ``\lang{opwig-}'' seguido pelo nome da
 linguagem de \script{} para a qual eles exportam. A interface do
 OPWIG disponibilizada pela \lang{libouroboros} e os módulos de CMake que criamos fazem a
 terefa de criar executáveis do OPWIG para cada linguagem ser trivial, e as listas de CMake
