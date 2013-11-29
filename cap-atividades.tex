@@ -445,20 +445,39 @@
   cada linguagem que se deseja ser compatível com a OPA, como explicado na seção
   \ref{cap:estrutura:opa} e ilustrado pela figura \ref{fig:api-classes}.
   A \VMac{} representa a máquina virtual da linguagem em si, sendo usada internamente pelo 
-  gerenciador. Raramente ela será usada diretamente pelo usuário. Alguns métodos importantes de 
-  sua interface são:
+  gerenciador, e portanto ela raramente ela será usada diretamente pelo usuário. A figura
+  \ref{fig:uml-vms} contém o diagrama UML que expressa a relação entre essas duas classes
+  e também as duas implementações de máquina virtual padrão do nosso sistema. Alguns
+  métodos importantes de sua interface são:
   
   \begin{itemize}
     \item Inicialização e Finalização da máquina virtual. São usadas pelo gerenciador internamente.
     \item Método para retornar a cadeia de caracteres correspondente à extensão de um 
       arquivo de \script{} dessa linguagem.
-    \item Carregar módulos, usado pelo gerenciador internamente.
+    \item Carregar módulos, que é a operação usada internamente pelo gerenciador.
     \item Executar código \script{}, também usado pelo gerenciador.
     \item Fornecer uma nova instância vazia de \VData{} (ver próxima seção) correspondente à
       linguagem da máquina.
   \end{itemize}
 
-  % TODO: diagrama UML
+  \begin{figure}[ht]
+    \centering
+    \caption{}
+    \begin{subfigure}{.8\textwidth}
+      \begin{center}
+        \includegraphics[width=\textwidth]{uml-vms.png}
+        \vspace{1em}
+
+        \textit{
+          Os métodos apresentados correspondem às operações que destacamos para
+          cada classe. A instância única de \SMgr{} armazena uma tabela que
+          relaciona os nomes das linguagens de \script{} com a instância de
+          máquina virtual correspondente.
+        }
+      \end{center}
+    \end{subfigure}
+    \label{fig:uml-vms}
+  \end{figure}
   
   \subsection{\VData{}}
   \label{sec:atividades:opa:vdata}
