@@ -432,3 +432,37 @@ c:ColocaCoisa( coisas.objetos.Coisa() )
 coisas.funcoes.FazAlgumaCoisa( 42 * c.fator )
 \end{lstlisting}
 \vspace{1em}
+
+
+\section{\textit{Milestones}}
+\label{cap:resultados:milestones}
+
+Como mencionamos na seção \ref{sec:actividads:decisoes}, adotamos uma metodologia de
+\textit{milestones} a partir do segundo semestre do desenvolvimento deste projeto.
+Inicialmente as \textit{milestones} estavam localizadas no mesmo repositório do 
+Ouroboros, mas depois optamos por separá-las em outro repositório para ficar mais
+similar a como um usuário usaria o nosso sistema. 
+
+Até o momento fizemos cinco \textit{milestones}, todas funcionais, e usamos o CMake 
+para simplificar sua compilação. Todas seguem o padrão de um simples programa de 
+linha de comando, onde o usuário digita comandos em texto e o computador devolve
+as respostas em texto também. A interface para tal programa é determinada pelo
+código \CXX{}, e os \script{s} em \lang{Lua} e \lang{Python} determinam os comandos
+e respostas, sendo que o programa usa o OPA para carregar os \script{s} e executar
+as funções adequadas.
+
+\begin{description}
+  \item[\textit{Milestone} 0] A primeira \textit{milestone} que criamos, seguindo indexação
+    por zero, é bem simples. Ela simplesmente necessitava que o OPWIG exportasse funções
+    globais recebendo e devolvendo tipos primitivos (\lang{bool} e \lang{const char*}) a partir
+    de um único arquivo de cabeçalho, e usava duas variáveis definidas pelos \script{s}.
+    
+  \item[\textit{Milestone} 1] Já na segunda \textit{milestone}, adicionamos \lang{namespaces}
+    contendo as funções globais, sendo que algumas delas agora retornavam \lang{void} - ou seja,
+    retornavam nada.
+    
+  \item[\textit{Milestone} 2] Eita.
+  \item[\textit{Milestone} 3] Nossa.
+  \item[\textit{Milestone} 4] Daora.
+  \item[\textit{Milestone} 5] CARAMBOLAS!
+\end{description}
