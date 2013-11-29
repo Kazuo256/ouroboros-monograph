@@ -487,14 +487,30 @@
   operações da classe \VObj{} (descritas anteriormente), de forma que as instâncias desta
   encapsulem chamadas às funções daquela. Assim, uma instância
   de \VObj{} pode ter uma instância de \VData{} implementada para uma linguagem 
-  ou outra sem precisar saber qual, graças ao polimorfismo através de herança.
+  ou outra sem precisar saber qual, graças ao polimorfismo através de herança. Essa relação
+  está ilustrada no diagrama UML da figura \ref{fig:uml-vdata} abaixo. Fora os métodos para as
+  operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto importante da
+  interface de \VData{} é um método para fornecer a máquina virual (contida no gerenciador)
+  que representa a máquina virtual responsável pela instância de \VData{} em questão.
 
-  % TODO: diagrama UML
-  
-  Fora os métodos para as operações descritas na subseção \ref{sec:atividades:opa:vobj}, um ponto
-  importante da interface de \VData{} é um método para retornar a instância (contida no gerenciador) 
-  da implementação da classe \VMac{} que representa a máquina virtual responsável pela instância de
-  \VData{} em questão.
+  \begin{figure}[ht]
+    \centering
+    \caption{}
+    \begin{subfigure}{.8\textwidth}
+      \begin{center}
+        \includegraphics[width=\textwidth]{uml-vdata.png}
+        \vspace{1em}
+
+        \textit{
+          Os métodos \lang{Wrap} e \lang{Unwrap} mostrados na verdade correspondem
+          a uma série de métodos distintos, cada um responsável pela conversão entre
+          valores nativos e virtuais de um tipo específico. Optamos por não indicar
+          todos eles para simplificar o diagrama.
+        }
+      \end{center}
+    \end{subfigure}
+    \label{fig:uml-vdata}
+  \end{figure}
   
   \section{Integração com SWIG}
   \label{sec:actividads:integracaoswig}
