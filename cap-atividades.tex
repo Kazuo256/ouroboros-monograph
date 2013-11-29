@@ -86,9 +86,6 @@
   ferramentas que optamos por usar, quanto das metodologias e convenções que
   escolhemos.
 
-  % TODO: Talvez seja legal estruturar as seções abaixo em itens...
-  % TODO: Also, tentar deixar as notas de rodapé menos caóticas
-
   \subsection{Decisões anteriores ao Trabalho de Formatura}
   Quando começamos a desenvolver o nosso ``sistema de \script{s}'',
   como ele era integrado à UGDK e fazia parte do USPGameDev, muitas das
@@ -96,12 +93,6 @@
   no grupo. Segue uma relação das decisões tomadas sobre ferramentas e
   metodologias usadas. Quando necessário, daremos um resumo sobre as
   ferramentas apresentadas.
-
-  % 1) Linguagens usadas
-  % 2) Compilador
-  % 3) Compatibilidade
-  % 4) Distribuição e versionamento
-  % 5) Geração de wrappers
 
   \begin{enumerate}
 
@@ -165,11 +156,11 @@
           sistema fazia parte do código da UGDK, ele compartilhava o repositório dela.
       \end{itemize}
 
-    \item \textbf{Geração de Wrappers}: SWIG \cite{swig:00}.
+    \item \textbf{Geração de \textit{wrappers}}: SWIG \cite{swig:00}.
       \begin{itemize}
         \item[Sobre -] Por extenso, seu nome é \emph{Simplified Wrapper and
           Interface Generator}, e ele essencialmente exporta código nativo
-          para diversas outras linguagens além das que usamos. Iremos explicar
+          para diversas outras linguagens, além das que usamos. Iremos explicar
           bastante sobre como ele é usado algumas seções a frente.
         \item[Motivo -] Foi a melhor opção para o que necessitávamos segundo
           nossa pesquisa, era uma ferramenta pronta para proporcionar a
@@ -178,7 +169,7 @@
           no USPGameDev.
       \end{itemize}
 
-    \item \textbf{Metodologia}: uma variação própria de métodos ágeis.
+    \item \textbf{Metodologia}: uma variação própria de métodos ágeis do USPGameDev.
       \begin{itemize}
         \item[Sobre -] O trabalho de formatura de Vinicius K. Daros
           \cite{scrum:00} trata com bastante detalhes sobre esse assunto.
@@ -188,7 +179,6 @@
           desenvolvíamos era voltado para ser usados nesses outros
           programas. Logo, trabalhávamos em conjunto com o resto do
           grupo usando a mesma metodologia.
-
       \end{itemize}
 
   \end{enumerate}
@@ -199,50 +189,101 @@
   projeto separado, totalmente independente de qualquer outro projeto do
   USPGameDev, e o nomeamos Projeto Ouroboros. Partindo do código fonte
   original, criamos outro repositório Git específico para o Ouroboros, e também
-  o hospedamos no GitHub.
+  o hospedamos no GitHub. Mantivemos o uso de CMake, pois, dentre outras razões,
+  ele nos permitiu simplificar algumas partes do nosso sistema tanto para os
+  desenvolvedores quanto para os usuários (mais informações na seção
+  \ref{cap:atividades:cmake}). Abaixo listamos as principais mudanças feitas
+  com relação às outras decisões anteriores, assim como algumas novas que
+  surgiram com a emancipação do nosso sistema.
   
-  Decidimos atualizar a linguagem de programação usada para \CXX{11},
-  uma versão bem mais recente do que o \CXX{} clássico, com diversas melhorias e
-  novas funcionalidades. Isso introduziu um problema no projeto: compatibilidade
-  de compiladores com essa versão nova. Como o \CXX{11} ainda é razoavelmente recente, nem todos
-  compiladores reconhecem todas suas novas funcionalidades. Mais notavelmente,
-  não conseguimos mais compilar no Windows com o Visual Studio 2010, e nem com
-  sua versão mais recente, Visual Studio 2013. No Linux, tivemos que usar uma
-  versão mais nova do \lang{g++}, a 4.7. Apesar de existirem versões ainda mais 
-  recentes, essa era a mínima necessária. Como ela não é fornecida por padrão
-  nos pacotes do Ubuntu LTS\footnotemark{} atual, tivemos que adaptar nossos
-  ambientes de desenvolvimento para conseguir usar um \lang{g++} mais recente.
+  \begin{enumerate}
 
-  \footnotetext{
-    \emph{Long Term Service}.
-  }
+    \item \textbf{Linguagens usadas}: As mesmas, só que com um padrão mais
+      recente de \CXX{}, o \CXX{11}.
+      \begin{itemize}
+        \item[Sobre -] Nesse novo padrão, inúmeras facilidades são
+          introduzidas à linguagem. As mais relevantes para nosso projeto
+          foram as funcionalidades de coleta de lixo automatizada e
+          os \textit{variadic templates}.
+        \item[Motivo -] Além da diversas facilidades que tornou o
+          desenvolvimento do sistema mais produtivo, algumas das
+          ferramentas que passamos a usar já adotavam esse novo padrão,
+          e portanto achamos melhor acompanhá-las nessa iniciativa para
+          evitar incompatibilidades.
+      \end{itemize}
 
-  Como parte do trabalho de formatura, tiramos o SWIG do projeto para substituí-lo
-  pelo nosso próprio gerador de \textit{wrappers}, o OPWIG (que explicamos na seção 
-  \ref{cap:estrutura:opwig} e cuja implementação será descrita na seção 
-  \ref{sec:actividads:opwig}). Também passamos a criar e usar bem mais testes
-  unitários para testar o nosso código, além de registrar nosso repositório Git
-  no Travis\footnotemark, que automaticamente tenta compilar nosso projeto e
-  executar as baterias de testes, avisando com \textit{e-mails} sempre que algo falha.
-  
-  \footnotetext{
-    O Travis (\url{https://travis-ci.org/Rewasvat/ouroboros/}, último acesso:
-    15/09/2013) é um servidor de integração contínua: ele automaticamente faz
-    \emph{download} do seu repositório quando há alguma mudança nele, e executa
-    uma sequência pré-determinada de comandos para verificar se o código compila
-    e passa nos testes.
-   }
-  
-  Nossa metodologia de trabalho também foi alterada. Passamos a desenvolver o
-  sistema separadamente do USPGameDev, manter listas de tarefas pendentes e a
-  ter objetivos fixados periodicamente para serem completados o quanto antes,
-  durante o primeiro semestre de trabalho. No segundo, adotamos o uso de
-  \textit{milestones} (ou ``marcos'', em português): elaborávamos uma pequena
-  aplicação de um usuário fictício do nosso sistema, e desenvolvíamos apenas o
-  necessário para que a aplicação dele funcionasse devidamente. Após completar
-  uma \textit{milestone}, montávamos uma outra mais complicada e que exigisse
-  mais do nosso projeto, e repetíamos o processo. Esse último método revelou
-  ser o mais produtivo para nós.
+    \item \textbf{Compilador}: Apenas \lang{g++}.
+      \begin{itemize}
+        \item[Motivo -] O uso de \CXX{11} introduziu um problema no projeto:
+          compatibilidade de compiladores com essa versão nova. Como o \CXX{11}
+          ainda é razoavelmente recente, nem todos compiladores reconhecem
+          todas suas novas funcionalidades. Mais notavelmente, não conseguimos
+          mais compilar no Windows com o Visual Studio 2010, e nem com sua
+          versão mais recente, Visual Studio 2013. No Linux, tivemos que usar
+          uma versão mais nova do \lang{g++}, a 4.7. Apesar de existirem
+          versões ainda mais recentes, essa era a mínima necessária.
+      \end{itemize}
+
+    \item \textbf{Gerador de \textit{wrappers}}: Abandonamos o uso de SWIG
+      para substituí-lo pelo nosso próprio gerador, o OPWIG.
+      \begin{itemize}
+        \item[Sobre -] Explicamos sobre ele na seção \ref{cap:estrutura:opwig}
+          e falaremos sobre sua implementação na seção \ref{sec:actividads:opwig}.
+        \item[Motivo -] Também trataremos dos motivos por trás desse mudança
+          em outra seção, a \ref{cap:atividades:swig-sux}.
+      \end{itemize}
+
+    \item \textbf{Metodologia}: Organização das metas em \textit{milestones}.
+      \begin{itemize}
+        \item[Sobre -] Após separar o projeto de USPGameDev, inicialmente
+          mantínhamos listas de tarefas pendentes e fixávamos objetivos
+          periodicamente para serem completados o quanto antes (algo vagamente
+          parecido com iterações de programação ágil, porém não tão bem
+          organizado). A partir do segundo semestre desse ano, adotamos o
+          uso das tais \textit{milestones} (ou ``marcos'', em português):
+          elaborávamos uma pequena aplicação de um usuário fictício do nosso
+          sistema, e desenvolvíamos apenas o necessário para que a aplicação
+          dele funcionasse devidamente. Após completar uma \textit{milestone},
+          montávamos uma outra mais complicada e que exigisse mais do nosso
+          projeto, e repetíamos o processo. Além disso, recentemente passamos
+          a aproveitar algumas funcionalidades do GitHub justamente voltadas
+          para o gerenciamento de \textit{milestones} e tarefas.
+        \item[Motivo -] Ao estabelecer uma meta tão clara quanto um caso de uso,
+          o desenvolvimento fica muito mais produtivo e objetivo. Durante o
+          primeiro semestre gastamos bastante tempo cobrindo partes do nosso
+          sistema que até agora não foram completamente utilizadas. Se esse
+          esforço tivesse sido melhor direcionado, provavelmente o projeto estaria
+          mais adiantado. O método das \textit{milesones} ainda por cima é
+          bastante compatível com os princípios de programação ágil, pois provê
+          um processo iterativo que prioriza o desenvolvimento das funionalidades
+          mais críticas e relevantes ao produto.
+      \end{itemize}
+
+    \item \textbf{Testes automatiazdos}: Usando \textit{googletest}\footnote{Disponpivel
+      em: \url{https://code.google.com/p/googletest/} (último acesso: 29/11/2013)} e
+      fazendo integração contínua com Travis\footnote{Acessível em:
+      \url{https://travis-ci.org/} (último acesso: 29/11/2013)}.
+      \begin{itemize}
+        \item[Sobre -] O \textit{googletest} é um arcabouço para escrever e
+          executar testes automatizados em \CXX{}, desenvolvido pela Google.
+          Já o Travis é um serviço de integração contínua: ele
+          automaticamente clona respósitórios no GitHub quando há alguma
+          modificação neles, e executa uma sequência de comandos (determinadas
+          pelo dono de cada repositório) para verificar se o código do projeto
+          compila e passa nos testes especificados para ele. Para usar o
+          Travis basta registrar o repositório desejado usando sua própria conta
+          do GitHub, e ele irá inclusive enviar e-mails para os desenvolvvedores
+          sempre que algo falhar no repositório.
+        \item[Motivo -] Como passamos a desenvolver nosso próprio gerador de
+          \textit{wrappers}, precisávamos de uma segurança melhor sobre o
+          funcionamento dele. Usar testes automatizados permitiu-nos desenvolver
+          com muito mais tranquilidade, certeza e produtividade. Ao mesmo tempo,
+          o uso do Travis permite que testemos nosso \textit{software} em
+          um ambiente que não seja o nosso (que já está todo preparado e portanto
+          seria uma referência viesada), assim como saber imediatamente quando
+          algo parou de funcionar graças às notificações que ele nos envia.
+      \end{itemize}
+  \end{enumerate}
   
   \section{Uma interface comum para Lua e Python.}
   \label{sec:atividades:opa}
@@ -558,6 +599,7 @@
   
   
   \section{Problemas com SWIG}
+  \label{cap:atividades:swig-sux}
   Ao longo do tempo em que fomos usando o SWIG notamos alguns problemas com ele, que eram
   refletidos no nosso sistema, impondo certas restrições. Alguns desses problemas conseguimos
   apaziguar com código inserido nos arquivos de interface do SWIG, como mencionado na seção
