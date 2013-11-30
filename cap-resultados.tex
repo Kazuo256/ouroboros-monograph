@@ -443,7 +443,7 @@ Inicialmente as \textit{milestones} estavam localizadas no mesmo repositório do
 Ouroboros, mas depois optamos por separá-las em outro repositório para ficar mais
 similar a como um usuário usaria o nosso sistema. 
 
-Até o momento fizemos cinco \textit{milestones}, todas funcionais, e usamos o CMake 
+Até o momento fizemos seis \textit{milestones}, todas funcionais, e usamos o CMake 
 para simplificar sua compilação. Todas seguem o padrão de um simples programa de 
 linha de comando, onde o usuário digita comandos em texto e o computador devolve
 as respostas em texto também. A interface para tal programa é determinada pelo
@@ -452,17 +452,325 @@ e respostas, sendo que o programa usa o OPA para carregar os \script{s} e execut
 as funções adequadas.
 
 \begin{description}
-  \item[\textit{Milestone} 0] A primeira \textit{milestone} que criamos, seguindo indexação
-    por zero, é bem simples. Ela simplesmente necessitava que o OPWIG exportasse funções
-    globais recebendo e devolvendo tipos primitivos (\lang{bool} e \lang{const char*}) a partir
-    de um único arquivo de cabeçalho, e usava duas variáveis definidas pelos \script{s}.
+  \item[\textit{Milestone} 0:] A primeira \textit{milestone} que criamos (seguindo indexação
+    por zero, como todo bom programador) é bem simples. Ela simplesmente necessitava que o
+    OPWIG:
+    \begin{itemize}
+      \item Exportasse funções globais recebendo e devolvendo tipos primitivos.
+      \item Exportasse um módulo a partir de um único arquivo de cabeçalho.
+    \end{itemize}
     
-  \item[\textit{Milestone} 1] Já na segunda \textit{milestone}, adicionamos \lang{namespaces}
-    contendo as funções globais, sendo que algumas delas agora retornavam \lang{void} - ou seja,
-    retornavam nada.
+  \item[\textit{Milestone} 1:] Já na segunda \textit{milestone}, adicionamos:
+    \begin{itemize}
+      \item \lang{Namespaces} como sub-módulos do módulo principal.
+      \item Funções devolvendo \lang{void} - ou seja, que devolvem nenhum valor.
+      \item Exportar um módulo a partir de um ou mais arquivos de cabeçalhos.
+    \end{itemize}
     
-  \item[\textit{Milestone} 2] Eita.
-  \item[\textit{Milestone} 3] Nossa.
-  \item[\textit{Milestone} 4] Daora.
-  \item[\textit{Milestone} 5] CARAMBOLAS!
+  \item[\textit{Milestone} 2:] Na terceira \textit{milestone} nós testamos para garantir 
+    que os \script{s} pudessem importar os sub-módulos diretamente, além de adicionar o
+    seguinte:
+    \begin{itemize}
+      \item \lang{Namespaces} aninhados (\lang{namespaces} dentro de \lang{namespaces})
+        como uma árvore apropriada de sub-módulos.
+      \item Váriaveis globais de tipos primitivos, possivelmente constantes (o \lang{const} do \CXX{}).
+    \end{itemize}
+    
+  \item[\textit{Milestone} 3:] Nessa \textit{milestone} nós adicionamos a exportação de classes
+    simples, como mencionado em \ref{cap:resultados:opwig}, com a diferença que os tipos envolvidos
+    só podiam ser primitivos.
+    
+  \item[\textit{Milestone} 4:] Esta \textit{milestone} foi a única que saiu do padrão das outras
+    \textit{milestone}. Em vez de criar um programa para testar funcionalidade que iríamos adicionar
+    no OPWIG, resolvemos arrumar algumas outras partes do sistema:
+    \begin{itemize}
+      \item Separamos a implementação do OPWIG para cada linguagem de \script{} do próprio OPWIG.
+      \item Criamos os módulos de CMake para facilitar o uso do Ouroboros.
+      \item Alteramos diversas funções do OPA para jogar exceções de \CXX{} quando algum erro
+        ocorresse, ao invés de ignorá-los ou simplesmente imprimir alguma mensagem no console.
+    \end{itemize}
+    Consequentemente essa \textit{milestone} não tem nenhum programa associado para testar o
+    código.
+    
+  \item[\textit{Milestone} 5:] Finalmente na sexta \textit{milestone} resolvemos implementar algo
+    importante que estava faltando: a conversão de classes, para possibilitar que atributos, 
+    variáveis, paramêtros de funções e seus valores devolvidos pudessem ser tipos complexos
+    (exportados pelo usuário) além dos tipos primitivos.
+    
 \end{description}
+
+\subsection{Rodando a \textit{Milestone}}
+Agora vamos explicar melhor como compilar e rodar uma \textit{milestone}. Como cada 
+\textit{milestone} contém a anterior, somente iremos exemplificar a última delas.
+
+Para compilar a partir da pasta raiz do repositório das \textit{milestones} basta rodar:
+
+\begin{verbatim}
+  $ cmake .
+  $ make milestone-05
+\end{verbatim}
+
+E para executar:
+
+\begin{verbatim}
+  $ cd milestone-05
+  $ ./bin/milestone-05
+\end{verbatim}
+
+Aqui vai um exemplo da execução dessa \textit{milestone}:
+
+\begin{figure}[ht]
+      \centering
+      \caption{}
+      \begin{subfigure}{.8\textwidth}
+        \begin{center}
+          \includegraphics[width=.5\textwidth]{ssMilestone.png}
+          \vspace{1em}
+
+          \textit{
+            As áreas demarcadas são os comandos enviados pelo usuário.
+          }
+        \end{center}
+      \end{subfigure}
+      \label{fig:milestone}
+    \end{figure}
+
+E finalmente, os arquivos de cabeçalho da \textit{milestone}:
+
+\vspace{1em}
+\begin{lstlisting}
+// info.h
+
+#ifndef OUROBOROS_MILESTONE_PROMPT_INFO_H_
+#define OUROBOROS_MILESTONE_PROMPT_INFO_H_
+
+class Info {
+  public:
+    Info ();
+
+    const char* subject ();
+    const char* predicate ();
+    const char* object ();
+
+    void set_subject (const char* the_subject);
+    void set_predicate (const char* the_predicate);
+    void set_object (const char* the_object);
+
+  private:
+    char subject_[256], predicate_[256], object_[256];
+};
+#endif // OUROBOROS_MILESTONE_PROMPT_INFO_H_
+\end{lstlisting}
+\vspace{1em}
+\begin{lstlisting}
+// input.h  
+
+#ifndef OUROBOROS_MILESTONE_PROMPT_IN_H_
+#define OUROBOROS_MILESTONE_PROMPT_IN_H_
+
+#include "info.h"
+
+namespace input {
+
+class Receiver {
+  public:
+
+    /// Receives a message from the input.
+    const char* ReceiveMessage ();
+    
+    /// Receives a number from the input.
+    double ReceiveNumber ();
+    
+    /// Receives a confirmation from the input.
+    bool ReceiveConfirmation ();
+
+    /// Receives an information from the input.
+    Info* ReceiveInfo ();
+
+  private:
+    char buffer[256];
+};
+} // namespace in
+#endif
+\end{lstlisting}
+
+\vspace{1em}
+\begin{lstlisting}
+// out.h
+
+#ifndef OUROBOROS_MILESTONE_00_PROMPT_H_
+#define OUROBOROS_MILESTONE_00_PROMPT_H_
+
+#include "info.h"
+
+namespace out {
+
+class Sender {
+  public:
+
+    /// Avtivates line breaking.
+    bool break_line;
+
+    /// Constructor.
+    Sender();
+    
+    /// Prints prompt output.
+    void SendMessage (const char* str);
+    
+    /// Prints n prompt outputs.
+    void SendMultimessage (const char* str, int n);
+
+    /// Prints an information.
+    void SendInfo (Info* the_info);
+
+  private:
+    const char *const TALKER_NAME;
+};
+} // namespace out
+#endif
+\end{lstlisting}
+
+Seu \script{} em \lang{Python}:
+\vspace{1em}
+\begin{lstlisting}[language=python]
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-    
+# pythontalker.py
+
+from prompt.input import Receiver
+import prompt
+
+def main():
+    rec = Receiver()
+    out = prompt.out.Sender()
+
+    out.SendMessage("WAZAAAAAAAAAP")
+    while True:
+        msg = rec.ReceiveMessage()
+        print "message received = [%s]" % (msg)
+        if msg in ["adios", "adieu", "arrivederci", "quit", "goodbye", "flw", "falou", "te mais", "te", "bye", "hasta"]:
+            break
+
+        elif msg == "hip hip":
+            out.SendMultimessage("HOORAH!", 3)
+
+        elif msg in ["vegeta", "scouter", "nappa"]:
+            out.SendMessage("what was Goku power level reported from Vegeta scouter?")
+            pl = rec.ReceiveNumber()
+            if pl > 9000.0:
+                out.SendMessage("correct.")
+            else:
+                out.SendMessage("dafuq dude?")
+
+        elif msg == "ask me":
+            out.SendMessage("vc eh bobo?")
+            bobo = rec.ReceiveConfirmation()
+            out.SendMessage(str(bobo)+"? Hmpf.")
+
+        elif msg == "break":
+            out.break_line = not out.break_line
+            out.SendMessage("toggled break line - "+str(out.break_line))
+
+        elif msg == "info around":
+            out.SendMessage("type in the info...")
+            inf = rec.ReceiveInfo()
+            out.SendMessage("receiving and sending info...")
+            out.SendInfo(inf)
+        elif msg == "get info":
+            out.SendMessage("type in the info...")
+            inf = rec.ReceiveInfo()
+            out.SendMessage( "Got info = subject:%s | predicate:%s | object:%s "%(inf.subject(), inf.predicate(), inf.object()) )
+        elif msg == "send info":
+            out.SendMessage("Type the info attributes in a row: subject, predicate and object.")
+            s = rec.ReceiveMessage()
+            p = rec.ReceiveMessage()
+            o = rec.ReceiveMessage()
+            inf = prompt.Info()
+            inf.set_subject(s)
+            inf.set_predicate(p)
+            inf.set_object(o)
+            out.SendMessage("Sending info...")
+            out.SendInfo(inf)
+
+        elif msg in ["help", "h"]:
+            out.SendMessage(" hip hip, scouter, ask me, break, info around, get info, send info, quit")
+        
+    return True
+\end{lstlisting}
+
+E seu \script{} em \lang{Lua}:
+\vspace{1em}
+\begin{lstlisting}[language=lua]
+-- luatalker.lua
+
+local out     = require "prompt.out"
+local input   = require "prompt.input"
+local prompt  = require "prompt"
+
+local function nogetter ()
+  local test = input.Receiver()
+  local check, err = pcall(function () assert(test.sbrubles) end)
+  if check == false and err then
+    print(err)
+  else
+    return false
+  end
+  return true
+end
+
+local function nosetter ()
+  local test = out.Sender()
+  local check, err = pcall(function () test.sbrubles = 42 end)
+  if check == false and err then
+    print(err)
+  else
+    return false
+  end
+  return true
+end
+
+function main ()
+  local send = out.Sender()
+  local receive = input.Receiver()
+  local info = prompt.Info()
+  info:set_subject "It"
+  info:set_predicate "does not"
+  info:set_object "matter"
+  send:SendMessage("Lets check some things first...")
+  if not nogetter() or not nosetter() then
+    return false
+  end
+  send:SendMessage("Everything ok so far. Sup bro.", "unused");
+  send:SendMessage("Line breakage status is "..tostring(send.break_line), "unused");
+  while true do
+    local msg = receive:ReceiveMessage()
+    print("[received \"..msg..\"]")
+    if msg == "bye" then return true end
+    if msg == "dude" then
+      send:SendMultimessage("Say what?", 5)
+    elseif msg == "sqrt" then
+      send:SendMessage("Of...?")
+      local arg = receive:ReceiveNumber()
+      send:SendMessage("Tis "..math.sqrt(arg))
+    elseif msg == "My favorite color is blue." then
+      send.break_line = false
+      send:SendMessage("You sure? ")
+      send.break_line = true
+      local answer = receive:ReceiveConfirmation()
+      if answer then
+        send:SendMessage("Lame.")
+      else
+        send:SendMessage("Indecisive fella.")
+      end
+    elseif msg == "Learn info" then
+      send:SendMessage "What info?"
+      info = receive:ReceiveInfo()
+      send:SendMessage "Ok!"
+    elseif msg == "Tell info" then
+      send:SendMessage "Here is what I know:"
+      send:SendInfo(info)
+    end
+  end
+end
+\end{lstlisting}
+\vspace{1em}
