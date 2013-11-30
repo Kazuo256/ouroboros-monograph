@@ -1,17 +1,17 @@
 \chapter{Resultados}
 \label{cap:resultados}
 
-Neste capítulo iremos apresentar os resultados obtidos ao longo do
-desenvolvimento do Projeto Ouroboros. Parte desses resultados foram
-obtidos antes do trabalho de formatura, mas ainda assim foram aprimorados
-durante a evolução do trabalho. Esses resultados formam o que
-chamamos de sistema do Projeto Ouroboros, na forma de uma biblioteca \CXX{}
-de nome \lang{libouroboros}. Como vimos no capítulo \ref{cap:estrutura},
-ele é composto por duas grandes partes, uma responsável por incorporar
+Neste capítulo iremos apresentar os resultados obtidos com o
+desenvolvimento do nosso projeto até então. Parte desses resultados
+surgiram antes do trabalho de formatura, mas ainda assim foram aprimorados
+durante a evolução dele. Eles formam o que chamamos de sistema do
+Projeto Ouroboros, na forma de uma biblioteca \CXX{} de nome
+\lang{libouroboros}. Como vimos no capítulo \ref{cap:estrutura},
+ela é composto por duas grandes partes, uma responsável por incorporar
 \script{s} e outra por exportar funcionalidades nativas para \script{s}.
 São a OPA e o OPWIG, resepectivamente.
 
-Para deixar clara a separação entre eles, os cabeçalho da biblioteca
+Para deixar clara a separação entre eles, os cabeçalhos da biblioteca
 dividem a interface dela em dois \textit{namespaces}: \lang{opa} e \lang{opwig}.
 Normalmente, quando o usuário usar nosso sistema, ele limitar-se-á ao uso
 das classes e rotinas do primeiro. Mas o segundo ainda se faz necessário
@@ -26,8 +26,8 @@ compila e funciona sem problemas.
 
 As implementações que fizemos da OPA e do OPWIG que comportam as linguagens de
 \script{} \lang{Lua} e \lang{Python} também estão funcionais (embora ainda não
-com todas as funcionalidades que gostaríamos), sendo distríbuidas como extensões
-da \lang{libouroboros} na forma outras bibliotecas separadas: \lang{libouroboros-lua}
+com todas os recursos que gostaríamos), sendo distríbuidas como extensões
+da \lang{libouroboros} na forma de bibliotecas separadas: \lang{libouroboros-lua}
 e \lang{libouroboros-python}, para \lang{Lua} e \lang{Python}, respectivamente.
 Assim é fácil incluí-las em uma mesma aplicação, basta ligá-la com a
 \lang{libouroboros} e com elas. Caso o usuário não queira usar uma das linguagens,
@@ -438,18 +438,21 @@ coisas.funcoes.FazAlgumaCoisa( 42 * c.fator )
 \label{cap:resultados:milestones}
 
 Como mencionamos na seção \ref{sec:actividads:decisoes}, adotamos uma metodologia de
-\textit{milestones} a partir do segundo semestre do desenvolvimento deste projeto.
+\textit{milestones} a partir do segundo semestre desse ano.
 Inicialmente as \textit{milestones} estavam localizadas no mesmo repositório do 
 Ouroboros, mas depois optamos por separá-las em outro repositório para ficar mais
-similar a como um usuário usaria o nosso sistema. 
+similar à interação real entre um usuário e o nosso sistema. 
 
 Até o momento fizemos seis \textit{milestones}, todas funcionais, e usamos o CMake 
 para simplificar sua compilação. Todas seguem o padrão de um simples programa de 
 linha de comando, onde o usuário digita comandos em texto e o computador devolve
-as respostas em texto também. A interface para tal programa é determinada pelo
-código \CXX{}, e os \script{s} em \lang{Lua} e \lang{Python} determinam os comandos
-e respostas, sendo que o programa usa o OPA para carregar os \script{s} e executar
-as funções adequadas.
+as respostas em texto também. Os mecanismos internos de tal programa são determinados
+pelo código \CXX{}, que é exportado via OPWIG para \script{s} em \lang{Lua} e
+\lang{Python} que especificam os comandos e respostas da aplicação. Por sua vez, o
+programa usa a OPA para carregar esses \script{s} e executar as funções adequadas.
+
+Segue um breve relato do que projetamos em cada \textit{milestone} e o que elas
+exigiam que o nosso sistema fornecesse.
 
 \begin{description}
   \item[\textit{Milestone} 0:] A primeira \textit{milestone} que criamos (seguindo indexação
@@ -463,28 +466,31 @@ as funções adequadas.
   \item[\textit{Milestone} 1:] Já na segunda \textit{milestone}, adicionamos:
     \begin{itemize}
       \item \lang{Namespaces} como sub-módulos do módulo principal.
-      \item Funções devolvendo \lang{void} - ou seja, que devolvem nenhum valor.
+      \item Funções devolvendo \lang{void} - ou seja, que não devolvem nenhum valor.
       \item Exportar um módulo a partir de um ou mais arquivos de cabeçalhos.
     \end{itemize}
     
-  \item[\textit{Milestone} 2:] Na terceira \textit{milestone} nós testamos para garantir 
-    que os \script{s} pudessem importar os sub-módulos diretamente, além de adicionar o
-    seguinte:
+  \item[\textit{Milestone} 2:] Na terceira \textit{milestone} nós testamos se os
+    \script{s} eram capazes acessar os sub-módulos exportados diretamente, além
+    de adicionar o seguinte:
     \begin{itemize}
       \item \lang{Namespaces} aninhados (\lang{namespaces} dentro de \lang{namespaces})
         como uma árvore apropriada de sub-módulos.
-      \item Váriaveis globais de tipos primitivos, possivelmente constantes (o \lang{const} do \CXX{}).
+      \item Váriaveis globais de tipos primitivos, possivelmente constantes
+        (isso é, com o modificador \lang{const} do \C{}).
     \end{itemize}
     
   \item[\textit{Milestone} 3:] Nessa \textit{milestone} nós adicionamos a exportação de classes
     simples, como mencionado em \ref{cap:resultados:opwig}, com a diferença que os tipos envolvidos
     só podiam ser primitivos.
     
-  \item[\textit{Milestone} 4:] Esta \textit{milestone} foi a única que saiu do padrão das outras
-    \textit{milestone}. Em vez de criar um programa para testar funcionalidade que iríamos adicionar
-    no OPWIG, resolvemos arrumar algumas outras partes do sistema:
+  \item[\textit{Milestone} 4:] Essa \textit{milestone} foi a única que saiu do padrão.
+    Em vez de criar um programa para testar funcionalidades que iríamos adicionar
+    ao OPWIG, resolvemos arrumar algumas outras partes do sistema:
     \begin{itemize}
-      \item Separamos a implementação do OPWIG para cada linguagem de \script{} do próprio OPWIG.
+      \item Movemos o código das especificações de \textit{wrappers}, que até então
+        faziam parte um executável separado da biblioteca, para dentro da
+        \lang{libouroboros}.
       \item Criamos os módulos de CMake para facilitar o uso do Ouroboros.
       \item Alteramos diversas funções do OPA para jogar exceções de \CXX{} quando algum erro
         ocorresse, ao invés de ignorá-los ou simplesmente imprimir alguma mensagem no console.
@@ -493,17 +499,17 @@ as funções adequadas.
     código.
     
   \item[\textit{Milestone} 5:] Finalmente na sexta \textit{milestone} resolvemos implementar algo
-    importante que estava faltando: a conversão de classes, para possibilitar que atributos, 
-    variáveis, paramêtros de funções e seus valores devolvidos pudessem ser tipos complexos
-    (exportados pelo usuário) além dos tipos primitivos.
+    importante que estava faltando: a conversão de valores que fossem instâncias de classes,
+    para possibilitar que atributos, variáveis, paramêtros de funções e seus resultados
+    devolvidos pudessem ter tipos complexos (isso é, definidos pelo usuário) ao invés
+    de apenas tipos primitivos.
     
 \end{description}
 
 \subsection{Executando a \textit{Milestone}}
-Agora vamos explicar melhor como compilar e rodar uma \textit{milestone}. Como cada 
-\textit{milestone} contém a anterior, somente iremos exemplificar a última delas.
-
-Para compilar a partir da pasta raiz do repositório das \textit{milestones} basta rodar:
+Agora vamos explicar melhor como compilar e executar uma \textit{milestone}. Como cada 
+uma delas é um incremento da anterior, basta exemplificarmos a última delas. Para compilar
+a partir da pasta raiz do repositório das \textit{milestones} basta rodar:
 
 \begin{verbatim}
   $ cmake .
@@ -535,7 +541,10 @@ Aqui vai um exemplo da execução dessa \textit{milestone}:
       \label{fig:milestone}
     \end{figure}
 
-E finalmente, os arquivos de cabeçalho da \textit{milestone}:
+Para ilustrar melhor as capacidades do nosso sistema, incluímos as
+partes relevantes do código fonte dessa última \textit{milestone}
+a seguir. Começamos pelos cabeçalhos cujas definições são exportadas
+para as máquinas virtuais que processarão os \script{s}:
 
 \vspace{1em}
 \begin{lstlisting}
@@ -630,7 +639,11 @@ class Sender {
 #endif
 \end{lstlisting}
 
-Seu \script{} em \lang{Python}:
+Cada \textit{milestone} processa dois \script{s}, um em
+\lang{Lua} e outro em \lang{Python}, um em seguida do outro.
+Cada um deles estabelece um fluxo de comandos e respostas
+próprio.
+
 \vspace{1em}
 \begin{lstlisting}[language=python]
 #!/usr/bin/python
@@ -698,8 +711,8 @@ def main():
     return True
 \end{lstlisting}
 
-E seu \script{} em \lang{Lua}:
 \vspace{1em}
+
 \begin{lstlisting}[language=lua]
 -- luatalker.lua
 
@@ -773,4 +786,6 @@ function main ()
   end
 end
 \end{lstlisting}
+
 \vspace{1em}
+
