@@ -26,9 +26,9 @@ linguagens de \script{} \lang{Lua} e \lang{Python} a um programa escrito em
 \CXX{}. Apesar de a princípio nos restringirmos apenas a essas duas linguagens
 de \script{}, elaboramos a arquitetura do nosso sistema de modo a facilitar
 a contemplação de novas linguagens. A compatibilidade inicial com duas
-linguagens diferentes de maneira simultânea visa demonstrar esse fato. Nesta
-monografia, são explicados todos os principais mecanismos desse sistema, assim
-como a teoria e a tecnologia por trás deles.
+linguagens diferentes de maneira simultânea visa justamente demonstrar essa
+versatilidade. Nesta monografia, são explicados todos os principais mecanismos desse
+sistema, assim como a teoria e a tecnologia por trás deles.
 
 \section{Motivação}
 \label{cap:intr:motivacao}
@@ -37,8 +37,8 @@ Como indicado por um exemplo altamente viesado acima, uma das nossas principais
 motivações para esse trabalho é o desenvolvimento de jogos digitais. Mais
 especificamente, foi nosso trabalho no USPGameDev\footnote{
   O USPGameDev é um grupo de pesquisa e desenvolvimento de jogos da
-  Universidade de São Paulo. Ver \url{uspgamedev.org} (último acesso: 
-  15/09/2013).
+  Universidade de São Paulo. Ver \url{http://uspgamedev.org/}
+  (último acesso: 15/09/2013).
 } que nos levou a ele. Afinal, em uma equipe de desenvolvedores de jogos não
 há apenas programadores, mas também \textit{designers} e artistas, que pouco
 ou nada sabem sobre programação. Nada melhor do que usar linguagens de
@@ -80,7 +80,8 @@ nossos aprendizados e experiências na monografia.
           mecanismos internos das linguagens envolvidas ou até mesmo saber qual a
           linguagem com que os \script{s} foram escritos.
     \item O sistema cuidará de disponibilizar as funcionalidades relevantes da
-          aplicação para os \script{s} que forem usados por ela.
+          aplicação de maneira que os \script{s} usados por ela possam acessá-las
+          sem grandes complicações.
     \item O sistema será um \textit{Software Livre}, e portanto deverá ser de
           fácil distribuição e inclusão nas aplicações que desejarem seus
           serviços.
