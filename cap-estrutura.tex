@@ -14,7 +14,7 @@
   e \lang{Python}, possivelmente ambas ao mesmo tempo. Como vimos na seção
   \ref{cap:conceitos:maquina}, essa interação pode ser estabelecida de maneira
   bastante direta entre elas se a máquina virtual da linguagem de \script{} em
-  questão tiver sido programada na linguagem compilada em questão. Para evitar
+  questão tiver sido programada na linguagem compilada de interesse. Para evitar
   repetitividade e simplificar o texto, diremos, do ponto de vista das
   máquinas virtuais envolvidas, que:
 
@@ -102,19 +102,20 @@
     Nesse ponto vale à pena destacar um aspecto que ficou de lado até agora.
     Como o subtítulo desse trabalho indica, o propósito do sistema é não só
     integrar as ditas linguagens, como fazê-lo de maneira \textit{automatizada}.
-    Até porque as APIs das máquinas virtuais por sí sós possuem seus próprios
+    Até porque as APIs das máquinas virtuais por sí sós já possuem seus próprios
     mecanismos de fornecer incorporação e exportação, indicando que nosso
-    projeto seria redundante, não fosse o fato que elas são trabalhosas e
-    específicas demais de usar. A intenção é que o usuário do nosso sistema não
+    projeto seria redundante, não fosse o fato que eles são trabalhosos e
+    específicos demais de usar. A intenção é que o usuário do nosso sistema não
     tenha que se preocupar com os detalhes de cada máquina virtual quando
     estiver desenvolvendo a aplicação dele e seja capaz de escrever normalmente
     os \script{s} que trabalhem com ela - isso é, podendo acessar módulos
     externos através dos mecanismos usuais que a linguagem virtual fornece.
 
     Logo, nosso sistema consistirá majoritariamente de uma biblioteca \CXX{}
-    que disponibiliza incorporação e exportação automatiza de e para \script{s}.
-    Faremos isso aproveitando as possibilidades de abstração da linguagem
-    escolhida para encapsular os comportamentos desejados. As duas próximas
+    que disponibiliza incorporação e exportação automatizada de e para \script{s}.
+    Faremos isso aproveitando as possibilidades de abstração que a orientação a
+    objetos em \CXX{} fornece para encapsular os comportamentos desejados das
+    máquinas virtuais. As duas próximas
     sessões explicarão como projetamos as partes dessa biblioteca que atenderão
     cada um desses requisitos.
 
@@ -124,10 +125,10 @@
     Como vimos na seção \ref{cap:conceitos:apis}, as máquinas virtuais com que
     estamos trabalhando possuem uma API própria através da qual podemos
     manipular seu conteúdo. Para evitar que o usuário acesse elas diretamente
-    (e tenha que lidar com os mecanismos dela ele mesmo), podemos encapsulá-las
-    por trás de uma camada que constitua uma nova API. Ela unificará o acesso às
-    funcionalidades de todas as máquinas virtuais compatíveis. Mais
-    especificamente, ela fornecerá os seguintes serviços:
+    (e tenha que lidar com os mecanismos delas ele mesmo), podemos encapsulá-las
+    por trás de uma camada que constitua uma nova API intermediária. Ela
+    unificará o acesso às funcionalidades de todas as máquinas virtuais compatíveis.
+    Mais especificamente, ela fornecerá os seguintes serviços:
 
     \begin{enumerate}
       \item Carregar um módulo a partir de um \script{};
@@ -143,24 +144,32 @@
     queremos que na verdade a rotina executada seja aquela que corresponda à
     máquina virtual apropriada ``sem que ele perceba'', como na figura
     \ref{fig:api-unificada}. Ou seja, precisamos de funções com nomes e
-    assinaturas\footnotemark{} fixos simbolizando a operação almejada, porém
+    assinaturas\footnote{A
+      \emph{assinatura} de uma rotina ou função especifica que tipos de
+      parâmetros ela recebe e que tipos de valores ela devolve a quem a
+      evocou.
+    } fixos simbolizando a operação almejada, porém
     sobrecarregadas com implementações circunstancialmente diferentes. Um jeito
     de obter esse efeito em \CXX{} é através da herança de classes, que é o
     método que adotaremos. Basicamente, sempre que formos implementar uma
-    funcionalidade que dependa do funcionamento das máquians virtuais,
-    definiremos uma classe abstrata com as assinaturas desejadas e herdaremos
+    funcionalidade que dependa do funcionamento das máquinas virtuais,
+    definiremos uma classe abstrata\footnote{Em
+      linguagens orientadas a objetos, \emph{classes abstratas} são classes
+      que não especificam a implementação de todas as operações dos objetos
+      pertencentes ao conjunto que ela representa, determinando apenas a
+      interface dessas operações. Outras classes deverão herdar dela para
+      de fato implementar cada operação, e os objetos envolvidos pertencerão
+      sempre a uma dessas classes filhas, mas poderão ser tratados como objetos
+      da classe mãe também. Por outro lado, um objeto nunca pode pertencer
+      \emph{apenas} a uma classe abstrata, pois senão ele teria comportamentos
+      indefinidos.
+    } com as assinaturas desejadas e herdaremos
     ela em classes específicas para cada linguagem de \script{}, que
-    implementarão o que de fato acontece quanda as funções da classe original
+    implementarão o que de fato acontece quando as funções da classe original
     são chamadas. Quando objetos dessas classes forem instanciados, os
     mecanismos de \CXX{} garantirão que a implementação usada corresponderá à
     classe verdadeira deles (relativa a alguma máquina virtual), por mais que a
     aplicação do usuário só conheça a classe abstrata mãe.
-
-    \footnotetext{
-      A \emph{assinatura} de uma rotina ou função especifica que tipos de
-      parâmetros ela recebe e que tipos de valores ela devolve a quem a
-      evocou.
-    }
 
     \begin{figure}[ht]
       \centering
@@ -181,13 +190,13 @@
       \label{fig:api-unificada}
     \end{figure}
 
-    Vamos, então, usar os serviços listados acima para escolher a combinação de
-    classes que a API unificada oferecerá. Uma maneira de fornecer acesso a
+    Vamos, então, basear-nos nos serviços listados acima para escolher a combinação de
+    classes que a nossa API intermediária deverá oferecer. Uma maneira de fornecer acesso a
     objetos virtuais, como especifica o item 3, é encapsular seu comportamento
     em uma classe própria. Dessa forma, quando instâncias dessa classe fossem
     manipuladas pela aplicação do usuário, elas internamente executariam as
     operações necessárias na máquina virtual para que o efeito desejado
-    refletisse nela. E com isso ganhamos o item 4 de graça, pois basta colocar
+    ocorresse. E com isso ganhamos o item 4 de graça, pois basta colocar
     nessa classe métodos que convertam o valor interno do objeto virtual para
     \CXX{} e vice-versa. Por exemplo, o usuário poderia usar uma instância dessa
     classe para referir-se a uma cadeia de caracteres definida em um \script{}
@@ -203,7 +212,7 @@
       Quando funções são tipos de \emph{primeira classe}, elas podem ser
       tratadas como se fossem um valor, o que permite que elas possam ser
       armazenadas em variáveis, passadas como argumento para outras funções
-      e até mesmo devolvidas por outras funções também.
+      e até mesmo devolvidas como resultado de outras funções também.
     }
 
     Fica faltando apenas o item 1, com o qual podemos seguir o mesmo raciocínio
@@ -212,10 +221,10 @@
     de objeto virtual que abstrai o módulo em si. Isso exige que a classe
     tenha operações de acesso a membros dos objetos, para a aplicação poder
     alcançar os objetos virtuais que estão ``dentro'' do módulo. Para completar,
-    a técnica de sobrecarga via herança nos permite criar, para cada máquina
-    virtual, implementações diferentes dessa classe que representa objetos
-    virtuais e mesmo assim exigir que o usuário use apenas uma classe base com
-    as assinaturas de todas essas operações que vimos. 
+    a técnica de sobrecarga via herança nos permite criar implementações diferentes
+    dessa classe para representar objetos virtuais de cada máquina e mesmo
+    assim exigir que o usuário use apenas a classe base delas com as assinaturas de
+    todas essas operações que vimos. 
 
     \begin{figure}[ht]
       \centering
@@ -228,7 +237,7 @@
           \textit{
             Cada instância da classe que representará objetos virtuais encapsula
             um valor dentro de alguma máquina virtual. Note que mais de uma
-            instância pode interagir com um mesmo valor.
+            instância pode ser responsável por um mesmo valor.
           }
         \end{center}
       \end{subfigure}
@@ -239,10 +248,10 @@
     classes. Afinal, quando o usuário quiser carregar um módulo para obter seu
     respectivo objeto virtual, que parte da nossa API ele deverá usar? A classe
     dos objetos virtuais não pode ser instanciada sozinha (até porque ela é
-    abstrata). Normalmente, quem tem as informações necessárias para tanto são
+    abstrata). Normalmente, quem tem as informações necessárias para fazê-lo são
     as próprias máquinas virtuais. Então, uma solução seria definir uma classe
     para as máquinas virtuais também, novamente usando herança para abstrair o
-    funcionamento delas ao mesmo tempo deixando assinaturas relevantes ficam
+    funcionamento delas ao mesmo tempo deixando que assinaturas relevantes fiquem
     expostas. A terceira classe seria justamente para gerenciar as instâncias de
     máquinas virtuais. As relações entre essas três classes e o usuário estão
     representadas na figura \ref{fig:api-classes}.
@@ -274,15 +283,23 @@
 
     Para entender melhor como fazer a exportação, precisamos saber o que
     exportar. No caso, como as aplicações dos usuários estarão escritas em \C{}
-    ou \CXX{}, os elementos que gostaríamos de exportar serão:
+    ou \CXX{}, os elementos que gostaríamos de exportar são:
 
     \begin{enumerate}
       \item Variáveis globais.
       \item Funções globais.
       \item Tipos novos definidos na aplicação (usando \lang{typedef}, classes
             ou equivalentes)
-      \item Outras informações, como \textit{namespaces}.
+          \item Outras informações, como \textit{namespaces}\footnotemark{}.
     \end{enumerate}
+
+    \footnotetext{
+      \textit{Namespaces} (do inglês, ``espaços de nomes'') são estruturas
+      em \CXX{} que separam os elementos de uma aplicação em espaços distintos,
+      facilitando a organização e expressividade do código, assim como
+      evitando possíveis conflitos de nomes iguais usados em contextos
+      diversos.
+    }
 
     No terceiro item, o ideal é que todas as operações inerentes ao tipo
     também sejam exportadas. Isso englobaria tanto operações aritméticas básicas
@@ -298,7 +315,7 @@
     o exemplo que demos na seção \ref{cap:estrutura:geral}, poderia haver um
     módulo na aplicação (no caso, um jogo) que cuidasse do posicionamento de
     avatares, e nós gostaríamos que \script{s} incorporados pudessem acessar
-    suas funcionalidades. Todas as variáveis, funções e tipos relacionados
+    as funcionalidades desse módulo. Todas as variáveis, funções e tipos relacionados
     teriam que ser colocados no módulo virtual através das funções de
     inicialização, que precisam ser feitas usando o protocolo esperado pelas
     APIs.
@@ -313,7 +330,7 @@
     Isso compõe um método de exportação que funciona, mas traz dificuldades. A
     maior delas é que \C{} e \CXX{} não oferecem um meio de definir funções
     novas em tempo de execução, impedindo nossa biblioteca de registrar módulos
-    virtuais durante suas rotinas, pois as funções de inicialização já precisam
+    virtuais durante o processo de suas rotinas, pois as funções de inicialização já precisam
     estar criadas quando a aplicação do usuário for ser compilada. A outra
     grande dificuldade é que é igualmente impossível de analisar o código da
     aplicação durante a execução dela mesma dadas as linguagens compiladas que
@@ -321,7 +338,7 @@
     nativo para uma linguagem de \script{}, ele simplesmente escreveria as
     funções de inicialização e manualmente colocaria cada elemento do código
     dele nos módulos exportados. Mas o que estamos tentando projetar aqui visa
-    justamente \emph{automatizar} a integração aplicação-\script{s}, então
+    justamente \emph{automatizar} a integração entre aplicação e \script{s}, então
     simplesmente pedir para o usuário fazer esse trabalho sujo para nós está
     fora de questão. Assim sendo, não temos como saber quais variáveis, funções
     e tipos pertencem a um módulo e, mesmo que soubéssemos, não temos como
@@ -377,7 +394,7 @@
     expô-los adequadamente aos protocolos que as APIs das máquinas virtuais
     exigem para exportação. Assim, o que realmente estaremos inserindo nos
     módulos virtuais serão esses \textit{wrappers}, e não os elementos
-    originais. Entraremos em mais detalhes sobre como fazer esses wrappers no
+    originais. Entraremos em mais detalhes sobre como fazer esses \textit{wrappers} no
     capítulo \ref{cap:atividades}. Por enquanto, o importante é entender que
     essa parte do nosso sistema envolverá um gerador de código que produzirá
     os \textit{wrappers} que ele julgar necessário dado o código fonte da
