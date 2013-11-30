@@ -251,7 +251,8 @@ exemplo para ilustrar um caso de uso, e discutimos brevemente as possibilidades
 atualmente existentes para integrar \script{s}. Depois, contamos sobre a
 motivação que nos levou a elaborar esse projeto, assim como o que diferencia
 ele das outras soluções presentes na comunidade Web. Terminamos listando os
-objetivos principais do trabalho com relação à biblioteca que desenvolvemos.
+objetivos principais do trabalho com relação à biblioteca de programação
+que desenvolvemos.
 
 Em seguida, partimos para uma discussão mais conceitual ao longo do próximo
 capítulo (\ref{cap:conceitos} - Conceitos e tecnologias estudadas).
@@ -259,26 +260,34 @@ Procuramos entender o que caracteriza as linguagens de programação que estamos
 tentando integrar: \CXX{}, \lang{Lua} e \lang{Python}. Para isso, exploramos
 as noções de linguagens compiladas contra linguagens interpretadas, e como
 o conceito de máquinas virtuais ajuda a entender melhor a relação entre elas.
-Ao final, elaboramos com mais profundidade as ferramentas que \lang{Lua} e
+Ao final, tratamos com mais profundidade sobre as ferramentas que \lang{Lua} e
 \lang{Python} nos oferecem, para que fique mais fácil de entender o que
-falamos demais capítulos do trabalho.
+falamos nos demais capítulos do trabalho.
 
-Tratamos, no terceiro capítulo (\ref{cap:atividades} - Atividades) sobre a
+Depois, apresentamos a estrutura do nosso projeto (\ref{cap:estrutura} -
+Estrutura do Projeto). Buscamos modelar uma solução para lidar com a
+integração automatizada que desejamos que nosso sistema forneça. Esse
+capítulo revela como dividimos nosso trabalho em duas grandes frentes,
+que chamamos de \textbf{incorporação} e \textbf{exportação}. Tentamos
+também deixar claro como o usuário poderá interagir com tudo isso.
+
+Discutimos, no quarto capítulo (\ref{cap:atividades} - Atividades), sobre a
 evolução do nosso sistema, desde sua origem a dois anos atrás até as decisões
 que tomamos ao longo desse último ano tendo em vista o trabalho de formatura.
 Contamos sobre como nossa participação no USPGameDev levou à ideia inicial
-do projeto, assim como o que mudou quando o disvinculamos do grupo. Em seguida,
-entramos em alguns detalhes da implementação do nosso sistema, que mostramos
-estar dividido em duas grandes partes principais. Também desabafamos sobre
-o SWIG, uma ferramente que nos ajudou inicialmente mas tornou-se uma
+do projeto, assim como o que mudou quando o desvinculamos do grupo. Em seguida,
+entramos em alguns detalhes da implementação do nosso sistema, segundo
+as duas partes principais idealizadas no capítulo anterior. Também desabafamos sobre
+o SWIG, uma ferramenta que nos ajudou inicialmente mas tornou-se uma
 enorme dor de cabeça posteriormente. Terminamos falando sobre algumas utilidades
 que fizemos em CMake para facilitar o uso da nossa biblioteca.
 
 No último capítulo da parte objetiva (\ref{cap:resultados} - Resultados)
 apresentamos o estado em que o projeto se encontra atualmente. Mostramos e
-exemplificamos as funcionalidades, com alguns exemplos para facilitar.
-Aproveitamos para deixar algumas instruções de uso, incluindo configuração e
-compilação das partes relevantes do sistema.
+exemplificamos as funcionalidades, com alguns trechos de código para
+deixar mais explícido o que ele é capaz de fazer. Aproveitamos para deixar
+algumas instruções de uso, incluindo configuração e compilação das partes
+relevantes do sistema.
 
 A parte subjetiva começa com um capítulo para cada autor (\ref{cap:omar} - Fernando
 Omar Aluani, e \ref{cap:wil} - Wilson Kazuo Mizutani), contando sobre nossas
