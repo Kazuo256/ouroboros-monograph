@@ -1,5 +1,4 @@
 
-- Conceitos sobre API do Lua: exemplo de código para "luaopen"
 - Padronizar a fonte de namespaces para itálico
 - Links para os nossos repositórios?
 - Exemplo de wrapper gerado?

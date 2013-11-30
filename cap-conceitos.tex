@@ -624,8 +624,9 @@
     para serem aceitas pela API. Elas também são chamadas de \lang{Python C Functions} ou
     \lang{PyCFunction}. As formas mais comuns
     de permitir que essa função nativa seja chamada pelos \script{s} são construir algum 
-    objeto que contenha ou execute essa função, ou definir um módulo pela API que o faça. De forma análoga 
-    a \lang{Lua}, para criar um módulo desses também é necessário inicializá-lo com código \C{},
+    objeto que contenha ou execute essa função, ou definir um módulo pela API que o faça.
+    De forma análoga a \lang{Lua}, para criar um módulo desses também é necessário
+    inicializá-lo com código \C{},
     o que também é feito com uma função de inicialização, que deve seguir a assinatura acima
     e ter o prefixo ``\lang{init}'', seguido do nome do módulo. Então, para implementar o módulo
     \lang{teste} que mostramos anteriormente dessa forma, estenderíamos o código do
