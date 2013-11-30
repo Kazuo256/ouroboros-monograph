@@ -6,7 +6,7 @@
   para lidar com os empecilhos do dia-a-dia, desde uma mobília para conseguirmos
   sentar e comer até aparelhos elaborados para detectar doenças em nossos
   corpos. Entender o problema que se quer resolver, e saber desprender a solução
-  dessa análise é um procedimento fundamental ao projetar esses produtos -- o
+  dessa análise é um procedimento fundamental ao projetar esses produtos -- e o
   mesmo vale quando desenvolvemos um \textit{software}. Para tanto, existem
   várias maneiras de se modelar os problemas, e uma das mais simples é na forma
   de uma pergunta.
@@ -84,7 +84,7 @@
     exatamente aquela que o computador foi projetado para processar. Em geral,
     uma linguagem dessas usa apenas valores numéricos para representar
     instruções explícitas de \emph{hardware} para manipulação de dados brutos,
-    e são conhecidas como \textbf{linguagem de máquina} \cite{org&arch:00}.
+    e são conhecidas como \textbf{linguagem de máquina}.
     Para elas, o modelo computacional corresponde às operações que o processador
     é capaz de executar e os dados que podem ser armazenados nos diversos tipos
     de memória da máquina.
@@ -127,7 +127,7 @@
       \end{enumerate}
     }
     
-    Em particular, \CXX{} é uma linguagem compilada \cite{cpp:00}. Em suas
+    Em particular, \CXX{} é uma linguagem compilada. Em suas
     primeiras versões programas escritos nela eram compilados para a linguagem
     \C{}, que por sua vez compilam para linguagens bastante próximas de uma
     linguagem de máquina, conhecidas como linguagens de montagem; atualmente,
@@ -172,7 +172,7 @@
     O segundo método de usar uma linguagem de alto nível para abstrair
     linguagens próximas a linguagens de máquina seria providenciar um programa
     intermediário capaz de simular a execução de instruções. Chamamos esses
-    programas de \textbf{interpretadores} \cite{pl:00}. Também dizemos que sua
+    programas de \textbf{interpretadores}. Também dizemos que sua
     linguagem fonte é uma \textbf{linguagem interpretada}. Essencialmente, ao
     invés de tentar levar a linguagem em si para mais perto da máquina, eles
     trazem a máquina para mais perto da linguagem. Isso é, produzem um modelo
@@ -195,7 +195,7 @@
     Uma das grandes e principais vantagens de linguagens interpretadas é que
     suas abstrações podem produzir muito mais escrevendo muito menos. Outra
     vantagem é que como elas são processadas por um programa durante a execução
-    deste, então o código fonte não precisa estar completo imediatamante (como
+    deste, então o código fonte não precisa estar completo de uma vez só (como
     ocorre com a compilação). O interpretador pode ir recebendo as intruções uma
     de cada vez, conforme o usuário as digita nas famosas linhas de comando, por
     exemplo. Juntando essas duas  características, é possível um usuário
@@ -218,7 +218,7 @@
     consideradas linguagens de \script{}. Com o objetivo de encontrar um meio de
     usá-las junto com \CXX{}, fizemos uma pesquisa sobre o funcionamento de suas
     respectivas máquinas virtuais. O que descobrimos, para nossa felicidade, é
-    que ambas são bibliotecas desenvolvidas em \C{}, e que seus interpretadores
+    que ambas fazem parte de bibliotecas desenvolvidas em \C{}, e que seus interpretadores
     nada mais são do que programas que usam essas bibliotecas. Eles cuidam de
     receber o código do usuário, seja através da linha de comando ou de
     \script{s}, e passá-los para a máquina virtual, que os processa devidamente.
@@ -254,8 +254,8 @@
 
     Essa seção é dedicada a um estudo breve das APIs que as máquina virtuais de
     \lang{Lua} e \lang{Python} oferecem. Ainda com o foco em encontrar meios
-    para formar a integração que queremos, explicaremos algumas funcionalidades
-    chave dessas APIs.
+    para formar a integração que queremos, limitar-nos-emos a explicar apenas
+    algumas funcionalidades mais relevantes dessas APIs.
 
     \subsection{\lang{Lua}}
     \label{cap:conceitos:apis:lua}
@@ -277,7 +277,7 @@
 
       Esse método tem várias vantagens, dentre elas o fato que o tipo dos
       elementos na pilha não é explícito, permitindo que a linguagem tenha
-      tipagem dinâmica \cite{pl:00}. Além disso, o processo para executar
+      tipagem dinâmica. Além disso, o processo para executar
       rotinas fica bastante generalizado: os valores na pilha no começo da
       execução delas são os parâmetros, em ordem, e os valores que ela deixar ao
       final são os resultados devolvidos, também em ordem. Do lado de quem evoca
@@ -301,7 +301,7 @@
       \vspace{1em}
 
     \begin{lstlisting}
-    // Indices passado nas chamadas abaixo sao a posicao da pilha na
+    // Indices passados nas chamadas abaixo sao a posicao da pilha na
     // qual queremos aplicar a operacao. Numeros positivos indexam a
     // partir da base da pilha, e negativos do topo para baixo.
     lua_State *L;
@@ -310,14 +310,16 @@
     // Vamos supor que a funcao pow eh uma variavel global...
     // A chamada abaixo coloca ela no topo da pilha
     lua_getglobal(L, "pow");
-    // Verifica se a funcao realmente existe e eh do tipo certo
+    // Verificamos se a funcao realmente existe e eh do tipo certo
     if (lua_isnil(L, -1) || !lua_isfunction(L, -1)
       throw runtime_error("Could not find function <pow>.");
-    // Empilha os parametros
+    // Empilhamos os parametros
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
-    // Evoca a funcao. Ela recebe dois parametros e devolve apenas um valor,
-    // como indicado pelos argumentos passados
+    // Nesse momento, o topo da pilha estah assim:
+    // [ ..., <pow>, x, y]
+    // Evocamos a funcao. Ela recebe dois parametros e devolve apenas um valor,
+    // entao indicamos nos argumentos passados abaixo
     lua_call(L, 2, 1);
     // Agora o resultado estah no topo da pilha e o resto foi removido
     double result = lua_tonumber(L, -1);
@@ -327,10 +329,10 @@
 
       Esse exemplo também serve para dar uma ideia de como funciona a conversão
       de valores entre a máquina virtual \lang{Lua} e a linguagem
-      \C{}\footnotemark{}. As funções com prefixo \lang{lua\_push} da API
+      \C{}\footnotemark{}. As funções com prefixo ``\lang{lua\_push}'' da API
       são usadas para converter para a máquina virtual colocando o valor no topo
-      da pilha, enquanto que as com \lang{lua\_to} convertem da pilha para
-      \C{}. Note que elas \emph{não} removem os elementos da pilha, para isso
+      da pilha, enquanto que as com ``\lang{lua\_to}'' convertem da pilha para
+      \C{}. Note que essas últimas \emph{não} removem os elementos da pilha, para isso
       tem a \lang{lua\_pop()}.
 
       \footnotetext{
@@ -401,18 +403,20 @@
 
       Um tipo mais versátil é o tipo \lang{function}, pois é possível passar
       funções em \C{} para a pilha usando ele. Tudo que é preciso é que a
-      assinatura usada seja \lang{int <função> (lua\_State *)}, isso é, uma
-      função que receba o estado da máquina e devolva um inteiro. Em sua
-      implementação, ela deve manipular a pilha de maneira a satisfazer o
+      assinatura delas seja \lang{int <função> (lua\_State *)}, isso é, que
+      elas sejam funções que recebam o estado da máquina e devolvam um inteiro.
+      Em sua implementação, elas devem manipular a pilha de maneira a satisfazer o
       protocolo especificado anteriormente: o que estiver na pilha inicialmente
       deve ser tratado como os parâmetros, e o que for deixado ao final serão
       os resultados, exceto que o valor inteiro devolvido indica quantos
       elementos do topo da pilha de fato devem ser devolvidos. Por exemplo, a
-      mesma função \lang{pow} mostrada acima seria assim:
+      mesma função \lang{pow} mostrada acima podia ser escrita usando a API
+      assim:
 
       \vspace{1em}
 
     \begin{lstlisting}
+    #include <lua.h>
     #include <cmath>
 
     int native_pow (lua_State* L) {
@@ -426,7 +430,7 @@
       double  x = lua_tonumber(L, 1),
               y = lua_tonumber(L, 2);
       lua_pushnumber(L, pow(x, y));
-      // Nao precisa limpar a pilha, bas avisar que soh o ultimo
+      // Nao precisa limpar a pilha, basta avisar que soh o ultimo
       // valor eh para ser devolvido
       return 1;
     }
@@ -434,19 +438,20 @@
 
       \vspace{1em}
 
-      Um procedimento similar é usado para fazer módulos nativos, pois eles são
+      Um procedimento similar é usado para fazer módulos \lang{Lua} que venham
+      de \C{}, pois eles são
       construídos usando funções nativas como essa. A principal diferença é que
       além de usar a assinatura correta, o nome da função que constrói o módulo
-      precisa ter o prefixo \lang{luaopen\_} seguido do nome do próprio módulo.
+      precisa ter o prefixo ``\lang{luaopen\_}'' seguido do nome do próprio módulo.
       Para futuras referências, chamaremos essas funções especiais de
       \emph{funções de inicialização}. Segue um exemplo de construção de um
-      módulo ``\lang{native}'' que contém apenas a função \lang{native\_pow}
+      módulo chamado ``\lang{native}'' que contém apenas a função \lang{native\_pow}
       que acamos de mostrar:
 
       \vspace{1em}
 
     \begin{lstlisting}
-    int luaopen_nativemodule (lua_State* L) {
+    int luaopen_native (lua_State* L) {
       // O argumento recebido eh o proprio nome do modulo, que
       // no caso vamos ignorar
       lua_settop(L, 0);
@@ -463,7 +468,7 @@
 
       \vspace{1em}
 
-      Para \script{s} poderem usar esse módulo, você precisa compilar ele em uma
+      Para \script{s} poderem usar esse módulo, é preciso compilar ele em uma
       biblioteca dinâmica\footnotemark{} com o nome ``\lang{native.so}'' em um
       Linux ou ``\lang{native.dll}'' em um Windows. Depois é só fazer como
       antes:
@@ -494,8 +499,8 @@
     \subsection{\lang{Python}}
     \label{cap:conceitos:apis:python}
     Ao contrário de \lang{Lua}, \lang{Python} trabalha internamente com um
-    \emph{heap} para guardar seus objetos, porém raramente o usuário precisa
-    mexer com o \textit{heap} diretamente. De fato, ao longo do desenvolvimento 
+    \emph{heap} (do inglês, ``monte'') para guardar seus objetos, porém raramente o usuário precisa
+    mexer com ele diretamente. De fato, ao longo do desenvolvimento 
     desse projeto nunca precisamos mexer nele.
 
     A API \C{} do \lang{Python} é bem compreensiva e documentada, com muitas funções e
@@ -528,10 +533,10 @@
         //primeiro importamos o modulo
         PyObject* teste = PyImport_ImportModule("teste"); //new ref
         if (teste == nullptr) {
-            // deu erro na importacao do modulo, python setou uma 
-            // excecao na API que pode ser vista...
-            // entao aqui voce deve ver essa excecao do python,
-            // e retornar um valor de erro ou soltar uma excecao de C++
+            // deu erro na importacao do modulo, e o python configura uma 
+            // excecao na API que pode ser analisada...
+            // entao aqui voce deve verificar essa excecao do python,
+            // e devolver um valor de erro ou soltar uma excecao de C++
             return 0;
         }
         
@@ -539,8 +544,8 @@
         // 1. pegar uma funcao do modulo
         // 2. construir uma tupla com os parametros a serem passados
         // 3. executar a tal funcao, passando os parametros.
-        //e tambem possivel realizar essas operacoes separadamente,
-        //cada uma e uma outra chamada de funcao da API.
+        //e tambem eh possivel realizar essas operacoes separadamente,
+        //cada uma em uma chamada separada de funcao da API.
         PyObject* result = PyObject_CallMethod(teste, "pow", "dd", x, y); //new ref
         if (result == nullptr) {
             // deu erro na chamada de funcao, o mesmo do caso teste==nullptr
@@ -548,36 +553,36 @@
             return 0;
         }
         
-        //convertermos o resultado para C
+        //convetermos o resultado para C
         double resultado = PyFloat_AsDouble(result);
         
         //corrigimos as contagens de referencia
         Py_DECREF(teste);
         Py_DECREF(result);
         
-        //e retornamos o resultado
+        //e devlvemos o resultado
         return resultado;
     }
     \end{lstlisting}
       
     \vspace{1em}
     
-    Como é possível notar no exemplo acima, outra facilidade da API é ela usa um sistema 
+    Como é possível notar no exemplo acima, outra facilidade da API é que ela usa um sistema 
     primitivo de orientação a objetos em \C{}, e quase tudo em \lang{Python} (um módulo, uma 
-    classe, uma função, etc) é representado em \C{} por um ponteiro para \lang{PyObject}, 
+    classe, uma função, etc) é representado em \C{} por um ponteiro para a estrutura \lang{PyObject}, 
     que além de informações sobre o tipo do objeto e outros valores, contém a contagem de 
-    referência do objeto. Quando a contagem de referências de um objeto se torna zero, a 
-    máquina virtual deleta aquele objeto. E ai está um dos piores pontos da API \lang{Python}: 
-    enquanto a máquina virtual gerencia automaticamente as contagens de referência
+    referência dele. Quando a contagem de referências de um objeto se torna zero, a 
+    máquina virtual o remove da memória. E ai está um dos piores pontos da API \lang{Python}: 
+    apesar de a máquina virtual gerenciar automaticamente as contagens de referência
     quando ela processa código em \lang{Python}, o usuário que usar a API \C{} tem que incrementar e 
     decrementar manualmente as contagens dos objetos que ele está usando, o que é trabalhoso e 
     propenso a erros.
     
-    Assim como no Lua, um \script{} pode ser usado de duas formas pela máquina virtual:
+    Assim como em Lua, um \script{} pode ser usado de duas formas pela máquina virtual:
     como uma sequência de operações a serem executadas ou como um módulo, contendo definições
-    e operações que podem ser usadas por outros módulos. No entanto, no \lang{Python} não há diferença
-    entre ambos. Ao importar um \script{} \lang{Python}, ele será executado e quaisquer operações
-    declaradas nele serão realizadas, assim como quaisquer definições se tornarão acessíveis
+    e operações que podem ser usadas por outros módulos. No entanto, a API \lang{Python} não diferencia
+    esses dois usos. Ao importar um \script{} \lang{Python}, ele será executado e quaisquer operações
+    descritas nele serão realizadas, assim como quaisquer definições se tornarão acessíveis
     a quem importou o módulo. Por exemplo, o seguinte script:
     \vspace{1em}
     \begin{lstlisting}[language=python]
@@ -589,10 +594,10 @@
     Irá importar o \script{} teste mostrado acima, que por si só não realiza nenhuma operação -
     ele simplesmente define a função \lang{pow}. Após a importação, esse \script{} não
     define nada, mas realiza uma operação: imprime texto no console, contendo a frase
-    ``2 elevado a 3 é igual a'' e o valor devolvido pela execução de \lang{pow(2,3)}.
+    ``2 elevado a 3 é igual a'' seguido do valor devolvido pela execução de \lang{pow(2,3)}.
     
     Também é possível definir variáveis, funções e classes para serem usadas pelos \script{s}
-    na linguagem nativa da máquina virtual. Usando a função \lang{pow} como exemplo novamente,
+    através da API da máquina virtual. Usando a função \lang{pow} como exemplo novamente,
     para implementá-la em \C{} faríamos o seguinte:
     
     \vspace{1em}
@@ -604,31 +609,32 @@
         double x, y;
         if (!PyArg_ParseTuple(args, "dd", &x, &y)) {
             // - Ocorreu algum erro na conversao dos parametros.
-            // Retornar NULL indica para a maquina virtual que ocorreu
-            // um erro nesta funcao, e nesse caso nao setamos uma excecao pois
-            // a propria funcao PyArg_ParseTuple ja o faz quando ocorre um erro.
-            return NULL;
+            // Devolver nullptr indica para a maquina virtual que ocorreu
+            // um erro nesta funcao, e nesse caso nao configuramos uma excecao pois
+            // a propria funcao PyArg_ParseTuple jah o faz quando ocorre um erro.
+            return nullptr;
         }
-        // Objeto python retornado deve ser sempre uma nova referencia
+        // Objeto python devolvido deve ser sempre uma nova referencia
         return Py_BuildValue("d", pow(x, y) );
     }
     \end{lstlisting}
     \vspace{1em}
     
-    A assinatura de \lang{native\_pow} é a assinatura de funções nativas de \lang{Python} em \C{},
-    também chamadas de \lang{Python C Functions} ou \lang{PyCFunction}. As formas mais comuns
-    de habilitar que essa função nativa seja chamada pelos \script{s} são definir algum 
-    objeto que contenha ou execute essa função ou definir um módulo nativo. De forma análoga 
-    ao \lang{Lua}, para criar um módulo nativo também é necessário inicializá-lo pelo \C{},
-    o que usualmente é feito com uma função de inicialização, e também deve seguir uma assinatura
-    e ter o prefixo \lang{init}, seguido pelo nome do módulo. Então para implementar o módulo
-    \lang{teste} que mostramos anteriormente de forma nativa, extenderíamos o código do
+    A assinatura de \lang{native\_pow} é a assinatura de que funções em \C{} precisam ter
+    para serem aceitas pela API. Elas também são chamadas de \lang{Python C Functions} ou
+    \lang{PyCFunction}. As formas mais comuns
+    de permitir que essa função nativa seja chamada pelos \script{s} são construir algum 
+    objeto que contenha ou execute essa função, ou definir um módulo pela API que o faça. De forma análoga 
+    a \lang{Lua}, para criar um módulo desses também é necessário inicializá-lo com código \C{},
+    o que também é feito com uma função de inicialização, que deve seguir a assinatura acima
+    e ter o prefixo ``\lang{init}'', seguido do nome do módulo. Então, para implementar o módulo
+    \lang{teste} que mostramos anteriormente dessa forma, estenderíamos o código do
     \lang{native\_pow} com o seguinte:
     
     \vspace{1em}
     \begin{lstlisting}
     static PyMethodDef TesteMethods[] = {
-        {"pow", native_pow, METH_VARARGS, "pow(x,y) -> retorna x elevado a y."},
+        {"pow", native_pow, METH_VARARGS, "pow(x,y) -> devolve x elevado a y."},
         {NULL, NULL, 0, NULL}        /* sentinela */
     };
 
@@ -641,7 +647,7 @@
     Para usar o módulo, caso você esteja incluindo a máquina virtual de \lang{Python}
     em sua aplicação executável, basta compilar esse arquivo junto com seu programa, 
     e chamar a função de inicialização \lang{initteste} após inicializar a máquina 
-    virtual. Caso contrário, basta compilar o módulo numa biblioteca 
-    dinâmica - mas não vamos entrar em detalhes neste caso pois para o escopo deste 
-    projeto, somente usamos módulos nativos em programas que estão incorporando as 
-    máquinas virtuais.
+    virtual. Caso contrário, basta compilar o módulo em uma biblioteca 
+    dinâmica - mas não vamos entrar em detalhes sobre esse caso pois, para o escopo deste 
+    projeto, somente usamos módulos construídos usando a API em programas que estão
+    incorporando as máquinas virtuais.
