@@ -787,7 +787,8 @@
   quando o programa é carregado, dado que ele tenha sido compilado junto com o código
   de \textit{wrapper} gerado. O \textit{bootstrap} então registra a máquina virtual da
   linguagem de \script{} para a qual ele está exportando, caso ela ainda não tenha sido
-  registrada, e registra o módulo de \script{} e seus sub-módulos nela.
+  registrada, e registra o módulo de \script{} e seus sub-módulos nela. Colocamos um
+  exemplo completo do que o gerador faz na seção \ref{cap:resultados:opwig}.
   
   Internamente, o OPWIG contém:
   \begin{itemize}
@@ -857,6 +858,8 @@
   eles usando o analisador, e consome eles para gerar o código correto dos \textit{wrappers}.
   
   \subsection{Especificação de \textit{wrappers}}
+  \label{cap:atividades:opwig:wrappers}
+
   O gerador de código, junto com a especificação de \textit{wrappers} para uma linguagem
   de \script{}, transforma os metadados em um arquivo de código \CXX{} contendo os
   \textit{wrappers} que possibilitarão que o código analisado seja exportado. O que o
@@ -894,7 +897,7 @@
   \section{Funções auxiliares de CMake}
   \label{cap:atividades:cmake}
   
-    Como dissemos na sessão \ref{cap:estrutura:opwig}, a geração dos
+    Como dissemos na seção \ref{cap:estrutura:opwig}, a geração dos
     \textit{wrappers} precisa ser feita antes da compilação da aplicação do
     usuário pelos geradores responsáveis por tratar cada máquina virtual usada.
     Isso gera uma complicação para o usuário e outra para os desenvolvedores. A

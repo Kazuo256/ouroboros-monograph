@@ -356,6 +356,7 @@ Cada gerador é especificado para uma só linguagem e portanto ao ser executado
 ele obrigatoriamente irá gerar um arquivo de código com o módulo exportado para
 essa linguagem apenas. O arquivo gerado é criado na mesma pasta onde gerador foi
 executado, seguindo o seguinte padrão de nomenclatura:
+
 \begin{verbatim}
   <nome da linguagem de script>_<nome do módulo>_wrap.cxx
 \end{verbatim}
@@ -366,6 +367,37 @@ Alternativamente, você pode optar por usar CMake para compilar sua aplicação,
 lhe permite usar as funcionalidades descritas na seção \ref{cap:atividades:cmake}
 para automatizar todo esse procedimento.
 
+Vamos mostrar agora o que nosso gerador produz em um caso bem simples. Não será
+demonstrado todas as capacidades dele, pois não só teria que ser um caso muito
+artifical, como também o código gerado seria muito extenso (atualmente, a nossa
+mais recente \textit{milestone} gera um total de 1203 linhas de código, somando
+os \textit{wrappers} de \lang{Lua} e de \lang{Python}). O cabeçalho que será
+analisado será o seguinte:
+
+\vspace{1em}
+\lstinputlisting{code/test.h}
+\vspace{1em}
+
+Como acabamos de ver, podemos gerar os \textit{wrappers} com os comandos:
+
+\begin{verbatim}
+  $ opwig-lua --module-name=test test.h
+  $ opwig-python --module-name=test test.h
+\end{verbatim}
+
+E serão gerados arquivos com nome ``Lua\_test\_wrap.cxx'' e ``Python\_test\_wrap.cxx'',
+cujo conteúdo seguirá a sequência de blocos descrita na seção
+\ref{cap:atividades:opwig:wrappers}. Os código gerados ficam, respectivamente:
+
+\vspace{1em}
+\lstinputlisting{code/Lua_test_wrap.cxx}
+\vspace{1em}
+\lstinputlisting{code/Python_test_wrap.cxx}
+\vspace{1em}
+
+Um dos nossos objetivos para um futuro próximo é conseguir gerar \textit{wrappers}
+com menos código mas que ainda assim sejam razoavelmente legíveis.
+
 \subsubsection{Usando os módulos gerados}
 
 Para usar os módulos gerados, basta compilar eles junto com seu programa, ligado com
@@ -375,7 +407,9 @@ capaz de incluir o módulo gerado usando o mecanismo padrão da linguagem para
 inclusão de módulos externos. E o módulo em si deverá ser usado como qualquer
 outro módulo normal dessa linguagem.
 
-Por exemplo, suponha a seguinte interface em \CXX{}:
+Vamos mostrar um exemplo mais elaborado que o anterior, para mostrar o quão
+fácil fica usar as definições exportadas em \script{}, mas dessa vez omitiremos
+o código que seria gerado. Suponha a seguinte interface em \CXX{}:
 
 \vspace{1em}
 \begin{lstlisting}
@@ -530,7 +564,7 @@ E para executar:
 
 Para ilustrar melhor as capacidades do nosso sistema, incluímos as
 partes relevantes do código fonte dessa última \textit{milestone}
-a seguir. No final da sessão, a figura \ref{fig:milestone} mostra
+a seguir. No final da seção, a figura \ref{fig:milestone} mostra
 um exemplo da execução dela. Começamos pelos cabeçalhos cujas
 definições são exportadas para as máquinas virtuais que processarão os \script{s}:
 
@@ -630,7 +664,10 @@ class Sender {
 Cada \textit{milestone} processa dois \script{s}, um em
 \lang{Lua} e outro em \lang{Python}, um em seguida do outro.
 Cada um deles estabelece um fluxo de comandos e respostas
-próprio.
+próprio. No caso do em \lang{Lua}, ele também faz algumas
+verificações adicionais, para saber se os \textit{wrappers}
+gerados detectam erros corretamente. Por isso, parece
+que ele solta mensagens de erro, mas elas são esperadas.
 
 \vspace{1em}
 \begin{lstlisting}[language=python]
