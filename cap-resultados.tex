@@ -7,7 +7,7 @@ surgiram antes do trabalho de formatura, mas ainda assim foram aprimorados
 durante a evolução dele. Eles formam o que chamamos de sistema do
 Projeto Ouroboros, na forma de uma biblioteca \CXX{} de nome
 \lang{libouroboros}. Como vimos no capítulo \ref{cap:estrutura},
-ela é composto por duas grandes partes, uma responsável por incorporar
+ela é composta por duas grandes partes, uma responsável por incorporar
 \script{s} e outra por exportar funcionalidades nativas para \script{s}.
 São a OPA e o OPWIG, resepectivamente.
 
@@ -22,15 +22,15 @@ usando o CMake para gerar arquivos relativos à compilação, como \textit{Makef
 no Linux. Não chegamos a testar em Mac OS mas por enquando em Windows não é
 possível compilar usando Visual Studio porque ele não reconhece \CXX{11} completamente
 ainda. Em Linux, contanto que os pacotes necessários estejam instalados, a biblioteca
-compila e funciona sem problemas.
+compila e funciona sem problemas usando um \lang{g++} de versão 4.7 ou mais recente.
 
 As implementações que fizemos da OPA e do OPWIG que comportam as linguagens de
 \script{} \lang{Lua} e \lang{Python} também estão funcionais (embora ainda não
 com todas os recursos que gostaríamos), sendo distríbuidas como extensões
 da \lang{libouroboros} na forma de bibliotecas separadas: \lang{libouroboros-lua}
 e \lang{libouroboros-python}, para \lang{Lua} e \lang{Python}, respectivamente.
-Assim é fácil incluí-las em uma mesma aplicação, basta ligá-la com a
-\lang{libouroboros} e com elas. Caso o usuário não queira usar uma das linguagens,
+Assim é fácil incluí-las em uma mesma aplicação: basta ligá-la tanto com a
+\lang{libouroboros} quanto com elas. Caso o usuário não queira usar uma das linguagens,
 é só não ligar com a biblioteca correspondente. Caso ele queira alguma outra
 linguagem, é só ele obter a implementação da \lang{libouroboros} específica dela
 e ligá-la junto.
@@ -48,7 +48,8 @@ provável que ainda alteremos algumas coisas no sistema, arrumando os
 eventuais erros que surgirem ou implementando novas funcionalidades.
 
 \subsection{Instruções de Uso}
-Aqui iremos explicar brevemente como usar a OPA da \lang{libouroboros}. Como
+Aqui iremos explicar brevemente como usar a OPA da \lang{libouroboros},
+para demonstrar o que obtivemos de resultados com ela. Como
 essa é a única parte que o usuário irá usar diretamente da biblioteca, também
 explicamos aqui como compilá-la usando CMake e Makefile. Depois mostraremos
 um simples exemplo de um programa que carrega um \script{}, pega o valor de uma
@@ -57,9 +58,9 @@ variável dele e do resultado da execução de uma função.
 \subsubsection{Compilação} 
 Como ainda não disponibilizamos nenhum pacote
 com os binários da \lang{libouroboros}, você terá que obter o código fonte dela
-e compilá-la manualmente. Para compilar, basta rodar o CMake na pasta 
-raiz do projeto que ele gerará os arquivos de compilação necessáios.
-E então, basta executar os comandos de make para compilação:
+e compilá-la manualmente. Para compilar, basta usar o CMake na pasta 
+raiz do projeto que ele gerará os arquivos de compilação necessários.
+E então, basta executar os comandos de \lang{make} para compilação:
 
 \begin{verbatim}
   $ cmake .
@@ -71,8 +72,8 @@ E então, basta executar os comandos de make para compilação:
 Os dois ultimos comandos são para compilar as implementações para cada linguagem,
 e você precisa usá-los somente se quiser de fato elas. Note que apesar de a
 \lang{libouroboros} não ter nenhuma dependência externa, as implementações
-das linguagens dependem dos pacotes de desenvolvimento de suas respectivas
-linguagens de \script{}, pois eles contêm a implementação das APIs das máquinas virtuais.
+das extensões para cada linguagens dependem dos pacotes de desenvolvimento de suas
+respectivas bibliotecas, para ter acesso à implementação das APIs das máquinas virtuais.
 É também possivel simplesmente executar
 
 \begin{verbatim}
@@ -139,10 +140,7 @@ int main() {
     
     //executando funcao
     VirtualObj funcao = modulo["DoStuff"];
-    VirtualObj retorno = funcao(); 
-    // argumentos para a funcao sao passados como VirtualObjs, 
-    // e podem ser passados quaisquer quantidade de objetos,
-    // ou uma lista de VirtualObj (VirtualObj::List).
+    VirtualObj resultado = funcao(); 
     
     //finalizando
     SCRIPT_MANAGER()->Finalize();
@@ -192,11 +190,10 @@ int main () {
 Os \lang{ifdef}s usarão as configurações que estavam ativadas no CMake para
 determinar quais máquinas virtuais devem ser registradas, e quais cabeçalhos
 precisam ser inclusos para tanto.
-
 Finalmente, para esse exemplo funcionar é necessário um \script{} como o seguinte,
 em \lang{Python}:
 
-\vspace{1em}
+\vspace{2.5em}
 \begin{lstlisting}[language=python]
 #exemplo.py
 
@@ -256,19 +253,19 @@ gerado pelo OPWIG também tem, como dissemos no capítulo anterior, um bloco de 
 caso ela não tenha sido ainda, e registra nela os módulos e sub-módulos que esse
 arquivo gerado visa exportar.
 
-É importante notar também que os código gerado pelo OPWIG depende de algumas funcionalidade
+É importante notar também que o código gerado pelo OPWIG depende de algumas funcionalidade
 presentes na OPA, portanto qualquer programa compilado junto com o código gerado por ele deve
-ser ligado com a \lang{libouroboros}. Isso é um contraste em relação ao SWIG, o qual gera
-código sem nenhuma dependência externa. Esse comportamento foi uma decisão de
+ser ligado com a \lang{libouroboros}. Esse comportamento foi uma decisão de
 projeto que fizemos para simplificar o código gerado pelo OPWIG e garantir uma melhor integração
 com a parte de incorporação. Supomos que se um usuário está usando o OPWIG então ele provavelmente
-também usará a OPA, já que o maior diferencial do nosso sistema com relação ao SWIG é que aquele provê
-essas duas vias de comunicação entre linguagem nativa e linguagens de \script{} enquanto que este
-apenas fornece a geração de \textit{wrappers} para exportação.
+também usará a OPA, já que o maior diferencial do nosso sistema com relação ao SWIG é este
+apenas fornece a geração de \textit{wrappers} para exportação enquanto que o Projeto Ouroboros
+provê essas duas vias de comunicação entre linguagem nativa e linguagens de \script{}.
 
 \subsection{Instruções de Uso}
 Aqui iremos explicar como usar o OPWIG, desde a compilação dos geradores até a execução
-deles e a inclusão do código gerado em sua aplicação.
+deles e a inclusão do código gerado em sua aplicação, novamente com a intenção de demonstrar
+as capacidades dele.
 
 É importante lembrar que o OPWIG na verdade é uma parte da nossa biblioteca. Por
 simplicidade de código e organização do sistema, todo o código do OPWIG é compilado
@@ -299,8 +296,8 @@ Tais executáveis são os geradores de fato, e cada um deverá ser ligado junto 
 \lang{libouroboros} e as extensões dela que a linguagem de \script{} em questão exige. 
 Esses geradores são gerados com um nome de prefixo ``\lang{opwig-}'' seguido pelo nome da
 linguagem de \script{} para a qual eles exportam. A interface do
-OPWIG disponibilizada pela \lang{libouroboros} e os módulos de CMake que criamos fazem a
-terefa de criar executáveis do OPWIG para cada linguagem ser trivial, e as listas de CMake
+OPWIG disponibilizada pela \lang{libouroboros} e os módulos de CMake que criamos fazem
+ser trivial a terefa de criar executáveis do OPWIG para cada linguagem, e as listas de CMake
 do repositório do projeto já usam essas facilidades para construir o \lang{opwig-lua}
 e o \lang{opwig-python}.
 
@@ -356,13 +353,15 @@ Onde:
 \end{itemize}
 
 Cada gerador é especificado para uma só linguagem e portanto ao ser executado
-ele obrigatoriamente irá gerar um arquivo de código com o módulo exportado para a
+ele obrigatoriamente irá gerar um arquivo de código com o módulo exportado para
 essa linguagem apenas. O arquivo gerado é criado na mesma pasta onde gerador foi
 executado, seguindo o seguinte padrão de nomenclatura:
 \begin{verbatim}
   <nome da linguagem de script>_<nome do módulo>_wrap.cxx
 \end{verbatim}
 
+Por exemplo, se meu módulo exportado se chamasse ``\lang{mymodule}''. o nome
+do \textit{wrapper} gerado para Lua seria ``\lang{Lua\_mymodule\_wrap.cxx}''.
 Alternativamente, você pode optar por usar CMake para compilar sua aplicação, o que
 lhe permite usar as funcionalidades descritas na seção \ref{cap:atividades:cmake}
 para automatizar todo esse procedimento.
@@ -385,7 +384,7 @@ Por exemplo, suponha a seguinte interface em \CXX{}:
 const char* prefixo = "Supimpa";
 
 namespace funcoes {
-    void FazAlgumaCoisa(int n);
+    void FazAlgumaCoisa(double num);
 }
 
 namespace objetos {
@@ -400,12 +399,13 @@ namespace objetos {
         
         double fator;
     };
+
 }
 \end{lstlisting}
 \vspace{1em}
 
-Sendo exportada como um módulo de nome ``coisas'', essa interface pode ser usada em \lang{Python}
-da seguinte forma:
+Sendo exportada como um módulo de nome ``\lang{coisas}'', essa interface pode
+ser usada em \lang{Python} da seguinte forma:
 
 \vspace{1em}
 \begin{lstlisting}[language=python]
@@ -452,7 +452,7 @@ pelo código \CXX{}, que é exportado via OPWIG para \script{s} em \lang{Lua} e
 programa usa a OPA para carregar esses \script{s} e executar as funções adequadas.
 
 Segue um breve relato do que projetamos em cada \textit{milestone} e o que elas
-exigiam que o nosso sistema fornecesse.
+exigiam que o nosso sistema fornecesse ao usuário.
 
 \begin{description}
   \item[\textit{Milestone} 0:] A primeira \textit{milestone} que criamos (seguindo indexação
@@ -465,16 +465,16 @@ exigiam que o nosso sistema fornecesse.
     
   \item[\textit{Milestone} 1:] Já na segunda \textit{milestone}, adicionamos:
     \begin{itemize}
-      \item \lang{Namespaces} como sub-módulos do módulo principal.
+      \item \textit{Namespaces} como sub-módulos do módulo principal.
       \item Funções devolvendo \lang{void} - ou seja, que não devolvem nenhum valor.
-      \item Exportar um módulo a partir de um ou mais arquivos de cabeçalhos.
+      \item Exportação de um módulo a partir de um ou mais arquivos de cabeçalhos.
     \end{itemize}
     
   \item[\textit{Milestone} 2:] Na terceira \textit{milestone} nós testamos se os
-    \script{s} eram capazes acessar os sub-módulos exportados diretamente, além
+    \script{s} eram capazes de acessar os sub-módulos exportados diretamente, além
     de adicionar o seguinte:
     \begin{itemize}
-      \item \lang{Namespaces} aninhados (\lang{namespaces} dentro de \lang{namespaces})
+      \item \textit{Namespaces} aninhados (\textit{namespaces} dentro de \textit{namespaces})
         como uma árvore apropriada de sub-módulos.
       \item Váriaveis globais de tipos primitivos, possivelmente constantes
         (isso é, com o modificador \lang{const} do \C{}).
@@ -499,8 +499,8 @@ exigiam que o nosso sistema fornecesse.
     código.
     
   \item[\textit{Milestone} 5:] Finalmente na sexta \textit{milestone} resolvemos implementar algo
-    importante que estava faltando: a conversão de valores que fossem instâncias de classes,
-    para possibilitar que atributos, variáveis, paramêtros de funções e seus resultados
+    importante que estava faltando: a conversão de valores que fossem instâncias de classes
+    \CXX{}, para possibilitar que atributos, variáveis, paramêtros de funções e seus resultados
     devolvidos pudessem ter tipos complexos (isso é, definidos pelo usuário) ao invés
     de apenas tipos primitivos.
     
