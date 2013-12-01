@@ -513,7 +513,7 @@ exigiam que o nosso sistema fornecesse ao usuário.
 \subsection{Executando a \textit{Milestone}}
 Agora vamos explicar melhor como compilar e executar uma \textit{milestone}. Como cada 
 uma delas é um incremento da anterior, basta exemplificarmos a última delas. Para compilar
-a partir da pasta raiz do repositório das \textit{milestones} basta rodar:
+a partir da pasta raiz do repositório das \textit{milestones} basta usar:
 
 \begin{verbatim}
   $ cmake .
@@ -527,28 +527,12 @@ E para executar:
   $ ./bin/milestone-05
 \end{verbatim}
 
-Na figura \ref{fig:milestone} temos um exemplo da execução dessa \textit{milestone}.
-
-\begin{figure}[ht]
-      \centering
-      \caption{}
-      \begin{subfigure}{.8\textwidth}
-        \begin{center}
-          \includegraphics[width=.8\textwidth]{ssMilestone.png}
-          \vspace{1em}
-
-          \textit{
-            O texto em verde são os comandos enviados pelo usuário.
-          }
-        \end{center}
-      \end{subfigure}
-      \label{fig:milestone}
-    \end{figure}
 
 Para ilustrar melhor as capacidades do nosso sistema, incluímos as
 partes relevantes do código fonte dessa última \textit{milestone}
-a seguir. Começamos pelos cabeçalhos cujas definições são exportadas
-para as máquinas virtuais que processarão os \script{s}:
+a seguir. No final da sessão, a figura \ref{fig:milestone} mostra
+um exemplo da execução dela. Começamos pelos cabeçalhos cujas
+definições são exportadas para as máquinas virtuais que processarão os \script{s}:
 
 \vspace{1em}
 \begin{lstlisting}
@@ -792,3 +776,20 @@ end
 \end{lstlisting}
 
 \vspace{1em}
+
+\begin{figure}[ht]
+  \centering
+  \caption{}
+  \begin{subfigure}{.8\textwidth}
+    \begin{center}
+      \includegraphics[width=.8\textwidth]{ssMilestone.png}
+      \vspace{1em}
+
+      \textit{
+        O texto em verde são os comandos enviados pelo usuário.
+      }
+    \end{center}
+  \end{subfigure}
+  \label{fig:milestone}
+\end{figure}
+
