@@ -1,5 +1,4 @@
 
 - Trocar imagem da milestone rodando?
-- Links para os nossos repositórios?
 - Exemplo de wrapper gerado?
 

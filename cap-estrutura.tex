@@ -45,7 +45,7 @@
     inteligência artifical desse inimigos, para que fosse fácil ajustá-las sem
     ter que recompilar o jogo. Desse modo, cada um desses \script{s} seria um
     módulo que a aplicação precisaria carregar e usar durante sua
-    execução\footnote{ Note como isso coincide com o conceito de ``módulo''
+    execução\footnote{Note como isso coincide com o conceito de ``módulo''
     usado pelas APIs das linguagens de \script{}.}. Eles, por sua vez,
     precisariam interagir com módulos da aplicação para que as inteligências
     artificiais conseguissem manipular seus personagens dentro do mundo virtual
@@ -55,8 +55,7 @@
     precisariam acessar o módulo que contenha a classe\footnotemark{} que
     representa o projétil desejado.
 
-    \footnotetext{
-      Classes são estruturas presentes em linguagens de programação
+    \footnotetext{Classes são estruturas presentes em linguagens de programação
       \emph{orientadas a objetos}. Seu papel é definir os dados e os
       comportamentos que um conjunto de objetos deve ter.
     }
@@ -208,8 +207,7 @@
     dentro da máquina virtual. A figura \ref{fig:api-vobjs} exemplifica essas
     ideias.
 
-    \footnotetext{
-      Quando funções são tipos de \emph{primeira classe}, elas podem ser
+    \footnotetext{Quando funções são tipos de \emph{primeira classe}, elas podem ser
       tratadas como se fossem um valor, o que permite que elas possam ser
       armazenadas em variáveis, passadas como argumento para outras funções
       e até mesmo devolvidas como resultado de outras funções também.
@@ -293,8 +291,7 @@
           \item Outras informações, como \textit{namespaces}\footnotemark{}.
     \end{enumerate}
 
-    \footnotetext{
-      \textit{Namespaces} (do inglês, ``espaços de nomes'') são estruturas
+    \footnotetext{\textit{Namespaces} (do inglês, ``espaços de nomes'') são estruturas
       em \CXX{} que separam os elementos de uma aplicação em espaços distintos,
       facilitando a organização e expressividade do código, assim como
       evitando possíveis conflitos de nomes iguais usados em contextos
@@ -320,8 +317,7 @@
     inicialização, que precisam ser feitas usando o protocolo esperado pelas
     APIs.
 
-    \footnotetext{
-      Para não confundir a qual tipo de módulo estaremos nos referindo,
+    \footnotetext{Para não confundir a qual tipo de módulo estaremos nos referindo,
       chamaremos os módulos que registramos nas máquinas virtuais de
       \emph{módulos virtuais}, enquanto que os da aplicação serão simplesmente
       \emph{módulos}.

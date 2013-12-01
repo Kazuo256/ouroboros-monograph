@@ -25,19 +25,18 @@
     No início deste ano, elegemos para o nosso trabalho de formatura supervisionado
     o aprimoramento de um sistema que já estávamos desenvolvendo desde o começo de
     2011, como parte das nossas atividades no USPGameDev. Originalmente, ele fazia
-    parte de um outro projeto do grupo chamado UGDK\footnote{
-      A UGDK é um dos principais projetos do USPGameDev, e seu
+    parte de um outro projeto do grupo chamado UGDK\footnote{A UGDK é um dos
+      principais projetos do USPGameDev, e seu
       nome é um acrônimo que pode significar tanto \emph{USP Game Development
       Kit} quanto \emph{USPGameDev Kit}. Ela é desenvolvida em \CXX{}, disponível em:
       \url{http://uspgamedev.org/projetos/ugdk/} (último acesso: 26/11/2013)
-    }, uma \emph{engine}\footnote{
-      Mais informações:
+    }, uma \emph{engine}\footnote{Mais informações:
       \url{http://www.gamecareerguide.com/features/529/what\_is\_a\_game\_.php}
       (último acesso: 26/11/2013)
     } de desenvolvimento de jogos digitais bidimensionais (ou
     simplesmente ``jogos 2D''). A ideia surgiu devido a uma situação com
     outro projeto, também do USPGameDev: o jogo digital chamado
-    \emph{Horus Eye}\footnotemark. Ele era programado em \CXX{} e usava os
+    \emph{Horus Eye}\footnotemark{}. Ele era programado em \CXX{} e usava os
     recursos da UGDK para ter acesso às funcionalidade essenciais de mídia e
     interatividade que um jogo precisa. A equipe estava tendo muitas dificuldades
     em expandir o conteúdo dele desde o seu lançamento em outubro de 2010, pois
@@ -48,9 +47,7 @@
     de mais conteúdo para ele. Foi então que elaboramos o chamado ``sistema de
     \script{s} da UGDK'', que depois viria a se tornar o projeto deste trabalho.
 
-    \footnotetext{
-      Disponível em: \url{uspgamedev.org/horus-eye} (último acesso: 25/07/2013)
-    }
+    \footnotetext{Disponível em: \url{uspgamedev.org/horus-eye} (último acesso: 25/07/2013)}
 
     Ele fornecia ferramentas que buscavam simplificar o máximo possível a
     troca de dados entre o jogo e os \script{s}. Para que a elaboração de conteúdo
@@ -160,7 +157,7 @@
 
     \item \textbf{Distribuição e versionamento}: Usando um repositório
       Git\footnote{Disponível em: \url{http://git-scm.com/} (último acesso em: 22/11/2013)}
-      hospedado no GitHub\footnote{ Acessível em: \url{https://github.com/} (último
+      hospedado no GitHub\footnote{Acessível em: \url{https://github.com/} (último
       acesso: 22/11/2013)}.
       \begin{itemize}
         \item[Sobre -] Git é um \textit{Software} Livre para versionamento cooperativo
@@ -204,13 +201,17 @@
   decisões de projeto originais. Primeiramente, separamos o sistema para ser um
   projeto separado, totalmente independente de qualquer outro projeto do
   USPGameDev, e o nomeamos Projeto Ouroboros. Partindo do código fonte
-  original, criamos outro repositório Git específico para o Ouroboros, e também
-  o hospedamos no GitHub. Mantivemos o uso de CMake, pois, dentre outras razões,
-  ele permitiu-nos simplificar algumas partes do nosso sistema tanto para os
+  original, criamos outro repositório Git específico para o Ouroboros\footnotemark{},
+  e também  o hospedamos no GitHub. Mantivemos o uso de CMake, pois, dentre outras
+  razões, ele permitiu-nos simplificar algumas partes do nosso sistema tanto para os
   desenvolvedores quanto para os usuários (mais informações na seção
   \ref{cap:atividades:cmake}). Abaixo listamos as principais mudanças feitas
   com relação às outras decisões anteriores, assim como algumas novas que
   surgiram com a emancipação do nosso sistema.
+
+  \footnotetext{Repositório do Projeto Ouroboros:
+                \url{https://github.com/Rewasvat/ouroboros}
+                (último acesso: 1/12/2013)}
   
   \begin{enumerate}
 
@@ -265,11 +266,9 @@
           a aproveitar algumas funcionalidades do GitHub justamente voltadas
           para o gerenciamento de tarefas que caíram muito bem com essa
           metodologia.
-        \footnotetext{
-          O uso que damos à palavra \textit{milestone} nesse trabalho provavelmente
-          não reflete exatamente o sentido usual que ela tem no desenvolvimento de
-          \textit{software}.
-        }
+        \footnotetext{O uso que damos à palavra \textit{milestone} nesse trabalho
+                      provavelmente não reflete exatamente o sentido usual que ela
+                      tem no desenvolvimento de \textit{software}.}
         \item[Motivo -] Ao estabelecer uma meta tão clara quanto um caso de uso,
           o desenvolvimento fica muito mais produtivo e objetivo. Durante o
           primeiro semestre gastamos bastante tempo cobrindo partes do nosso
@@ -383,8 +382,7 @@
       \end{lstlisting}
   \end{itemize}
 
-  \footnotetext{
-    \textit{Templates} são uma funcionalidade de \CXX{} que permite
+  \footnotetext{\textit{Templates} são uma funcionalidade de \CXX{} que permite
     definir parametricamente funções e classes, fazendo-as exigir um
     ou mais tipos em uma notação especial quando são usadas. Com isso,
     essas funções ou classes têm seus corpos escritos de forma generalizada
@@ -401,11 +399,10 @@
   implementação}\footnotemark{}. A classe \VData{} não deve ser usada diretamente pelo
   usuário.
   
-  \footnotetext{
-    Vide \url{
-      % Wikibooks é uma boa referência?
-      http://en.wikibooks.org/wiki/C++\_Programming/Idioms\#Pointer\_To\_Implementation\_.28pImpl.29
-    } (último acesso: 15/09/2013)
+  % Wikibooks é uma boa referência?
+  \footnotetext{Vide
+    \url{http://en.wikibooks.org/wiki/C++\_Programming/Idioms\#Pointer\_To\_Implementation\_.28pImpl.29}
+    (último acesso: 15/09/2013)
   }
   
   \subsection{\SMgr{}}
@@ -417,8 +414,8 @@
   que estão disponíveis no sistema, permitindo ao usuário executar algumas operações simples
   porém importantes nelas como um conjunto:
 
-  \footnotetext{
-    \textit{Singleton} é um padrão de projeto que permite ter apenas uma instância de uma classe
+  \footnotetext{\textit{Singleton} é um padrão de projeto que permite ter
+    apenas uma instância de uma classe
     num dado momento. Mais informações em \cite{patterns:00}.
   }
   
@@ -711,9 +708,8 @@
     \item \textbf{O SWIG não exporta o aninhamento\footnotemark{} de classes,
       \textit{structs} e \textit{unions}, e aparentemente não pretende resolver isso tão cedo}.
       
-      \footnotetext{
-        Aninhar tais estruturas de \CXX{} é o ato de definir algumas delas dentro de outra
-        delas.
+      \footnotetext{Aninhar tais estruturas
+        de \CXX{} é o ato de definir algumas delas dentro de outra delas.
       }
     \item \textbf{O SWIG não tem trata a herança de classes \CXX{} nos \script{s}}.
       
@@ -727,8 +723,7 @@
       classe \CXX{} passível de ser herdada, para esse sistema funcionar foi também necessário uma
       grande parte de código adicionado nos arquivos de interface do SWIG.
       
-      \footnotetext{
-        Uma alternativa para simplificar esse processo está no nosso blog: 
+      \footnotetext{Uma alternativa para simplificar esse processo está no nosso blog: 
         \url{http://projeto-ouroboros.blogspot.com.br/2013/07/gerador-de-proxies.html}
         (último acesso: 15/09/2013)
       }

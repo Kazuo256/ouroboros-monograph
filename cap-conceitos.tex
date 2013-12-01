@@ -150,8 +150,7 @@
     declarados - e a outra seriam os \emph{arquivos de implementação} - onde a
     definição do que os símbolos significam é feita.
 
-    \footnotetext{
-      Esses símbolos são essenciamente nomes que estão associados a partes
+    \footnotetext{Esses símbolos são essenciamente nomes que estão associados a partes
       específicas de um programa, como suas variáveis e rotinas.
     }
 
@@ -244,8 +243,7 @@
     simplesmente \textbf{API} (do inglês, \textit{Application Programming
     Interface})\footnotemark{}.
 
-    \footnotetext{
-      Geralmente a ideia de API também vem atrelada a algum tipo de documentação
+    \footnotetext{Geralmente a ideia de API também vem atrelada a algum tipo de documentação
       que explica como usar a interface. Por exemplo, costuma-se disponibilizar
       uma referência do que cada rotina na biblioteca faz. Além disso, cada
       linguagem de programação tem sua própria maneira de expor uma API, o que
@@ -269,8 +267,7 @@
       contendo uma sequência de valores, dos quais os últimos costumam ser os
       relevantes\footnotemark{}.
 
-      \footnotetext{
-        Uma implementação clássica de pilha teria operações que acessam apenas o
+      \footnotetext{Uma implementação clássica de pilha teria operações que acessam apenas o
         último elemento inserido. Na API \lang{Lua}, existem algumas funções que
         conseguem inserir e remover valores em posições arbitrárias da pilha.
       }
@@ -335,8 +332,7 @@
       \C{}. Note que essas últimas \emph{não} removem os elementos da pilha, para isso
       tem a \lang{lua\_pop()}.
 
-      \footnotetext{
-        Como a API \lang{Lua} está escrita em \C{}, ela não oferece um meio
+      \footnotetext{Como a API \lang{Lua} está escrita em \C{}, ela não oferece um meio
         direto de conversão para \CXX{}. No nosso sistema, usamos alguns
         artifícios para contornar isso.
       }
@@ -392,8 +388,7 @@
       fazendo. A linguagem chama essas estruturas fornecidas pela linguagem
       nativa de \lang{userdata}.
 
-      \footnotetext{
-        \emph{Tabelas de símbolos} são estruturas de dados que costumam abstrair
+      \footnotetext{\emph{Tabelas de símbolos} são estruturas de dados que costumam abstrair
         duas operações básicas em sua interface: busca e inserção de elementos
         através de \emph{chaves}. Às vezes uma operação de remoção também está
         disponível, mas nem sempre ela é necessária. Em \lang{Lua}, por exemplo,
@@ -473,8 +468,7 @@
       Linux ou ``\lang{native.dll}'' em um Windows. Depois é só fazer como
       antes:
 
-      \footnotetext{
-        Bibliotecas dinâmicas são compiladas de maneira que o programa que as
+      \footnotetext{Bibliotecas dinâmicas são compiladas de maneira que o programa que as
         usa não precisa ser completamente ligado com elas na sua própria
         compilação. Em compensação, ele termina de ligar com elas quando é
         executado.
