@@ -1,4 +1,4 @@
 
-- Trocar imagem da milestone rodando?
+
 - Exemplo de wrapper gerado?
 
