@@ -314,18 +314,33 @@
   quesito foi o que formou a OPA vista na seção \ref{cap:estrutura:opa}. Desde o
   começo vimos desenvolvendo uma interface generalizada capaz de usar uma ou outra
   máquina virtual sem diferenças na interface para o usuário. A seguir explicamos
-  o que implementamos de fato nas principais classes da OPA. As duas primeiras são
-  as que são realmente usadas diretamente pelo usuário, e elas encapsulam de uma ou
-  de outra maneira os mecanismos das duas últimas.
+  o que implementamos de fato nas principais classes da OPA.
+
+  Como vimos no capítulo anterior, a princípio precisaríamos de três classes
+  na nossa API: uma para representar objetos virtuais, outra para máquinas virtuais
+  e a última para gerenciar essas máquinas. Mas na realidade, por questões de
+  usabilidade, implementamos a classe de objetos virtuais em duas partes. Uma
+  delas é a que o usuário utilizará, e portanto terá vários mecanismos facilitadores.
+  A outra será a que de fato fará o trabalho sujo, escondido do usuário graças
+  à primeira. Elas são as classes \VObj{} e \VData{}, respectivamente.
+  
+  As das máquinas virtuais e do gerenciador serão mantidas como projetamos. No
+  entanto, o usuário não usará a de máquinas virtuais com tanta frequência, já a
+  do gerenciador será muito mais presente e importante para ele. Principalmente
+  porque o gerenciador encapsula os serviços das máquinas virtuais, então o
+  acesso direto a elas torna-se desnecessário.
+  
+  A seguir entramos em detalhes sobre cada uma dessas classes.
   
   \subsection{\VObj{}}
   \label{sec:atividades:opa:vobj}
   Essa classe representa um objeto virtual qualquer, como explicado na seção
   \ref{cap:estrutura:opa}. É quase a única classe que o
   usuário precisa usar. Ela implementa alguns métodos que possibilitam ao
-  usuário realizar sobre o tal objeto operações comuns a diversas linguagens de
-  \script{}. Também sobreescrevemos alguns operadores de \CXX{} para facilitar o
-  uso de algumas dessas operações:
+  usuário realizar sobre o tal objeto operações comuns em elementos de diversas
+  linguagens de \script{}. Para tornar o uso dessa classe mais agradável, também
+  sobreescrevemos alguns operadores de \CXX{} de maneira a facilitar uso de
+  algumas dessas operações:
   \begin{itemize}
     \item \textbf{Executar o objeto como uma função}: simplificado pelo operador \lang{()}
       do \CXX{}, permitindo ao usuário usar as próprias instâncias de \VObj{} como
@@ -525,8 +540,7 @@
   \VData{} é a segunda classe abstrata do sistema que deve ser implementada para uma linguagem
   de \script{} poder ser usada pela OPA. Ela provê os mecanismos essenciais dos objetos virtuais
   de uma linguagem específica, fornecendo todas aquelas
-  operações da classe \VObj{} (descritas anteriormente), de forma que as instâncias desta
-  encapsulem chamadas às funções daquela. Assim, uma instância
+  operações da classe \VObj{} (descritas anteriormente). Assim, uma instância
   de \VObj{} pode ter uma instância de \VData{} implementada para uma linguagem 
   ou outra sem precisar saber qual, graças ao polimorfismo através de herança. Essa relação
   está ilustrada no diagrama UML da figura \ref{fig:uml-vdata}. Fora os métodos para as
