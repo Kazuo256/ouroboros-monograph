@@ -460,16 +460,18 @@
         //pyvm corresponde ao mesmo vm declarado antes.
       \end{lstlisting}
 
-    \item \textbf{Executar código de \script{}}: o gerenciador permite ao usuário tentar executar um código
+    \item \textbf{Executar código de \script{}}: o gerenciador permite ao usuário tentar executar
+      um código
       qualquer, dado como uma cadeia de caracteres, na máquina virtual de sua escolha. Exemplo:
       \vspace{1em}
       \begin{lstlisting}
         SCRIPT_MANAGER()->ExecuteCode("Lua", "print(42)");
       \end{lstlisting}
 
-    \item \textbf{Carregar módulos}: possivelmente o método mais importante da classe \SMgr{}, este
-      método recebe um caminho para um arquivo de \script{} (sem a extensão dele). Ele então determina
-      se o \script{} existe, e de acordo com a extensão do arquivo, qual máquina virtual deve processá-lo.
+    \item \textbf{Carregar módulos}: possivelmente o método mais importante da classe \SMgr{},
+      este método recebe um caminho para um arquivo de \script{} (sem a extensão dele).
+      Ele então determina se o \script{} existe, e de acordo com a extensão do arquivo,
+      qual máquina virtual deve processá-lo.
       A tal máquina virtual então carrega o \script{} e a função devolve uma instância de \VObj{}
       representando o módulo carregado de acordo com a linguagem de \script{} usada. Exemplo:
       \vspace{1em}
