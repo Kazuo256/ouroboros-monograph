@@ -1,6 +1,4 @@
 
-- Padronizar a fonte de namespaces para itálico
-- Verificar se tem "Lua" ou "Python" em algum lugar sem \lang
 - Trocar imagem da milestone rodando?
 - Links para os nossos repositórios?
 - Exemplo de wrapper gerado?
