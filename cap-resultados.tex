@@ -24,7 +24,7 @@ possível compilar usando Visual Studio porque ele não reconhece \CXX{11} compl
 ainda. Em Linux, contanto que os pacotes necessários estejam instalados, a biblioteca
 compila e funciona sem problemas usando um \lang{g++} de versão 4.7 ou mais recente.
 
-As implementações que fizemos da OPA e do OPWIG que comportam as linguagens de
+As extensões que fizemos da OPA e do OPWIG que comportam as linguagens de
 \script{} \lang{Lua} e \lang{Python} também estão funcionais (embora ainda não
 com todas os recursos que gostaríamos), sendo distríbuidas como extensões
 da \lang{libouroboros} na forma de bibliotecas separadas: \lang{libouroboros-lua}
@@ -34,6 +34,10 @@ Assim é fácil incluí-las em uma mesma aplicação: basta ligá-la tanto com a
 é só não ligar com a biblioteca correspondente. Caso ele queira alguma outra
 linguagem, é só ele obter a implementação da \lang{libouroboros} específica dela
 e ligá-la junto.
+Essas extensões exigem, como é de se esperar, as bibliotecas de \lang{Lua} (versão 5.1)
+e de \lang{Python} (versão 2.7). \textbf{Os pacotes dessas bibliotecas precisam estar
+instaladas no sistema para que o CMake as encontre e as ligue devidamente com as
+extensões de nossa biblioteca}.
 
 \section{OPA}
 \label{cap:resultados:opa}
