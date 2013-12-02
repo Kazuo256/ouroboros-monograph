@@ -27,7 +27,7 @@
   como objetivo esclarecer essa questão, e com isso destacar o problema que
   o nosso sistema foi projetado para resolver, além do método necessário para
   tanto. Começamos tentando entender melhor o que são esses elementos que
-  estamos tentando integrar.
+  tentamos integrar.
 
   \section{Linguagens de Programação}
   \label{cap:conceitos:linguagens}
@@ -99,11 +99,11 @@
     delas, tornando trabalhoso de fazer um mesmo programa compatível com todas
     elas. Além disso, é preciso muitas instruções para realizar computações
     simples, pois as operações que um processador é capaz de fazer são
-    normalmente bastante primitivas - como movimentar dados na memória, ou
+    normalmente bastante primitivas --- como movimentar dados na memória, ou
     comparar o valor dos dados em lugares diferentes dela. Para lidar com esses
     problemas existem dois métodos que essencialmente buscam abstrair as
     computações desejadas em instruções mais abstratas, isso é, em uma linguagem
-    de programação mais acessível - ou de alto nível, como se costuma dizer.
+    de programação mais acessível --- ou de alto nível, como se costuma dizer.
 
     \subsection{Compilação}
     \label{cap:conceitos:maquina:compilacao}
@@ -146,8 +146,8 @@
     programa à parte, chamado de \emph{ligador}, ou pelo próprio compilador. A
     maneira que tanto \C{} quanto \CXX{} encontraram para lidar com esse
     procedimento foi fornecer uma divisão para seus arquivos de código fonte:
-    uma parte seriam os \emph{arquivos de cabeçalho} - onde os símbolos são
-    declarados - e a outra seriam os \emph{arquivos de implementação} - onde a
+    uma parte seriam os \emph{arquivos de cabeçalho} --- onde os símbolos são
+    declarados --- e a outra seriam os \emph{arquivos de implementação} --- onde a
     definição do que os símbolos significam é feita.
 
     \footnotetext{Esses símbolos são essenciamente nomes que estão associados a partes
@@ -207,7 +207,7 @@
 
     Costumamos dizer que linguagens interpretadas que podem ser usadas
     para escrever \script{s} são \textbf{linguagens de \script{}}. Infelizmente
-    não é tão fácil definir formalmente elas, como indica \cite{script:00}. O
+    não é tão fácil definí-las formalmente, como indica \cite{script:00}. O
     que não chega a ser um problema para nossa discussão, pois as propriedades
     que nos interessam estão na definição das linguagens interpretadas.
 
@@ -330,7 +330,7 @@
       são usadas para converter para a máquina virtual colocando o valor no topo
       da pilha, enquanto que as com ``\lang{lua\_to}'' convertem da pilha para
       \C{}. Note que essas últimas \emph{não} removem os elementos da pilha, para isso
-      tem a \lang{lua\_pop()}.
+      existe a \lang{lua\_pop()}.
 
       \footnotetext{Como a API \lang{Lua} está escrita em \C{}, ela não oferece um meio
         direto de conversão para \CXX{}. No nosso sistema, usamos alguns
@@ -463,7 +463,7 @@
 
       \vspace{1em}
 
-      Para \script{s} poderem usar esse módulo, é preciso compilar ele em uma
+      Para \script{s} poderem usar esse módulo, é preciso compilá-lo em uma
       biblioteca dinâmica\footnotemark{} com o nome ``\lang{native.so}'' em um
       Linux ou ``\lang{native.dll}'' em um Windows. Depois é só fazer como
       antes:
@@ -643,6 +643,6 @@
     em sua aplicação executável, basta compilar esse arquivo junto com seu programa, 
     e chamar a função de inicialização \lang{initteste} após inicializar a máquina 
     virtual. Caso contrário, basta compilar o módulo em uma biblioteca 
-    dinâmica - mas não vamos entrar em detalhes sobre esse caso pois, para o escopo deste 
+    dinâmica --- mas não vamos entrar em detalhes sobre esse caso pois, para o escopo deste 
     projeto, somente usamos módulos construídos usando a API em programas que estão
     incorporando as máquinas virtuais.

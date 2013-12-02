@@ -107,7 +107,7 @@
     específicos demais de usar. A intenção é que o usuário do nosso sistema não
     tenha que se preocupar com os detalhes de cada máquina virtual quando
     estiver desenvolvendo a aplicação dele e seja capaz de escrever normalmente
-    os \script{s} que trabalhem com ela - isso é, podendo acessar módulos
+    os \script{s} que trabalhem com ela --- isso é, podendo acessar módulos
     externos através dos mecanismos usuais que a linguagem virtual fornece.
 
     Logo, nosso sistema consistirá majoritariamente de uma biblioteca \CXX{}
@@ -343,12 +343,12 @@
     
     Um jeito de contornar esses problemas é \emph{não} tentar fazer a exportação
     durante a execução da aplicação, mas sim antes de ela ser compilada, de
-    maneira que tenhamos acesso ao código fonte dela. A partir dele somos
+    maneira que tenhamos acesso ao seu código fonte. A partir dele somos
     capazes de reconhecer as declarações que queremos importar, e podemos
     escrever o código adicional das funções de inicialização a tempo
     de elas serem compiladas junto com o resto da aplicação. Isso seria feito
-    por um outro programa - que obviamente precisa estar compilado antes da
-    aplicação, uma vez que ele \emph{interfere} com o código dela - que chamamos
+    por um outro programa --- que obviamente precisa estar compilado antes da
+    aplicação, uma vez que ele \emph{interfere} com o código dela --- que chamamos
     de \emph{gerador de código}. Na prática, as únicas partes do código da
     aplicação que ele precisa analisar são os cabeçalhos, que é onde estarão as
     declarações. Uma visão geral desse procedimento está ilustrada na figura
@@ -360,7 +360,7 @@
     máquinas virtuais: elas precisam ter uma assinatura específica, que ainda
     por cima varia de máquina para máquina. E fica ainda mais complicado quando
     pensamos em classes, pois em \lang{Lua}, por exemplo, não há orientação a
-    objetos implementada por padrão - embora seja possível construir mecanismos
+    objetos implementada por padrão --- embora seja possível construir mecanismos
     na linguagem que funcionem como classes, que é o que precisamos fazer.
 
     \begin{figure}[ht]
@@ -400,7 +400,7 @@
     Isso tudo significa que no final das contas nosso sistema não será apenas
     uma biblioteca, pois ele também terá executáveis fazendo o papel de
     geradores, um para cada linguagem de \script{}. O que fizemos para evitar
-    espalhar muito nosso código é que esses programas auxiliares simplesmente
-    evocam algumas rotinas da nossa biblioteca que de fato farão a análise e
+    dividir nosso código em muitas partes foi limitar esses programas auxiliares a
+    simplesmente evocarem algumas rotinas da nossa biblioteca que de fato farão a análise e
     a geração de código. Chamamos essa parte do nosso sistema de \emph{Ouroboros
     Project Wrapper and Interface Generator} (OPWIG).
